@@ -1,0 +1,21 @@
+## Interface: 100100
+## Title: Battle Pet Completionist
+## Version: @project-version@
+## Notes: Let's go catch them all!
+## IconTexture: Interface\Icons\Inv_Pet_Achievement_CaptureAWildPet
+## Author: GurliGebis
+## X-Category: Battle Pets
+## X-Compatible-With: 100100
+## X-Curse-Packaged-Version: @project-version@
+## X-Curse-Project-Name: Battle Pet Completionist
+## X-Curse-Project-ID: 873861
+## SavedVariables: BattlePetCompletionistDB
+
+# Libs
+embeds.xml
+
+# Core
+Main.lua
+
+# Modules
+Modules\modules.xml

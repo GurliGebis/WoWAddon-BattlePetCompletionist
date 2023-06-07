@@ -1,0 +1,13 @@
+package-as: BattlePetCompletionist
+enable-nolib-creation: no
+
+manual-changelog:
+  filename: Changelog.md
+  markup-type: markdown
+
+ignore:
+  - Modules/Data/Source
+  - images
+  - Changelog.md
+  - LICENSE
+  - README.md
