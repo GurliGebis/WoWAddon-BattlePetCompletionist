@@ -21,6 +21,14 @@ ConfigModule = BattlePetCompletionist:NewModule("ConfigModule", "AceConsole-3.0"
 
 local AceConfig = LibStub("AceConfig-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
+local petSources = {
+    [1] = BATTLE_PET_SOURCE_1,
+    [2] = BATTLE_PET_SOURCE_2,
+    [3] = BATTLE_PET_SOURCE_3,
+    [4] = BATTLE_PET_SOURCE_4,
+    [5] = BATTLE_PET_SOURCE_5,
+    [7] = BATTLE_PET_SOURCE_7
+}
 
 local options = {
     name = "Battle Pet Completionist",
@@ -147,6 +155,24 @@ local options = {
             set = function(_, value)
                 ConfigModule.AceDB.profile.mapPinIconType = value
             end
+        },
+        spacer3 = {
+            order = 14,
+            name = "",
+            type = "description"
+        },
+        mapPinSources = {
+            order = 15,
+            name = "Map pin sources",
+            type = "multiselect",
+            desc = "The sources for pets to show on the map.",
+            values = petSources,
+            get = function(_, key)
+                return ConfigModule.AceDB.profile.mapPinSources[key]
+            end,
+            set = function(_, key, value)
+                ConfigModule.AceDB.profile.mapPinSources[key] = value
+            end
         }
     },
 }
@@ -157,6 +183,14 @@ local defaultOptions = {
         mapPinSize = "S1",
         mapPinsToInclude = "T1ALL",
         mapPinIconType = "T1PET",
+        mapPinSources = {
+            [1] = true,
+            [2] = true,
+            [3] = true,
+            [4] = true,
+            [5] = true,
+            [7] = true
+        },
         minimapIconEnabled = true
     }
 }
@@ -194,4 +228,16 @@ function ConfigModule:GetMapPinScale()
     }
 
     return scaleMap[ConfigModule.AceDB.profile.mapPinSize]
+end
+
+function ConfigModule:GetMapPinSources()
+    local sources = {}
+
+    for key, value in pairs(petSources) do
+        if ConfigModule.AceDB.profile.mapPinSources[key] then
+            table.insert(sources, value)
+        end
+    end
+
+    return sources
 end
