@@ -21,13 +21,31 @@ DataModule = BattlePetCompletionist:NewModule("DataModule")
 ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 LibPetJournal = LibStub('LibPetJournal-2.0')
 
+local function DoesPetMatchSourceFilters(speciesId)
+    local petSource = DataModule:GetPetSource(speciesId)
+
+    local enabledSources = ConfigModule:GetMapPinSources()
+
+    for _, v in ipairs(enabledSources) do
+        if v == petSource then
+            return true
+        end
+    end
+
+    return false
+end
+
 function DataModule:GetPetsInMap(mapId)
     return DataModule.PetData[mapId]
 end
 
 function DataModule:ShouldPetBeShown(speciesId)
     if ConfigModule.AceDB.profile.mapPinsToInclude == "T1ALL" then
-        return true
+        if DoesPetMatchSourceFilters(speciesId) then
+            return true
+        else
+            return false
+        end
     end
 
     if ConfigModule.AceDB.profile.mapPinsToInclude == "T4NONE" then
@@ -53,7 +71,11 @@ function DataModule:ShouldPetBeShown(speciesId)
         end
     end
 
-    return true
+    if DoesPetMatchSourceFilters(speciesId) then
+        return true
+    else
+        return false
+    end
 end
 
 function DataModule:GetOwnedPets(speciesId)
@@ -76,4 +98,27 @@ function DataModule:GetOwnedPets(speciesId)
     else
         return nil
     end
+end
+
+function DataModule:GetPetSource(speciesId)
+    local _, _, _, _, tooltipSource = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
+    local index = string.find(tooltipSource, ":")
+    local source = ""
+
+    if index then
+        source = string.sub(tooltipSource, 1, index - 1)
+    end
+
+    if     string.find(source, BATTLE_PET_SOURCE_1) ~= nil then return BATTLE_PET_SOURCE_1
+    elseif string.find(source, BATTLE_PET_SOURCE_2) ~= nil then return BATTLE_PET_SOURCE_2
+    elseif string.find(source, BATTLE_PET_SOURCE_3) ~= nil then return BATTLE_PET_SOURCE_3
+    elseif string.find(source, BATTLE_PET_SOURCE_4) ~= nil then return BATTLE_PET_SOURCE_4
+    elseif string.find(source, BATTLE_PET_SOURCE_5) ~= nil then return BATTLE_PET_SOURCE_5
+    elseif string.find(source, BATTLE_PET_SOURCE_6) ~= nil then return BATTLE_PET_SOURCE_6
+    elseif string.find(source, BATTLE_PET_SOURCE_7) ~= nil then return BATTLE_PET_SOURCE_7
+    elseif string.find(source, BATTLE_PET_SOURCE_8) ~= nil then return BATTLE_PET_SOURCE_8
+    elseif string.find(source, BATTLE_PET_SOURCE_9) ~= nil then return BATTLE_PET_SOURCE_9
+    elseif string.find(source, BATTLE_PET_SOURCE_10) ~= nil then return BATTLE_PET_SOURCE_10
+    elseif string.find(source, BATTLE_PET_SOURCE_11) ~= nil then return BATTLE_PET_SOURCE_11
+    else return nil end
 end
