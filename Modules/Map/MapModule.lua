@@ -20,6 +20,7 @@ BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionis
 MapModule = BattlePetCompletionist:NewModule("MapModule")
 ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 DataModule = BattlePetCompletionist:GetModule("DataModule")
+AceHook = LibStub("AceHook-3.0")
 
 MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
@@ -162,8 +163,43 @@ function MapModule:UpdateWorldMap()
     MapModule.WorldMapDataProvider:RefreshAllData()
 end
 
+function MapModule:InitializeDropDown()
+    AceHook:SecureHook(WorldMapFrame.overlayFrames[2], "InitializeDropDown", function()
+        UIDropDownMenu_AddSeparator()
+
+        local header = 
+        {
+            isTitle = true,
+            notCheckable = true,
+            text = "Battle Pet Completionist",
+        }
+        UIDropDownMenu_AddButton(header)
+
+        local battlePetToggle =
+        {
+            isNotRadio = true,
+            keepShownOnClick = true,
+            text = "Battle Pets",
+            checked = ConfigModule.AceDB.profile.mapPinsToInclude ~= "T4NONE",
+            func = function()
+                if ConfigModule.AceDB.profile.mapPinsToInclude == "T4NONE" then
+                    ConfigModule.AceDB.profile.mapPinsToInclude = ConfigModule.AceDB.profile.mapPinsToIncludeOriginal
+                else
+                    ConfigModule.AceDB.profile.mapPinsToIncludeOriginal = ConfigModule.AceDB.profile.mapPinsToInclude
+                    ConfigModule.AceDB.profile.mapPinsToInclude = "T4NONE"
+                end
+
+                MapModule:UpdateWorldMap()
+            end
+        }
+        UIDropDownMenu_AddButton(battlePetToggle)
+    end)
+
+end
+
 function MapModule:OnEnable()
     WorldMapFrame:AddDataProvider(MapModule.WorldMapDataProvider)
+    MapModule:InitializeDropDown()
 
     self:UpdateWorldMap()
 end
