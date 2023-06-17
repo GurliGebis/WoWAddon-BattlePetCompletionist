@@ -109,6 +109,10 @@ local options = {
                 return ConfigModule.AceDB.profile.mapPinsToInclude
             end,
             set = function(_, value)
+                if value == "T4NONE" and ConfigModule.AceDB.profile.mapPinsToInclude ~= "T4NONE" then
+                    -- Save the value from before "None" was selected, so we can switch to that if enabled from the map dropdown.
+                    ConfigModule.AceDB.profile.mapPinsToIncludeOriginal = ConfigModule.AceDB.profile.mapPinsToInclude
+                end
                 ConfigModule.AceDB.profile.mapPinsToInclude = value
                 MapModule:UpdateWorldMap()
             end
@@ -182,6 +186,7 @@ local defaultOptions = {
         petCageTooltipEnabled = true,
         mapPinSize = "S1",
         mapPinsToInclude = "T1ALL",
+        mapPinsToIncludeOriginal = "T1ALL",
         mapPinIconType = "T1PET",
         mapPinSources = {
             [1] = true,

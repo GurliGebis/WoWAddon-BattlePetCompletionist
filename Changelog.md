@@ -1,3 +1,6 @@
+# 10.1.0-20230617_1
+* Added possibility to toggle map pins from the world map overlay frame dropdown
+
 # 10.1.0-20230613_3
 * Added the ability to filter based on pet source
 
