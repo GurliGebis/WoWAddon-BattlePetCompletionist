@@ -5,7 +5,9 @@ This addon is 100% GPL-3 licensed, and will stay that way.
 
 ## Features
 * Displays the locations of all pets.
+* Filter the list of pets shown (in the options dialog)
 * Updates the tooltip for pets in the auction house (and pet cages in general), to show the source of the pet.
+* Create TomTom waypoints by shift clicking a map pin.
 
 The aim of the addon is to keep things simple, which is why there is no integration with the pet battles themselves - if you want help with that, please look at the [Pokemon Trainer NG](https://www.curseforge.com/wow/addons/pokemon-trainer-ng) addon.
 
