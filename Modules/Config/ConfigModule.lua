@@ -40,7 +40,7 @@ local options = {
             name = "Tooltips",
             type = "header"
         },
-        tooltipDescription = {
+        tooltipsDescription = {
             order = 2,
             name = "Tooltips settings" .. "\n",
             type = "description"
