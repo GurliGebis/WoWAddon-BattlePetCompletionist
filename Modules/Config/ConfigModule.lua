@@ -192,7 +192,7 @@ local options = {
             order = 18,
             name = "Tomtom",
             type = "toggle",
-            desc = "Middle clicking a map pin creates a TomTom waypoint.",
+            desc = "SHIFT + left clicking a map pin creates a TomTom waypoint.",
             width = "full",
             get = function()
                 return ConfigModule.AceDB.profile.tomtomIntegration

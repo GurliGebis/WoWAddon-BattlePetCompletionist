@@ -152,10 +152,11 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseLeave()
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
-    if button == "LeftButton" then
-        SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS);
-        PetJournal_SelectSpecies(PetJournal, self.PetSpeciesID);
-    elseif button == "MiddleButton" then
+    if button ~= "LeftButton" then
+        return
+    end
+
+    if IsShiftKeyDown() then
         if TomTom and ConfigModule.AceDB.profile.tomtomIntegration then
             local x, y = self:GetPosition()
             local mapId = self.MapId
@@ -169,7 +170,10 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
             }
 
             TomTom:AddWaypoint(mapId, x, y, options)
-        end
+        end        
+    else
+        SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS);
+        PetJournal_SelectSpecies(PetJournal, self.PetSpeciesID);
     end
 end
 

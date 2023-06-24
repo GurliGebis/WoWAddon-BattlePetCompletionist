@@ -1,3 +1,6 @@
+# 10.1.0-20230624_2
+* Changed TomTom integration to use SHIFT + left mouse button instead of middle mouse button
+
 # 10.1.0-20230624_1
 * Changed the way UIDropDownMenu items are created
 * Added TomTom integration with middle mouse button click
