@@ -84,6 +84,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
 
                 local pin = map:AcquirePin("BPetCompletionistWorldMapPinTemplate", realX, realY, speciesIcon)
                 pin.PetSpeciesID = pet
+                pin.MapId = mapId
             end
         end
     end
@@ -151,12 +152,25 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseLeave()
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
-    if button ~= "LeftButton" then
-        return
-    end
+    if button == "LeftButton" then
+        SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS);
+        PetJournal_SelectSpecies(PetJournal, self.PetSpeciesID);
+    elseif button == "MiddleButton" then
+        if TomTom and ConfigModule.AceDB.profile.tomtomIntegration then
+            local x, y = self:GetPosition()
+            local mapId = self.MapId
+            local speciesName = C_PetJournal.GetPetInfoBySpeciesID(self.PetSpeciesID)
+            local icon = "Interface\\icons\\inv_pet_achievement_captureawildpet"
 
-    SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS);
-    PetJournal_SelectSpecies(PetJournal, self.PetSpeciesID);
+            local options = {
+                title = speciesName,
+                minimap_icon = icon,
+                worldmap_icon = icon
+            }
+
+            TomTom:AddWaypoint(mapId, x, y, options)
+        end
+    end
 end
 
 function MapModule:UpdateWorldMap()

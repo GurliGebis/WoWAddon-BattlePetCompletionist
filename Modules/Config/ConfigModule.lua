@@ -177,6 +177,29 @@ local options = {
             set = function(_, key, value)
                 ConfigModule.AceDB.profile.mapPinSources[key] = value
             end
+        },
+        integrationHeader = {
+            order = 16,
+            name = "Integrations",
+            type = "header"
+        },
+        integrationDescription = {
+            order = 17,
+            name = "Integration settings" .. "\n",
+            type = "description"
+        },
+        tomtomIntegrationEnabled = {
+            order = 18,
+            name = "Tomtom",
+            type = "toggle",
+            desc = "Middle clicking a map pin creates a TomTom waypoint.",
+            width = "full",
+            get = function()
+                return ConfigModule.AceDB.profile.tomtomIntegration
+            end,
+            set = function()
+                ConfigModule.AceDB.profile.tomtomIntegration = not ConfigModule.AceDB.profile.tomtomIntegration
+            end
         }
     },
 }
@@ -196,7 +219,8 @@ local defaultOptions = {
             [5] = true,
             [7] = true
         },
-        minimapIconEnabled = true
+        minimapIconEnabled = true,
+        tomtomIntegration = true
     }
 }
 

@@ -1,5 +1,6 @@
-# NEXT
+# 10.1.0-20230624_1
 * Changed the way UIDropDownMenu items are created
+* Added TomTom integration with middle mouse button click
 
 # 10.1.0-20230617_1
 * Added possibility to toggle map pins from the world map overlay frame dropdown
