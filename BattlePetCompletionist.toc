@@ -1,11 +1,11 @@
-## Interface: 100100
+## Interface: 100105
 ## Title: Battle Pet Completionist
 ## Version: @project-version@
 ## Notes: Let's go catch them all!
 ## IconTexture: Interface\Icons\Inv_Pet_Achievement_CaptureAWildPet
 ## Author: GurliGebis
 ## X-Category: Battle Pets
-## X-Compatible-With: 100100
+## X-Compatible-With: 100105
 ## X-Curse-Packaged-Version: @project-version@
 ## X-Curse-Project-Name: Battle Pet Completionist
 ## X-Curse-Project-ID: 873861

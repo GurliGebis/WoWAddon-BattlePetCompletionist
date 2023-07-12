@@ -1,3 +1,7 @@
+# 10.1.5-20230712_1
+* Updated data files with data from 10.1.5
+* Updated TOC to support 10.1.5
+
 # 10.1.0-20230624_2
 * Changed TomTom integration to use SHIFT + left mouse button instead of middle mouse button
 
