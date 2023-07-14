@@ -98,6 +98,9 @@ function BattlePetCompletionistWorldMapPinMixin:OnLoad()
     self:SetScalingLimits(1, 1.0, 1.2);
 end
 
+-- hack to avoid error in combat in 10.1.5
+BattlePetCompletionistWorldMapPinMixin.SetPassThroughButtons = function() end
+
 function BattlePetCompletionistWorldMapPinMixin:OnAcquired(x, y, iconpath)
     self:SetPosition(x, y)
 

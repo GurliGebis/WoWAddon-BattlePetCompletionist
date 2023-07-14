@@ -1,3 +1,6 @@
+# 10.1.5-20230714_1
+* Added workaround for error with SetPassThroughButtons being called while in combat
+
 # 10.1.5-20230712_1
 * Updated data files with data from 10.1.5
 * Updated TOC to support 10.1.5
