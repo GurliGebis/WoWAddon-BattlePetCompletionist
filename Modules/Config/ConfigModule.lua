@@ -103,6 +103,7 @@ local options = {
                 T1ALL = "All",
                 T2MISSING = "Missing",
                 T3NOTRARE = "Not Rare",
+                T5NOTMAXCOLLECTED = "Not maximum amount collected",
                 T4NONE = "None"
             },
             get = function()

@@ -68,6 +68,11 @@ function DataModule:ShouldPetBeShown(speciesId)
                     return false
                 end
             end
+
+            if ConfigModule.AceDB.profile.mapPinsToInclude == "T5NOTMAXCOLLECTED" then
+                numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
+                return numCollected < limit;
+            end
         end
     end
 
