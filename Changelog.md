@@ -1,3 +1,6 @@
+# 10.1.5-20230727_1
+* Add Map Pin filter for maximum amount of pets (provided by olescheller on github)
+
 # 10.1.5-20230714_1
 * Added workaround for error with SetPassThroughButtons being called while in combat
 
