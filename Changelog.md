@@ -1,3 +1,7 @@
+# 10.1.7-20230912_1
+* Updated data files with data from 10.1.7
+* Updated TOC to support 10.1.7
+
 # 10.1.5-20230727_1
 * Add Map Pin filter for maximum amount of pets (provided by olescheller on github)
 
