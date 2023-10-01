@@ -1,6 +1,8 @@
 <Ui>
     <Include file="Config\ConfigModule.xml" />
     <Include file="Data\DataModule.xml" />
+
+    <Include file="Capture\CaptureModule.xml" />
     <Include file="Map\MapModule.xml"/>
     <Include file="Minimap\MinimapModule.xml"/>
     <Include file="Tooltip\TooltipModule.xml"/>

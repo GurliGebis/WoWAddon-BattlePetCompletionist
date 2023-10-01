@@ -1,3 +1,6 @@
+# 10.1.7-20231002_1
+* Added dialog window for when one or more uncollected pets can be captured
+
 # 10.1.7-20230912_1
 * Updated data files with data from 10.1.7
 * Updated TOC to support 10.1.7

@@ -35,19 +35,19 @@ local options = {
     handler = ConfigModule,
     type = "group",
     args = {
-        tooltipsHeader = {
+        tooltipsAndNotificationsHeader = {
             order = 1,
-            name = "Tooltips",
+            name = "Tooltips and Notifications",
             type = "header"
         },
         tooltipsDescription = {
             order = 2,
-            name = "Tooltips settings" .. "\n",
+            name = "Tooltip and notification settings" .. "\n",
             type = "description"
         },
         petCageTooltipEnabled = {
             order = 3,
-            name = "Enable tooltip for pet cages and auction listings",
+            name = "Enable tooltips for pet cages and auction listings",
             type = "toggle",
             desc = "Show a tooltip when hovering over a Pet Cage item or a pet in the auction UI.",
             width = "full",
@@ -58,18 +58,31 @@ local options = {
                 ConfigModule.AceDB.profile.petCageTooltipEnabled = not ConfigModule.AceDB.profile.petCageTooltipEnabled
             end
         },
-        minimapHeader = {
+        petBattleUnknownNotifyEnabled = {
             order = 4,
+            name = "Show notification when uncollected pets are in the enemy team.",
+            type = "toggle",
+            desc = "Show a notification window when one or more uncollected pets can be captured",
+            width = "full",
+            get = function()
+                return ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled
+            end,
+            set = function()
+                ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled = not ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled
+            end
+        },
+        minimapHeader = {
+            order = 5,
             name = "Minimap",
             type = "header"
         },
         minimapDescription = {
-            order = 5,
+            order = 6,
             name = "Minimap settings" .. "\n",
             type = "description"
         },
         minimapIconEnabled = {
-            order = 6,
+            order = 7,
             name = "Enable the minimap icon",
             type = "toggle",
             desc = "Show an icon on the minimap.",
@@ -85,17 +98,17 @@ local options = {
             end
         },
         mapPinsHeader = {
-            order = 7,
+            order = 8,
             name = "Map pins",
             type = "header"
         },
         mapPinsDescription = {
-            order = 8,
+            order = 9,
             name = "Map pins settings" .. "\n",
             type = "description"
         },
         mapPinsToInclude = {
-            order = 9,
+            order = 10,
             name = "Map pins to include",
             type = "select",
             desc = "Which map pins should be shown on the map.",
@@ -119,12 +132,12 @@ local options = {
             end
         },
         spacer1 = {
-            order = 10,
+            order = 11,
             name = "",
             type = "description"
         },
         mapPinSize = {
-            order = 11,
+            order = 12,
             name = "Map pin size",
             type = "select",
             desc = "The size of the pins on the map.",
@@ -141,12 +154,12 @@ local options = {
             end
         },
         spacer2 = {
-            order = 12,
+            order = 13,
             name = "",
             type = "description"
         },
         mapPinIconType = {
-            order = 13,
+            order = 14,
             name = "Map pin icon type",
             type = "select",
             desc = "The kind of icon to show in the pins on the map.",
@@ -162,12 +175,12 @@ local options = {
             end
         },
         spacer3 = {
-            order = 14,
+            order = 15,
             name = "",
             type = "description"
         },
         mapPinSources = {
-            order = 15,
+            order = 16,
             name = "Map pin sources",
             type = "multiselect",
             desc = "The sources for pets to show on the map.",
@@ -180,17 +193,17 @@ local options = {
             end
         },
         integrationHeader = {
-            order = 16,
+            order = 17,
             name = "Integrations",
             type = "header"
         },
         integrationDescription = {
-            order = 17,
+            order = 18,
             name = "Integration settings" .. "\n",
             type = "description"
         },
         tomtomIntegrationEnabled = {
-            order = 18,
+            order = 19,
             name = "Tomtom",
             type = "toggle",
             desc = "SHIFT + left clicking a map pin creates a TomTom waypoint.",
@@ -208,6 +221,7 @@ local options = {
 local defaultOptions = {
     profile = {
         petCageTooltipEnabled = true,
+        petBattleUnknownNotifyEnabled = true,
         mapPinSize = "S1",
         mapPinsToInclude = "T1ALL",
         mapPinsToIncludeOriginal = "T1ALL",
@@ -240,6 +254,10 @@ end
 
 function ConfigModule:IsPetCageTooltipEnabled()
     return ConfigModule.AceDB.profile.petCageTooltipEnabled
+end
+
+function ConfigModule:IsPetBattleUnknownNotifyEnabled()
+    return ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled
 end
 
 function ConfigModule:GetMapPinsIconType()
