@@ -8,8 +8,19 @@ This addon is 100% GPL-3 licensed, and will stay that way.
 * Filter the list of pets shown (in the options dialog)
 * Updates the tooltip for pets in the auction house (and pet cages in general), to show the source of the pet.
 * Create TomTom waypoints by shift clicking a map pin.
+* Work together with your party to capture pets (see Teamwork below).
 
 The aim of the addon is to keep things simple, which is why there is no integration with the pet battles themselves - if you want help with that, please look at the [Pokemon Trainer NG](https://www.curseforge.com/wow/addons/pokemon-trainer-ng) addon.
+
+## Teamwork
+When both you and other players in your party have this addon installed (along with TomTom), you can use the "Help a Friend" feature.
+When anyone in your party starts a pet battle, the following happends:
+* Check if any uncollected pets are found - if so, notify the player and stop.
+* If no uncollected pets are found, check if other players in your party is missing any of them.
+* If someone is missing one (or more), ask the player if they want to notify the other player.
+* If they do, the other player gets a popup, telling them who and which pets.
+* If they accept the offer, a TomTom waypoint is created, and the other player is notified that the offer is accepted.
+* If the offer is declined, the other player is notified as well.
 
 ## Legality of this addon
 This addon looks and feels a lot like the old, non-open source PetTracker addon.  
