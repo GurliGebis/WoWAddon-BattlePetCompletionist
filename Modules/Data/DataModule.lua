@@ -105,6 +105,44 @@ function DataModule:GetOwnedPets(speciesId)
     end
 end
 
+function DataModule:GetEnemyPetsInBattle()
+    local numberOfEnemyPets = C_PetBattles.GetNumPets(Enum.BattlePetOwner.Enemy)
+    local foundNotOwnedPets = {}
+    local foundOwnedPets = {}
+
+    for i = 1, numberOfEnemyPets do
+        local speciesId = C_PetBattles.GetPetSpeciesID(Enum.BattlePetOwner.Enemy, i)
+        local breedQuality = C_PetBattles.GetBreedQuality(Enum.BattlePetOwner.Enemy, i)
+        local ownedPets = DataModule:GetOwnedPets(speciesId)
+
+        if (ownedPets == nil) then
+            table.insert(foundNotOwnedPets, { speciesId, breedQuality })
+        else
+            table.insert(foundOwnedPets, { speciesId, breedQuality })
+        end
+    end
+
+    return foundNotOwnedPets, foundOwnedPets
+end
+
+function DataModule:CanWeCapturePets()
+    local isNpcControlled = C_PetBattles.IsPlayerNPC(Enum.BattlePetOwner.Enemy)
+
+    if isNpcControlled == false then
+        -- It is a PvP pet battle, you cannot capture pets here.
+        return false
+    end
+
+    local isWildBattle = C_PetBattles.IsWildBattle()
+
+    if isWildBattle == false then
+        -- It is a quest or something else like that - you cannot capture pets here.
+        return false
+    end
+
+    return true
+end
+
 function DataModule:GetPetSource(speciesId)
     local _, _, _, _, tooltipSource = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
     local index = string.find(tooltipSource, ":")

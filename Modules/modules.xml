@@ -3,6 +3,7 @@
     <Include file="Data\DataModule.xml" />
 
     <Include file="Capture\CaptureModule.xml" />
+    <Include file="HelpAFriend\HelpAFriendModule.xml" />
     <Include file="Map\MapModule.xml"/>
     <Include file="Minimap\MinimapModule.xml"/>
     <Include file="Tooltip\TooltipModule.xml"/>

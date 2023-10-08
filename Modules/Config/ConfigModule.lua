@@ -214,6 +214,29 @@ local options = {
             set = function()
                 ConfigModule.AceDB.profile.tomtomIntegration = not ConfigModule.AceDB.profile.tomtomIntegration
             end
+        },
+        helpAFriendHeader = {
+            order = 20,
+            name = "Help a Friend",
+            type = "header"
+        },
+        helpAFriendDescription = {
+            order = 21,
+            name = "Help a Friend settings" .. "\n",
+            type = "description"
+        },
+        helpAFriendEnabled = {
+            order = 22,
+            name = "Work togeter with your party to find missing pets",
+            type = "toggle",
+            desc = "Help a friend by working together to find pets you are missing.",
+            width = "full",
+            get = function()
+                return ConfigModule.AceDB.profile.helpAFriendEnabled
+            end,
+            set = function()
+                ConfigModule.AceDB.profile.helpAFriendEnabled = not ConfigModule.AceDB.profile.helpAFriendEnabled
+            end
         }
     },
 }
@@ -235,7 +258,8 @@ local defaultOptions = {
             [7] = true
         },
         minimapIconEnabled = true,
-        tomtomIntegration = true
+        tomtomIntegration = true,
+        helpAFriendEnabled = true
     }
 }
 
@@ -258,6 +282,10 @@ end
 
 function ConfigModule:IsPetBattleUnknownNotifyEnabled()
     return ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled
+end
+
+function ConfigModule:IsHelpAFriendEnabled()
+    return ConfigModule.AceDB.profile.helpAFriendEnabled
 end
 
 function ConfigModule:GetMapPinsIconType()

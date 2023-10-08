@@ -1,3 +1,6 @@
+# 10.1.7-20231008_1
+* Added the "Help a Friend" feature, to allow party members to coordinate pet capture.
+
 # 10.1.7-20231002_1
 * Added dialog window for when one or more uncollected pets can be captured
 

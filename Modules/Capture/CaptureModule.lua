@@ -30,32 +30,11 @@ function CaptureModule:BattleHasStarted()
         return
     end
 
-    local isNpcControlled = C_PetBattles.IsPlayerNPC(Enum.BattlePetOwner.Enemy)
-
-    if isNpcControlled == false then
-        -- It is a PvP pet battle, you cannot capture pets here.
+    if DataModule:CanWeCapturePets() == false then
         return
     end
 
-    local isWildBattle = C_PetBattles.IsWildBattle()
-
-    if isWildBattle == false then
-        -- It is a quest or something else like that - you cannot capture pets here.
-        return
-    end
-
-    local numberOfEnemyPets = C_PetBattles.GetNumPets(Enum.BattlePetOwner.Enemy)
-    local notOwnedPets = {}
-
-    for i = 1, numberOfEnemyPets do
-        local speciesId = C_PetBattles.GetPetSpeciesID(Enum.BattlePetOwner.Enemy, i)
-        local breedQuality = C_PetBattles.GetBreedQuality(Enum.BattlePetOwner.Enemy, i)
-        local ownedPets = DataModule:GetOwnedPets(speciesId)
-
-        if (ownedPets == nil) then
-            table.insert(notOwnedPets, { speciesId, breedQuality })
-        end
-    end
+    local notOwnedPets = DataModule:GetEnemyPetsInBattle()
 
     if (#notOwnedPets > 0) then
         self:CreateUncollectPetsDialog(notOwnedPets)
