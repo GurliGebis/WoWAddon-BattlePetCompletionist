@@ -30,6 +30,8 @@ local messagePrefixes = {
     DECLINE_OFFER = "BPC_DECLINEOFFER"
 }
 
+local offerSentTo = ""
+
 function HelpAFriendModule:OnEnable()
     if TomTom == nil then
         -- TomTom is required for this functionality to work.
@@ -101,7 +103,7 @@ function HelpAFriendModule:OnReceivedAnnounce(_, msg, _, sender)
 
     for i = 1, #pets do
         local speciesId = pets[i][1]
-        
+
         if DataModule:GetOwnedPets(speciesId) == nil then
             table.insert(notOwnedPets, speciesId)
         end
@@ -156,7 +158,8 @@ function HelpAFriendModule:OnReceivedINeedPets(_, msg, _, sender)
     _G.StaticPopupDialogs[messagePrefixes.I_NEED_PETS] = {
         text = dialogMessage,
         OnAccept = function()
-            -- We do, so we sent the offer.
+            -- We do, so we store their name and sent the offer.
+            offerSentTo = sender
             self:SendCommMessage(messagePrefixes.OFFER_PETS, AceSerializer:Serialize(message), "WHISPER", sender)
         end,
 
@@ -224,6 +227,11 @@ function HelpAFriendModule:OnReceivedAcceptOffer(_, msg, _, sender)
         return
     end
 
+    if sender ~= offerSentTo then
+        -- Someone is sending us an accept, but we haven't send them an offer, so we just return.
+        return
+    end
+
     local success = AceSerializer:Deserialize(msg)
 
     if success == false then
@@ -231,6 +239,7 @@ function HelpAFriendModule:OnReceivedAcceptOffer(_, msg, _, sender)
     end
 
     -- The other player accepted our offer.
+    offerSentTo = ""
     local dialogMessage = sender .. " has accepted your offer|n|nPlease wait for them before forfeiting."
 
     _G.StaticPopupDialogs[messagePrefixes.ACCEPT_OFFER] = {
@@ -251,13 +260,19 @@ function HelpAFriendModule:OnReceivedDeclineOffer(_, msg, _, sender)
         return
     end
 
+    if sender ~= offerSentTo then
+        -- Someone is sending us an accept, but we haven't send them an offer, so we just return.
+        return
+    end
+
     local success = AceSerializer:Deserialize(msg)
 
-    -- The other player declined our offer.
     if success == false then
         return
     end
 
+    -- The other player declined our offer.
+    offerSentTo = ""
     local dialogMessage = sender .. " has declined your offer."
 
     _G.StaticPopupDialogs[messagePrefixes.DECLINE_OFFER] = {

@@ -1,3 +1,6 @@
+# 10.1.7-20231009_1
+* Fixed "Help a Friend" to check if sender of responses is also the same person we sent the offer to.
+
 # 10.1.7-20231008_1
 * Added the "Help a Friend" feature, to allow party members to coordinate pet capture.
 
