@@ -1,3 +1,6 @@
+# 10.1.7-20231011_1
+* Integrated with the Addon Compartment, clicking on it has the same effect as clicking the minimap icon.
+
 # 10.1.7-20231009_1
 * Fixed "Help a Friend" to check if sender of responses is also the same person we sent the offer to.
 

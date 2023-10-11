@@ -4,6 +4,9 @@
 ## Notes: Let's go catch them all!
 ## IconTexture: Interface\Icons\Inv_Pet_Achievement_CaptureAWildPet
 ## Author: GurliGebis
+## AddonCompartmentFunc: BattlePetCompletionist_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: BattlePetCompletionist_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: BattlePetCompletionist_OnAddonCompartmentLeave
 ## X-Category: Battle Pets
 ## X-Compatible-With: 100107
 ## X-Curse-Packaged-Version: @project-version@

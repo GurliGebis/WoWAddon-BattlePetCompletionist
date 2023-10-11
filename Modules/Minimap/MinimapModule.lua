@@ -54,6 +54,10 @@ function MinimapModule:UpdateMinimap()
     end
 end
 
+local function IconOrCompartmentClicked()
+    InterfaceOptionsFrame_OpenToCategory(ConfigModule.OptionsFrame)
+end
+
 function MinimapModule:CreateMinimapIcon()
     local LibDataBroker = LibStub("LibDataBroker-1.1", true)
     MinimapIcon = LibDataBroker and LibStub("LibDBIcon-1.0", true)
@@ -67,8 +71,8 @@ function MinimapModule:CreateMinimapIcon()
         text = "Battle Pet Completionist",
         icon = "Interface\\Icons\\Inv_Pet_Achievement_CaptureAWildPet",
         OnClick = function(_, button)
-            if button == "LeftButton" then 
-                InterfaceOptionsFrame_OpenToCategory(ConfigModule.OptionsFrame)
+            if button == "LeftButton" then
+                IconOrCompartmentClicked()
             end
         end,
         OnTooltipShow = function(tooltip)
@@ -82,4 +86,19 @@ function MinimapModule:CreateMinimapIcon()
         ConfigModule.AceDB.global.minimap = ConfigModule.AceDB.global.minimap or {}
         MinimapIcon:Register("BattlePetCompletionist", minimapButton, ConfigModule.AceDB.global.minimap)
     end
+end
+
+function BattlePetCompletionist_OnAddonCompartmentClick(addonName, button)
+    IconOrCompartmentClicked()
+end
+
+function BattlePetCompletionist_OnAddonCompartmentEnter(addonName, button)
+    GameTooltip:SetOwner(AddonCompartmentFrame)
+    GameTooltip:AddLine("Battle Pet Completionist")
+    GameTooltip:AddLine("|cffffff00Click|r to open the options dialog.")
+    GameTooltip:Show()
+end
+
+function BattlePetCompletionist_OnAddonCompartmentLeave(addonName, button)
+    GameTooltip:Hide()
 end
