@@ -140,7 +140,19 @@ function DataModule:CanWeCapturePets()
         return false
     end
 
-    return true
+    local numberOfEnemyPets = C_PetBattles.GetNumPets(Enum.BattlePetOwner.Enemy)
+
+    for i = 1, numberOfEnemyPets do
+        local speciesId = C_PetBattles.GetPetSpeciesID(Enum.BattlePetOwner.Enemy, i)
+        local _, _, _, _, _, _, _, _, _, _, obtainable = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
+
+        -- We can end here, but without any captureable pets, so if we see at least one that can be captured, we return true.
+        if (obtainable == true) then
+            return true
+        end
+    end
+
+    return false
 end
 
 function DataModule:GetPetSource(speciesId)
