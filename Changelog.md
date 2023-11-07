@@ -1,5 +1,8 @@
+# NEXT
+* Cleanup lookup of "obtainable" in DataModule.
+
 # 10.1.7-20231104_1
-* Fix bug in notification dialog, where it shows tamers as uncollected.
+* Fixed bug in notification dialog, where it shows tamers as uncollected.
 
 # 10.1.7-20231011_1
 * Integrated with the Addon Compartment, clicking on it has the same effect as clicking the minimap icon.
