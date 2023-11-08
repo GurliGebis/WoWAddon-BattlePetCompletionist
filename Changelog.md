@@ -1,5 +1,6 @@
 # NEXT
 * Cleanup lookup of "obtainable" in DataModule.
+* Updated data files with data from 10.2.0
 
 # 10.1.7-20231104_1
 * Fixed bug in notification dialog, where it shows tamers as uncollected.
