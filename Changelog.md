@@ -1,3 +1,6 @@
+# 10.2.0-20231111_1
+* More pet locations for the Emerald Dream pets.
+
 # 10.2.0-20231108_1
 * Cleanup lookup of "obtainable" in DataModule.
 * Updated data files with data from 10.2.0
