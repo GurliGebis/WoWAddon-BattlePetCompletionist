@@ -1,5 +1,8 @@
+# 10.2.0-20231126_1
+* Updated data files with latest data from 10.2.0 week 2023-47
+
 # 10.2.0-20231120_1
-* Updated data files with latest data from 10.2.0
+* Updated data files with latest data from 10.2.0 week 2023-46
 
 # 10.2.0-20231111_1
 * More pet locations for the Emerald Dream pets.
