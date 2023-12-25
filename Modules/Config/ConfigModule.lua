@@ -215,29 +215,51 @@ local options = {
                 ConfigModule.AceDB.profile.tomtomIntegration = not ConfigModule.AceDB.profile.tomtomIntegration
             end
         },
-        helpAFriendHeader = {
+        combatHeader = {
             order = 20,
-            name = "Help a Friend",
+            name = "Combat",
             type = "header"
         },
-        helpAFriendDescription = {
+        combatDescription = {
             order = 21,
-            name = "Help a Friend settings" .. "\n",
+            name = "Combat settings" .. "\n",
             type = "description"
         },
-        helpAFriendEnabled = {
+        combatMode = {
             order = 22,
-            name = "Work togeter with your party to find missing pets",
-            type = "toggle",
-            desc = "Help a friend by working together to find pets you are missing.",
-            width = "full",
+            name = "Combat mode",
+            type = "select",
+            desc = "How to function when pet battles are started",
+            values = {
+                V1HAF = "Help a Friend",
+                V2FORFEIT = "Forfeit",
+                V3NONE = "None"
+            },
             get = function()
-                return ConfigModule.AceDB.profile.helpAFriendEnabled
+                return ConfigModule.AceDB.profile.combatMode
             end,
-            set = function()
-                ConfigModule.AceDB.profile.helpAFriendEnabled = not ConfigModule.AceDB.profile.helpAFriendEnabled
+            set = function(_, value)
+                ConfigModule.AceDB.profile.combatMode = value
             end
-        }
+        },
+        forfeitThreshold = {
+            order = 23,
+            name = "Forfiet threshold",
+            type = "select",
+            desc = "The threshold for when to always suggest forfeit.",
+            values = {
+                C1BLUE = "Rare",
+                C2GREEN = "Uncommon",
+                C3WHITE = "Common",
+                C4GREY = "Poor"
+            },
+            get = function()
+                return ConfigModule.AceDB.profile.forfeitThreshold
+            end,
+            set = function(_, value)
+                ConfigModule.AceDB.profile.forfeitThreshold = value
+            end
+        },
     },
 }
 
@@ -259,7 +281,8 @@ local defaultOptions = {
         },
         minimapIconEnabled = true,
         tomtomIntegration = true,
-        helpAFriendEnabled = true
+        combatMode = "V1HAF",
+        forfeitThreshold = "C1BLUE"
     }
 }
 
@@ -284,12 +307,16 @@ function ConfigModule:IsPetBattleUnknownNotifyEnabled()
     return ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled
 end
 
-function ConfigModule:IsHelpAFriendEnabled()
-    return ConfigModule.AceDB.profile.helpAFriendEnabled
+function ConfigModule:GetCombatMode()
+    return strsub(ConfigModule.AceDB.profile.combatMode, 3)
+end
+
+function ConfigModule:GetForfeitThreshold()
+    return strsub(ConfigModule.AceDB.profile.forfeitThreshold, 3)
 end
 
 function ConfigModule:GetMapPinsIconType()
-    if  ConfigModule.AceDB.profile.mapPinIconType == "T1PET" then
+    if ConfigModule.AceDB.profile.mapPinIconType == "T1PET" then
         return "PET"
     else
         return "FAMILY"

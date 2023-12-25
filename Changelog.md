@@ -1,3 +1,6 @@
+# 10.2.0-20231225_1
+* Added option to (semi)-auto forfeit, if there are no pet upgrades or they are below a quality threshold.
+
 # 10.2.0-20231126_1
 * Updated data files with latest data from 10.2.0 week 2023-47
 
