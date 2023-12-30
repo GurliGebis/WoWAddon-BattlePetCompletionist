@@ -1,3 +1,6 @@
+# 10.2.0-20231230_1
+* Fixed typo in settings, patch provided by Cieper on github.
+
 # 10.2.0-20231227_1
 * Updated data files with latest data from 10.2.0 week 2023-52
 
