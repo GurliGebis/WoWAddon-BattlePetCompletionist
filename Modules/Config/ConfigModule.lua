@@ -244,7 +244,7 @@ local options = {
         },
         forfeitThreshold = {
             order = 23,
-            name = "Forfiet threshold",
+            name = "Forfeit threshold",
             type = "select",
             desc = "The threshold for when to always suggest forfeit.",
             values = {
