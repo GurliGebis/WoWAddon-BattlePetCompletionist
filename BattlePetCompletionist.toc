@@ -1,4 +1,4 @@
-## Interface: 100200
+## Interface: 100205
 ## Title: Battle Pet Completionist
 ## Version: @project-version@
 ## Notes: Let's go catch them all!
@@ -8,7 +8,7 @@
 ## AddonCompartmentFuncOnEnter: BattlePetCompletionist_OnAddonCompartmentEnter
 ## AddonCompartmentFuncOnLeave: BattlePetCompletionist_OnAddonCompartmentLeave
 ## X-Category: Battle Pets
-## X-Compatible-With: 100200
+## X-Compatible-With: 100205
 ## X-Curse-Packaged-Version: @project-version@
 ## X-Curse-Project-Name: Battle Pet Completionist
 ## X-Curse-Project-ID: 873861
