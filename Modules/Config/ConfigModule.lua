@@ -117,6 +117,7 @@ local options = {
                 T2MISSING = "Missing",
                 T3NOTRARE = "Not Rare",
                 T5NOTMAXCOLLECTED = "Not maximum amount collected",
+                T6NAMEFILTER = "Name filter",
                 T4NONE = "None"
             },
             get = function()
@@ -131,13 +132,26 @@ local options = {
                 MapModule:UpdateWorldMap()
             end
         },
-        spacer1 = {
+        mapPinsFilter = {
             order = 11,
+            name = "Partial pet name",
+            type = "input",
+            desc = "Enter part the name to filter by",
+            get = function()
+                return ConfigModule.AceDB.profile.mapPinsFilter
+            end,
+            set = function(_, value)
+                ConfigModule.AceDB.profile.mapPinsFilter = value
+                MapModule:UpdateWorldMap()
+            end
+        },
+        spacer1 = {
+            order = 12,
             name = "",
             type = "description"
         },
         mapPinSize = {
-            order = 12,
+            order = 13,
             name = "Map pin size",
             type = "select",
             desc = "The size of the pins on the map.",
@@ -154,12 +168,12 @@ local options = {
             end
         },
         spacer2 = {
-            order = 13,
+            order = 14,
             name = "",
             type = "description"
         },
         mapPinIconType = {
-            order = 14,
+            order = 15,
             name = "Map pin icon type",
             type = "select",
             desc = "The kind of icon to show in the pins on the map.",
@@ -175,12 +189,12 @@ local options = {
             end
         },
         spacer3 = {
-            order = 15,
+            order = 16,
             name = "",
             type = "description"
         },
         mapPinSources = {
-            order = 16,
+            order = 17,
             name = "Map pin sources",
             type = "multiselect",
             desc = "The sources for pets to show on the map.",
@@ -193,17 +207,17 @@ local options = {
             end
         },
         integrationHeader = {
-            order = 17,
+            order = 18,
             name = "Integrations",
             type = "header"
         },
         integrationDescription = {
-            order = 18,
+            order = 19,
             name = "Integration settings" .. "\n",
             type = "description"
         },
         tomtomIntegrationEnabled = {
-            order = 19,
+            order = 20,
             name = "Tomtom",
             type = "toggle",
             desc = "SHIFT + left clicking a map pin creates a TomTom waypoint.",
@@ -216,17 +230,17 @@ local options = {
             end
         },
         combatHeader = {
-            order = 20,
+            order = 21,
             name = "Combat",
             type = "header"
         },
         combatDescription = {
-            order = 21,
+            order = 22,
             name = "Combat settings" .. "\n",
             type = "description"
         },
         combatMode = {
-            order = 22,
+            order = 23,
             name = "Combat mode",
             type = "select",
             desc = "How to function when pet battles are started",
@@ -243,7 +257,7 @@ local options = {
             end
         },
         forfeitThreshold = {
-            order = 23,
+            order = 24,
             name = "Forfeit threshold",
             type = "select",
             desc = "The threshold for when to always suggest forfeit.",
@@ -271,6 +285,7 @@ local defaultOptions = {
         mapPinsToInclude = "T1ALL",
         mapPinsToIncludeOriginal = "T1ALL",
         mapPinIconType = "T1PET",
+        mapPinsFilter = "",
         mapPinSources = {
             [1] = true,
             [2] = true,

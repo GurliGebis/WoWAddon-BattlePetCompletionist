@@ -53,7 +53,7 @@ function DataModule:ShouldPetBeShown(speciesId)
     end
 
     for _, petId in LibPetJournal:IteratePetIDs() do
-        local speciesIdFromJournal = C_PetJournal.GetPetInfoByPetID(petId)
+        local speciesIdFromJournal, _, _, _, _, _, _, petName = C_PetJournal.GetPetInfoByPetID(petId)
 
         if speciesIdFromJournal == speciesId then
             if ConfigModule.AceDB.profile.mapPinsToInclude == "T2MISSING" then
@@ -72,6 +72,20 @@ function DataModule:ShouldPetBeShown(speciesId)
             if ConfigModule.AceDB.profile.mapPinsToInclude == "T5NOTMAXCOLLECTED" then
                 numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
                 return numCollected < limit;
+            end
+
+            if ConfigModule.AceDB.profile.mapPinsToInclude == "T6NAMEFILTER" then
+                if ConfigModule.AceDB.profile.mapPinsFilter == "" then
+                    -- Name filter has been selected, but the filter text box is empty
+                    -- So we just return true for all pets.
+                    return true
+                end
+                
+                -- Since string.find is case sensitive, we convert everything to lowercase first.
+                local loweredTextBoxValue = string.lower(ConfigModule.AceDB.profile.mapPinsFilter)
+                local loweredPetName = string.lower(petName)
+
+                return string.find(loweredPetName, loweredTextBoxValue)
             end
         end
     end

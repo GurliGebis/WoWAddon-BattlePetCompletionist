@@ -1,3 +1,6 @@
+# 10.2.5-20240225_1
+* Added ability to filter on pet name.
+
 # 10.2.5-20240117_1
 * Updated data files with data from 10.2.5
 * Updated TOC to support 10.2.5
