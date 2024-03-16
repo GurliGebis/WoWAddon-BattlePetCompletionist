@@ -40,38 +40,53 @@ function DataModule:GetPetsInMap(mapId)
 end
 
 function DataModule:ShouldPetBeShown(speciesId)
+    -- Apply source filters first so that later settings can't forget to take them into account
+    if not DoesPetMatchSourceFilters(speciesId) then
+        return false
+    end
+
     if ConfigModule.AceDB.profile.mapPinsToInclude == "T1ALL" then
-        if DoesPetMatchSourceFilters(speciesId) then
-            return true
-        else
-            return false
-        end
+        return true
     end
 
     if ConfigModule.AceDB.profile.mapPinsToInclude == "T4NONE" then
         return false
     end
 
+    local rareQuality = 4 -- Rare / Blue
+    -- Filter species based on pet journal entries
+    local noMatchResult = true
     for _, petId in LibPetJournal:IteratePetIDs() do
         local speciesIdFromJournal, _, _, _, _, _, _, petName = C_PetJournal.GetPetInfoByPetID(petId)
 
         if speciesIdFromJournal == speciesId then
+            local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
+            local quality = select(5, C_PetJournal.GetPetStats(petId))
+
             if ConfigModule.AceDB.profile.mapPinsToInclude == "T2MISSING" then
-                return false
+                return numCollected < 1
             end
 
             if ConfigModule.AceDB.profile.mapPinsToInclude == "T3NOTRARE" then
-                local quality = select(5, C_PetJournal.GetPetStats(petId))
-
-                if (quality >= 4) then
-                    -- quality 4 is Rare / Blue
+                if (quality >= rareQuality) then
                     return false
                 end
             end
 
             if ConfigModule.AceDB.profile.mapPinsToInclude == "T5NOTMAXCOLLECTED" then
-                numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
-                return numCollected < limit;
+                return numCollected < limit
+            end
+
+            if ConfigModule.AceDB.profile.mapPinsToInclude == "T7NOTMAXRARE" then
+                if numCollected < limit then
+                    return true
+                end
+                -- Since we're at limit, we want to show if any of the pets are less than rare.
+                -- We can't determine that until we've gone through all of them.
+                if quality < rareQuality then
+                    return true
+                end
+                noMatchResult = false
             end
 
             if ConfigModule.AceDB.profile.mapPinsToInclude == "T6NAMEFILTER" then
@@ -90,11 +105,7 @@ function DataModule:ShouldPetBeShown(speciesId)
         end
     end
 
-    if DoesPetMatchSourceFilters(speciesId) then
-        return true
-    else
-        return false
-    end
+    return noMatchResult
 end
 
 function DataModule:GetOwnedPets(speciesId)

@@ -117,10 +117,20 @@ local options = {
             values = {
                 T1ALL = "All",
                 T2MISSING = "Missing",
-                T3NOTRARE = "Not Rare",
+                T3NOTRARE = "Not rare",
                 T5NOTMAXCOLLECTED = "Not maximum amount collected",
                 T6NAMEFILTER = "Name filter",
+                T7NOTMAXRARE = "Not maximum rare collected",
                 T4NONE = "None"
+            },
+            sorting = {
+                "T1ALL",
+                "T7NOTMAXRARE",
+                "T5NOTMAXCOLLECTED",
+                "T3NOTRARE",
+                "T2MISSING",
+                "T6NAMEFILTER",
+                "T4NONE",
             },
             get = function()
                 return ConfigModule.AceDB.profile.mapPinsToInclude
