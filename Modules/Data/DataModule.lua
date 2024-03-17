@@ -138,12 +138,16 @@ function DataModule:GetEnemyPetsInBattle()
     for i = 1, numberOfEnemyPets do
         local speciesId = C_PetBattles.GetPetSpeciesID(Enum.BattlePetOwner.Enemy, i)
         local breedQuality = C_PetBattles.GetBreedQuality(Enum.BattlePetOwner.Enemy, i)
-        local ownedPets = DataModule:GetOwnedPets(speciesId)
+        local obtainable = select(11, C_PetJournal.GetPetInfoBySpeciesID(speciesId));
 
-        if (ownedPets == nil) then
-            table.insert(foundNotOwnedPets, { speciesId, breedQuality })
-        else
-            table.insert(foundOwnedPets, { speciesId, breedQuality })
+        if obtainable then
+            local ownedPets = DataModule:GetOwnedPets(speciesId)
+
+            if (ownedPets == nil) then
+                table.insert(foundNotOwnedPets, { speciesId, breedQuality })
+            else
+                table.insert(foundOwnedPets, { speciesId, breedQuality })
+            end
         end
     end
 
