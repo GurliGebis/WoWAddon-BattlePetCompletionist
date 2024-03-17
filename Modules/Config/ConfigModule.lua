@@ -30,6 +30,7 @@ local petSources = {
     [7] = BATTLE_PET_SOURCE_7
 }
 
+local standardControlWidth = 1.2; -- A little wider to allow for longer option labels
 local options = {
     name = "Battle Pet Completionist",
     handler = ConfigModule,
@@ -111,14 +112,25 @@ local options = {
             order = 10,
             name = "Map pins to include",
             type = "select",
+            width = standardControlWidth,
             desc = "Which map pins should be shown on the map.",
             values = {
                 T1ALL = "All",
                 T2MISSING = "Missing",
-                T3NOTRARE = "Not Rare",
+                T3NOTRARE = "Not rare",
                 T5NOTMAXCOLLECTED = "Not maximum amount collected",
                 T6NAMEFILTER = "Name filter",
+                T7NOTMAXRARE = "Not maximum rare collected",
                 T4NONE = "None"
+            },
+            sorting = {
+                "T1ALL",
+                "T7NOTMAXRARE",
+                "T5NOTMAXCOLLECTED",
+                "T3NOTRARE",
+                "T2MISSING",
+                "T6NAMEFILTER",
+                "T4NONE",
             },
             get = function()
                 return ConfigModule.AceDB.profile.mapPinsToInclude
@@ -136,6 +148,7 @@ local options = {
             order = 11,
             name = "Partial pet name",
             type = "input",
+            width = standardControlWidth,
             desc = "Enter part the name to filter by",
             get = function()
                 return ConfigModule.AceDB.profile.mapPinsFilter
@@ -154,6 +167,7 @@ local options = {
             order = 13,
             name = "Map pin size",
             type = "select",
+            width = standardControlWidth,
             desc = "The size of the pins on the map.",
             values = {
                 S1 = "Small",
@@ -176,6 +190,7 @@ local options = {
             order = 15,
             name = "Map pin icon type",
             type = "select",
+            width = standardControlWidth,
             desc = "The kind of icon to show in the pins on the map.",
             values = {
                 T1PET = "Pet Icon",
@@ -243,6 +258,7 @@ local options = {
             order = 23,
             name = "Combat mode",
             type = "select",
+            width = standardControlWidth,
             desc = "How to function when pet battles are started",
             values = {
                 V1HAF = "Help a Friend",
@@ -260,6 +276,7 @@ local options = {
             order = 24,
             name = "Forfeit threshold",
             type = "select",
+            width = standardControlWidth,
             desc = "The threshold for when to always suggest forfeit.",
             values = {
                 C1BLUE = "Rare",
