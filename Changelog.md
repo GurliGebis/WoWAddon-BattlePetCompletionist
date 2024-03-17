@@ -1,3 +1,7 @@
+# 10.2.5-20240317_1
+* Add "Not maximum rare collected" option to "Map pins to include", patch provided by davidmc24 on github.
+* Update CanWeCapturePets to take unobtainable pets into account, patch provided by davidmc24 on github.
+
 # 10.2.5-20240225_1
 * Added ability to filter on pet name.
 
