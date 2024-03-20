@@ -1,3 +1,7 @@
+# 10.2.6-20240320-1
+* Updated data files with data from 10.2.6
+* Updated TOC to support 10.2.6
+
 # 10.2.5-20240317_1
 * Add "Not maximum rare collected" option to "Map pins to include", patch provided by davidmc24 on github.
 * Update CanWeCapturePets to take unobtainable pets into account, patch provided by davidmc24 on github.
