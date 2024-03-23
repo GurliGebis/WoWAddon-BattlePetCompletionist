@@ -1,3 +1,6 @@
+# 10.2.6-20240323-1
+* Add "Forfeit prompt unless" setting, patch provided by davidmc24 on github.
+
 # 10.2.6-20240320-1
 * Updated data files with data from 10.2.6
 * Updated TOC to support 10.2.6
