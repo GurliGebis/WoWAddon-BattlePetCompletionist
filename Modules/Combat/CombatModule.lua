@@ -104,6 +104,7 @@ function CombatModule:ForfeitBattleHasStarted()
     
     local notOwnedPets, ownedPets = DataModule.GetEnemyPetsInBattle()
     local forfeitThreshold = ConfigModule:GetForfeitThreshold()
+    local forfeitPromptUnless = ConfigModule:GetForfeitPromptUnless()
 
     if (#notOwnedPets > 0) then
         -- First we see if there is any not owned pets - if there are, we shouldn't be asking the user.
@@ -122,26 +123,47 @@ function CombatModule:ForfeitBattleHasStarted()
         local breedQuality = petInfo[2]
 
         local myPets = DataModule:GetOwnedPets(speciesId)
+        local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
 
-        local highestOwnedQuality = 0
+        local meetsForfeitThreshold = false
+        if forfeitThreshold == "BLUE" and breedQuality >= 4 then
+            meetsForfeitThreshold = true
+        elseif forfeitThreshold == "GREEN" and breedQuality >= 3 then
+            meetsForfeitThreshold = true
+        elseif forfeitThreshold == "WHITE" and breedQuality >= 2 then
+            meetsForfeitThreshold = true
+        elseif forfeitThreshold == "GREY" and breedQuality >= 1 then
+            meetsForfeitThreshold = true
+        end
 
-        -- Find the highest quality of the pet that we own.
-        for _, myPetInfo in ipairs(myPets) do
-            if myPetInfo[2] > highestOwnedQuality then
-                highestOwnedQuality = myPetInfo[2]
+        if forfeitPromptUnless == "NOTMAXCOLLECTED" or forfeitPromptUnless == "NOTMAXRARE" then
+            if numCollected < limit and meetsForfeitThreshold then
+                upgradeFound = true
             end
         end
 
-        -- Is the found pet higher quality that our currently highest owned pet?
-        if breedQuality > highestOwnedQuality then
-            -- Now we have to compare with our threshold, since for example, we might be seeing an Uncommon version, but have Rare as our threshold.
-            if forfeitThreshold == "BLUE" and breedQuality >= 4 then
+        if forfeitPromptUnless == "NOTRARE" then
+            -- Find the highest quality of the pet that we own.
+            local highestOwnedQuality = 0
+            for _, myPetInfo in ipairs(myPets) do
+                if myPetInfo[2] > highestOwnedQuality then
+                    highestOwnedQuality = myPetInfo[2]
+                end
+            end
+            if breedQuality > highestOwnedQuality and meetsForfeitThreshold then
                 upgradeFound = true
-            elseif forfeitThreshold == "GREEN" and breedQuality >= 3 then
-                upgradeFound = true
-            elseif forfeitThreshold == "WHITE" and breedQuality >= 2 then
-                upgradeFound = true
-            elseif forfeitThreshold == "GREY" and breedQuality >= 1 then
+            end
+        end
+
+        if forfeitPromptUnless == "NOTMAXRARE" then
+            -- Find the lowest quality of the pet that we own.
+            local lowestOwnedQuality = 4
+            for _, myPetInfo in ipairs(myPets) do
+                if myPetInfo[2] < lowestOwnedQuality then
+                    lowestOwnedQuality = myPetInfo[2]
+                end
+            end
+            if breedQuality > lowestOwnedQuality and meetsForfeitThreshold then
                 upgradeFound = true
             end
         end

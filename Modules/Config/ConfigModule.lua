@@ -291,6 +291,31 @@ local options = {
                 ConfigModule.AceDB.profile.forfeitThreshold = value
             end
         },
+        forfeitPromptUnless = {
+            order = 25,
+            name = "Forfeit prompt unless",
+            type = "select",
+            width = standardControlWidth,
+            desc = "The condition for when to not forfeit.",
+            values = {
+                T2MISSING = "Missing",
+                T3NOTRARE = "Not rare",
+                T5NOTMAXCOLLECTED = "Not maximum amount collected",
+                T7NOTMAXRARE = "Not maximum rare collected",
+            },
+            sorting = {
+                "T7NOTMAXRARE",
+                "T5NOTMAXCOLLECTED",
+                "T3NOTRARE",
+                "T2MISSING",
+            },
+            get = function()
+                return ConfigModule.AceDB.profile.forfeitPromptUnless
+            end,
+            set = function(_, value)
+                ConfigModule.AceDB.profile.forfeitPromptUnless = value
+            end
+        },
     },
 }
 
@@ -314,7 +339,8 @@ local defaultOptions = {
         minimapIconEnabled = true,
         tomtomIntegration = true,
         combatMode = "V1HAF",
-        forfeitThreshold = "C1BLUE"
+        forfeitThreshold = "C1BLUE",
+        forfeitPromptUnless = "T3NOTRARE"
     }
 }
 
@@ -345,6 +371,10 @@ end
 
 function ConfigModule:GetForfeitThreshold()
     return strsub(ConfigModule.AceDB.profile.forfeitThreshold, 3)
+end
+
+function ConfigModule:GetForfeitPromptUnless()
+    return strsub(ConfigModule.AceDB.profile.forfeitPromptUnless, 3)
 end
 
 function ConfigModule:GetMapPinsIconType()
