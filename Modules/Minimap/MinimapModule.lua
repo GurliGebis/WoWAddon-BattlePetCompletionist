@@ -19,86 +19,49 @@
 BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
 MinimapModule = BattlePetCompletionist:NewModule("MinimapModule")
 ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
+BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
 
-local MinimapIcon = nil
+local LibDataBroker = LibStub("LibDataBroker-1.1", true)
+local LibDBIcon = LibStub("LibDBIcon-1.0", true)
+
+local function IsMinimapSupportAvailable()
+    return LibDataBroker ~= nil and LibDBIcon ~= nil
+end
+
+function MinimapModule:GetMinimapName()
+    return BattlePetCompletionist:GetName()
+end
+
+function MinimapModule:IsMinimapIconEnabled()
+    return ConfigModule.AceDB.profile.minimapIconEnabled
+end
+
+function MinimapModule:InitializeMinimapConfig()
+    ConfigModule.AceDB.global.minimap = ConfigModule.AceDB.global.minimap or {}
+    return ConfigModule.AceDB.global.minimap
+end
 
 function MinimapModule:OnInitialize()
-    if ConfigModule.AceDB.profile.minimapIconEnabled then
-        MinimapModule:CreateMinimapIcon()
-    end
-
-    MinimapModule:UpdateMinimap()
+    self:UpdateMinimap()
 end
 
 function MinimapModule:ShowIcon()
-    if MinimapIcon == nil then
-        self:CreateMinimapIcon()
+    if not LibDBIcon:IsRegistered(self:GetMinimapName()) then
+        LibDBIcon:Register(self:GetMinimapName(), BrokerModule:GetDataObject(), self:InitializeMinimapConfig())
     end
-
-    MinimapIcon:Show("BattlePetCompletionist")
+    LibDBIcon:Show(self:GetMinimapName())
 end
 
 function MinimapModule:HideIcon()
-    if MinimapIcon == nil then
-        return
-    end
-
-    MinimapIcon:Hide("BattlePetCompletionist")
+    LibDBIcon:Hide(self:GetMinimapName())
 end
 
 function MinimapModule:UpdateMinimap()
-    if ConfigModule.AceDB.profile.minimapIconEnabled then
-        MinimapModule:ShowIcon()
-    else
-        MinimapModule:HideIcon()
+    if IsMinimapSupportAvailable() then
+        if self:IsMinimapIconEnabled() then
+            self:ShowIcon()
+        else
+            self:HideIcon()
+        end
     end
-end
-
-local function IconOrCompartmentClicked()
-    InterfaceOptionsFrame_OpenToCategory(ConfigModule.OptionsFrame)
-end
-
-function MinimapModule:CreateMinimapIcon()
-    local LibDataBroker = LibStub("LibDataBroker-1.1", true)
-    MinimapIcon = LibDataBroker and LibStub("LibDBIcon-1.0", true)
-
-    if LibDataBroker == nil then
-        return
-    end
-
-    local minimapButton = LibDataBroker:NewDataObject("BPCBtn", {
-        type = "launcher",
-        text = "Battle Pet Completionist",
-        icon = "Interface\\Icons\\Inv_Pet_Achievement_CaptureAWildPet",
-        OnClick = function(_, button)
-            if button == "LeftButton" then
-                IconOrCompartmentClicked()
-            end
-        end,
-        OnTooltipShow = function(tooltip)
-            tooltip:AddLine("Battle Pet Completionist")
-            tooltip:AddLine("|cffffff00Click|r to open the options dialog.")
-        end,
-        OnLeave = HideTooltip
-    })
-
-    if MinimapIcon then
-        ConfigModule.AceDB.global.minimap = ConfigModule.AceDB.global.minimap or {}
-        MinimapIcon:Register("BattlePetCompletionist", minimapButton, ConfigModule.AceDB.global.minimap)
-    end
-end
-
-function BattlePetCompletionist_OnAddonCompartmentClick(addonName, button)
-    IconOrCompartmentClicked()
-end
-
-function BattlePetCompletionist_OnAddonCompartmentEnter(addonName, button)
-    GameTooltip:SetOwner(AddonCompartmentFrame)
-    GameTooltip:AddLine("Battle Pet Completionist")
-    GameTooltip:AddLine("|cffffff00Click|r to open the options dialog.")
-    GameTooltip:Show()
-end
-
-function BattlePetCompletionist_OnAddonCompartmentLeave(addonName, button)
-    GameTooltip:Hide()
 end
