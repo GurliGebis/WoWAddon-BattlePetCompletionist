@@ -1,7 +1,8 @@
-BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
-BrokerModule = BattlePetCompletionist:NewModule("BrokerModule", "AceEvent-3.0")
-DataModule = BattlePetCompletionist:GetModule("DataModule")
-LibDataBroker = LibStub("LibDataBroker-1.1")
+local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
+local BrokerModule = BattlePetCompletionist:NewModule("BrokerModule", "AceEvent-3.0")
+local DataModule = BattlePetCompletionist:GetModule("DataModule")
+local LibDataBroker = LibStub("LibDataBroker-1.1")
+local LibPetJournal = LibStub("LibPetJournal-2.0")
 
 function BrokerModule:GetDataObjectName()
     return BattlePetCompletionist:GetName()

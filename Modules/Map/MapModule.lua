@@ -16,11 +16,11 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
-BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
-MapModule = BattlePetCompletionist:NewModule("MapModule")
-ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
-DataModule = BattlePetCompletionist:GetModule("DataModule")
-AceHook = LibStub("AceHook-3.0")
+local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
+local MapModule = BattlePetCompletionist:NewModule("MapModule")
+local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
+local DataModule = BattlePetCompletionist:GetModule("DataModule")
+local AceHook = LibStub("AceHook-3.0")
 
 MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
