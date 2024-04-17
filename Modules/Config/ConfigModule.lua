@@ -110,10 +110,16 @@ local options = {
             width = standardControlWidth,
             desc = "The goal to track in the data source.",
             values = {
-                G1COLLECT = "Collect at least one",
-                G2COLLECTRARE = "Collect at least one rare",
-                G3COLLECTMAX = "Collect maximum amount",
-                G4COLLECTMAXRARE = "Collect maximum amount rare",
+                COLLECT = "Collect at least one",
+                COLLECTRARE = "Collect at least one rare",
+                COLLECTMAX = "Collect maximum amount",
+                COLLECTMAXRARE = "Collect maximum amount rare",
+            },
+            sorting = {
+                "COLLECT",
+                "COLLECTRARE",
+                "COLLECTMAX",
+                "COLLECTMAXRARE",
             },
             get = function()
                 return ConfigModule.AceDB.profile.brokerGoal
@@ -380,7 +386,7 @@ local defaultOptions = {
             [7] = true
         },
         minimapIconEnabled = true,
-        brokerGoal = "G1COLLECT",
+        brokerGoal = "COLLECT",
         brokerGoalTextEnabled = true,
         tomtomIntegration = true,
         combatMode = "V1HAF",

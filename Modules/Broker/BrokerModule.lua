@@ -157,13 +157,13 @@ end
 
 function BrokerModule:MetGoal(numCollected, numRareCollected, limit)
     local goal = ConfigModule.AceDB.profile.brokerGoal
-    if goal == "G1COLLECT" then
+    if goal == "COLLECT" then
         return numCollected > 0
-    elseif goal == "G2COLLECTRARE" then
+    elseif goal == "COLLECTRARE" then
         return numRareCollected > 0
-    elseif goal == "G3COLLECTMAX" then
+    elseif goal == "COLLECTMAX" then
         return numCollected >= limit
-    elseif goal == "G4COLLECTMAXRARE" then
+    elseif goal == "COLLECTMAXRARE" then
         return numRareCollected >= limit
     else
         return false
@@ -199,14 +199,16 @@ function BrokerModule:RefreshData()
     local suffix
     if not goalTextEnabled then
         suffix = ""
-    elseif goal == "G1COLLECT" then
+    elseif goal == "COLLECT" then
         suffix = " Collected"
-    elseif goal == "G2COLLECTRARE" then
+    elseif goal == "COLLECTRARE" then
         suffix = " Rare"
-    elseif goal == "G3COLLECTMAX" then
+    elseif goal == "COLLECTMAX" then
         suffix = " Max Collected"
-    elseif goal == "G4COLLECTMAXRARE" then
+    elseif goal == "COLLECTMAXRARE" then
         suffix = " Max Rare"
+    else
+        suffix = ""
     end
     self.dataSource.text = string.format("%d/%d%s", count, totalCount, suffix)
 end
