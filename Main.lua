@@ -16,4 +16,5 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
-BattlePetCompletionist = LibStub("AceAddon-3.0"):NewAddon("BattlePetCompletionist")
+local addonName, _ = ...
+BattlePetCompletionist = LibStub("AceAddon-3.0"):NewAddon(addonName)
