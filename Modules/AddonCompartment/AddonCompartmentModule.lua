@@ -16,7 +16,8 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
-local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
+local addonName, _ = ...
+local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
 
 function BattlePetCompletionist_OnAddonCompartmentClick(addonName, button)

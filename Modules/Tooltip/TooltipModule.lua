@@ -16,10 +16,11 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
-BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
-TooltipModule = BattlePetCompletionist:NewModule("TooltipModule")
-ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
-AceHook = LibStub("AceHook-3.0")
+local addonName, _ = ...
+local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
+local TooltipModule = BattlePetCompletionist:NewModule("TooltipModule")
+local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
+local AceHook = LibStub("AceHook-3.0")
 
 function TooltipModule:OnEnable()
     AceHook:SecureHook(_G, "BattlePetToolTip_Show", function(speciesID, ...)

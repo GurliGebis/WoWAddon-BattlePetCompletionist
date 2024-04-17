@@ -16,15 +16,12 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
-local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
+local addonName, _ = ...
+local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local MinimapModule = BattlePetCompletionist:NewModule("MinimapModule")
 local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
 local LibDBIcon = LibStub("LibDBIcon-1.0")
-
-function MinimapModule:GetMinimapName()
-    return BattlePetCompletionist:GetName()
-end
 
 function MinimapModule:IsMinimapIconEnabled()
     return ConfigModule.AceDB.profile.minimapIconEnabled
@@ -40,14 +37,14 @@ function MinimapModule:OnInitialize()
 end
 
 function MinimapModule:ShowIcon()
-    if not LibDBIcon:IsRegistered(self:GetMinimapName()) then
-        LibDBIcon:Register(self:GetMinimapName(), BrokerModule:GetDataObject(), self:InitializeMinimapConfig())
+    if not LibDBIcon:IsRegistered(addonName) then
+        LibDBIcon:Register(addonName, BrokerModule:GetDataObject(), self:InitializeMinimapConfig())
     end
-    LibDBIcon:Show(self:GetMinimapName())
+    LibDBIcon:Show(addonName)
 end
 
 function MinimapModule:HideIcon()
-    LibDBIcon:Hide(self:GetMinimapName())
+    LibDBIcon:Hide(addonName)
 end
 
 function MinimapModule:UpdateMinimap()

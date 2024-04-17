@@ -16,15 +16,13 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
-local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
+local addonName, _ = ...
+local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local BrokerModule = BattlePetCompletionist:NewModule("BrokerModule", "AceEvent-3.0")
+local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 local LibDataBroker = LibStub("LibDataBroker-1.1")
 local LibPetJournal = LibStub("LibPetJournal-2.0")
-
-function BrokerModule:GetDataObjectName()
-    return BattlePetCompletionist:GetName()
-end
 
 -- Also used by MinimapModule
 function BrokerModule:GetDataObject()
@@ -42,7 +40,7 @@ function BrokerModule:GetZonePetData()
 end
 
 function BrokerModule:OnInitialize()
-    self.dataSource = LibDataBroker:NewDataObject(self:GetDataObjectName(), {
+    self.dataSource = LibDataBroker:NewDataObject(addonName, {
         type = "data source",
         label = "BattlePets",
         icon = "Interface\\Icons\\Inv_Pet_Achievement_CaptureAWildPet",
