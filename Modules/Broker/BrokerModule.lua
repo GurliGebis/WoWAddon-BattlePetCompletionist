@@ -93,7 +93,7 @@ function BrokerModule:OnTooltipShow(tooltip, includeDetails)
     local metGoalCount = 0
     local totalCount = 0
     local petData = self:GetZonePetData()
-    -- TODO: sort
+    local detailEntries = {}
     for speciesId, _ in pairs(petData) do
         totalCount = totalCount + 1
         local numCollected, numRareCollected, limit = self:GetNumCollectedInfo(speciesId)
@@ -114,8 +114,13 @@ function BrokerModule:OnTooltipShow(tooltip, includeDetails)
             local petSummary = table.concat(petStrings, "/")
             local sourceTypeIcon = self:TooltipToSourceTypeIcon(speciesId)
             local iconCode = string.format("|T%s:16:16|t|T%s:12:12:0:0|t", speciesIcon, sourceTypeIcon)
-            tooltip:AddLine(string.format("%s %s %s", iconCode, speciesName, petSummary))
+            table.insert(detailEntries, { iconCode, speciesName, petSummary })
         end
+    end
+    -- Sort by species name
+    table.sort(detailEntries, function(a, b) return a[2] < b[2] end)
+    for _, entry in ipairs(detailEntries) do
+        tooltip:AddLine(table.concat(entry, " "))
     end
     if not petData then
         tooltip:AddLine("No pets found for current zone")
