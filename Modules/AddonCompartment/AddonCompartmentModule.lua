@@ -7,7 +7,7 @@ end
 
 function BattlePetCompletionist_OnAddonCompartmentEnter(addonName, button)
     GameTooltip:SetOwner(AddonCompartmentFrame)
-    BrokerModule:OnTooltipShow(GameTooltip)
+    BrokerModule:OnTooltipShow(GameTooltip, false)
     GameTooltip:Show()
 end
 

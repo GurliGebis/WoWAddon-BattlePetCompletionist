@@ -94,7 +94,7 @@ local options = {
             set = function()
                 ConfigModule.AceDB.profile.minimapIconEnabled = not ConfigModule.AceDB.profile.minimapIconEnabled
 
-                MinimapModule = BattlePetCompletionist:GetModule("MinimapModule")
+                local MinimapModule = BattlePetCompletionist:GetModule("MinimapModule")
                 MinimapModule:UpdateMinimap()
             end
         },
@@ -120,7 +120,7 @@ local options = {
             end,
             set = function(_, value)
                 ConfigModule.AceDB.profile.brokerGoal = value
-                MinimapModule = BattlePetCompletionist:GetModule("BrokerModule")
+                local BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
                 BrokerModule:RefreshData()
             end
         },
@@ -135,7 +135,7 @@ local options = {
             end,
             set = function()
                 ConfigModule.AceDB.profile.brokerGoalTextEnabled = not ConfigModule.AceDB.profile.brokerGoalTextEnabled
-                MinimapModule = BattlePetCompletionist:GetModule("BrokerModule")
+                local BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
                 BrokerModule:RefreshData()
             end
         },
@@ -182,6 +182,7 @@ local options = {
                     ConfigModule.AceDB.profile.mapPinsToIncludeOriginal = ConfigModule.AceDB.profile.mapPinsToInclude
                 end
                 ConfigModule.AceDB.profile.mapPinsToInclude = value
+                local MapModule = BattlePetCompletionist:GetModule("MapModule")
                 MapModule:UpdateWorldMap()
             end
         },
@@ -196,6 +197,7 @@ local options = {
             end,
             set = function(_, value)
                 ConfigModule.AceDB.profile.mapPinsFilter = value
+                local MapModule = BattlePetCompletionist:GetModule("MapModule")
                 MapModule:UpdateWorldMap()
             end
         },
