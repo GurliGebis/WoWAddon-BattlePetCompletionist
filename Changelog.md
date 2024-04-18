@@ -1,3 +1,6 @@
+# 10.2.6-20240418-1
+* Add data broker support, implementation provided by davidmc24 on github.
+
 # 10.2.6-20240323-1
 * Add "Forfeit prompt unless" setting, patch provided by davidmc24 on github.
 
