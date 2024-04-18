@@ -42,7 +42,7 @@ end
 function BrokerModule:OnInitialize()
     self.dataSource = LibDataBroker:NewDataObject(addonName, {
         type = "data source",
-        label = "BattlePets",
+        label = "Battle Pets",
         icon = "Interface\\Icons\\Inv_Pet_Achievement_CaptureAWildPet",
         OnClick = function(_, button)
             self:OnClick(button)

@@ -100,7 +100,7 @@ local options = {
         },
         brokerDescription = {
             order = 8,
-            name = "LibDataBroker settings" .. "\n",
+            name = "Data Broker settings" .. "\n",
             type = "description"
         },
         brokerGoal = {
