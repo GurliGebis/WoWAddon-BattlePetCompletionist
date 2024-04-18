@@ -16,9 +16,9 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
-BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
-ConfigModule = BattlePetCompletionist:NewModule("ConfigModule", "AceConsole-3.0")
-
+local addonName, _ = ...
+local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
+local ConfigModule = BattlePetCompletionist:NewModule("ConfigModule", "AceConsole-3.0")
 local AceConfig = LibStub("AceConfig-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local petSources = {
@@ -72,9 +72,9 @@ local options = {
                 ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled = not ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled
             end
         },
-        minimapHeader = {
+        displayHeader = {
             order = 5,
-            name = "Minimap",
+            name = "Display",
             type = "header"
         },
         minimapDescription = {
@@ -94,22 +94,69 @@ local options = {
             set = function()
                 ConfigModule.AceDB.profile.minimapIconEnabled = not ConfigModule.AceDB.profile.minimapIconEnabled
 
-                MinimapModule = BattlePetCompletionist:GetModule("MinimapModule")
+                local MinimapModule = BattlePetCompletionist:GetModule("MinimapModule")
                 MinimapModule:UpdateMinimap()
             end
         },
-        mapPinsHeader = {
+        brokerDescription = {
             order = 8,
+            name = "Data Broker settings" .. "\n",
+            type = "description"
+        },
+        brokerGoal = {
+            order = 9,
+            name = "Display Goal",
+            type = "select",
+            width = standardControlWidth,
+            desc = "The goal to track in the data source.",
+            values = {
+                COLLECT = "Collect at least one",
+                COLLECTRARE = "Collect at least one rare",
+                COLLECTMAX = "Collect maximum amount",
+                COLLECTMAXRARE = "Collect maximum amount rare",
+            },
+            sorting = {
+                "COLLECT",
+                "COLLECTRARE",
+                "COLLECTMAX",
+                "COLLECTMAXRARE",
+            },
+            get = function()
+                return ConfigModule.AceDB.profile.brokerGoal
+            end,
+            set = function(_, value)
+                ConfigModule.AceDB.profile.brokerGoal = value
+                local BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
+                BrokerModule:RefreshData()
+            end
+        },
+        brokerGoalTextEnabled = {
+            order = 10,
+            name = "Include goal text",
+            type = "toggle",
+            desc = "Add a suffix to the displayed text",
+            width = standardControlWidth,
+            get = function()
+                return ConfigModule.AceDB.profile.brokerGoalTextEnabled
+            end,
+            set = function()
+                ConfigModule.AceDB.profile.brokerGoalTextEnabled = not ConfigModule.AceDB.profile.brokerGoalTextEnabled
+                local BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
+                BrokerModule:RefreshData()
+            end
+        },
+        mapPinsHeader = {
+            order = 11,
             name = "Map pins",
             type = "header"
         },
         mapPinsDescription = {
-            order = 9,
+            order = 12,
             name = "Map pins settings" .. "\n",
             type = "description"
         },
         mapPinsToInclude = {
-            order = 10,
+            order = 13,
             name = "Map pins to include",
             type = "select",
             width = standardControlWidth,
@@ -141,11 +188,12 @@ local options = {
                     ConfigModule.AceDB.profile.mapPinsToIncludeOriginal = ConfigModule.AceDB.profile.mapPinsToInclude
                 end
                 ConfigModule.AceDB.profile.mapPinsToInclude = value
+                local MapModule = BattlePetCompletionist:GetModule("MapModule")
                 MapModule:UpdateWorldMap()
             end
         },
         mapPinsFilter = {
-            order = 11,
+            order = 14,
             name = "Partial pet name",
             type = "input",
             width = standardControlWidth,
@@ -155,16 +203,17 @@ local options = {
             end,
             set = function(_, value)
                 ConfigModule.AceDB.profile.mapPinsFilter = value
+                local MapModule = BattlePetCompletionist:GetModule("MapModule")
                 MapModule:UpdateWorldMap()
             end
         },
         spacer1 = {
-            order = 12,
+            order = 15,
             name = "",
             type = "description"
         },
         mapPinSize = {
-            order = 13,
+            order = 16,
             name = "Map pin size",
             type = "select",
             width = standardControlWidth,
@@ -182,12 +231,12 @@ local options = {
             end
         },
         spacer2 = {
-            order = 14,
+            order = 17,
             name = "",
             type = "description"
         },
         mapPinIconType = {
-            order = 15,
+            order = 18,
             name = "Map pin icon type",
             type = "select",
             width = standardControlWidth,
@@ -204,12 +253,12 @@ local options = {
             end
         },
         spacer3 = {
-            order = 16,
+            order = 19,
             name = "",
             type = "description"
         },
         mapPinSources = {
-            order = 17,
+            order = 20,
             name = "Map pin sources",
             type = "multiselect",
             desc = "The sources for pets to show on the map.",
@@ -222,17 +271,17 @@ local options = {
             end
         },
         integrationHeader = {
-            order = 18,
+            order = 21,
             name = "Integrations",
             type = "header"
         },
         integrationDescription = {
-            order = 19,
+            order = 22,
             name = "Integration settings" .. "\n",
             type = "description"
         },
         tomtomIntegrationEnabled = {
-            order = 20,
+            order = 23,
             name = "Tomtom",
             type = "toggle",
             desc = "SHIFT + left clicking a map pin creates a TomTom waypoint.",
@@ -245,17 +294,17 @@ local options = {
             end
         },
         combatHeader = {
-            order = 21,
+            order = 24,
             name = "Combat",
             type = "header"
         },
         combatDescription = {
-            order = 22,
+            order = 25,
             name = "Combat settings" .. "\n",
             type = "description"
         },
         combatMode = {
-            order = 23,
+            order = 26,
             name = "Combat mode",
             type = "select",
             width = standardControlWidth,
@@ -273,7 +322,7 @@ local options = {
             end
         },
         forfeitThreshold = {
-            order = 24,
+            order = 27,
             name = "Forfeit threshold",
             type = "select",
             width = standardControlWidth,
@@ -292,7 +341,7 @@ local options = {
             end
         },
         forfeitPromptUnless = {
-            order = 25,
+            order = 28,
             name = "Forfeit prompt unless",
             type = "select",
             width = standardControlWidth,
@@ -337,6 +386,8 @@ local defaultOptions = {
             [7] = true
         },
         minimapIconEnabled = true,
+        brokerGoal = "COLLECT",
+        brokerGoalTextEnabled = true,
         tomtomIntegration = true,
         combatMode = "V1HAF",
         forfeitThreshold = "C1BLUE",

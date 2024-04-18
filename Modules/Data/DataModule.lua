@@ -16,10 +16,11 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
-BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
-DataModule = BattlePetCompletionist:NewModule("DataModule")
-ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
-LibPetJournal = LibStub('LibPetJournal-2.0')
+local addonName, _ = ...
+local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
+local DataModule = BattlePetCompletionist:NewModule("DataModule")
+local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
+local LibPetJournal = LibStub('LibPetJournal-2.0')
 
 local function DoesPetMatchSourceFilters(speciesId)
     local petSource = DataModule:GetPetSource(speciesId)

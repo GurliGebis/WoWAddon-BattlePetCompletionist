@@ -16,10 +16,11 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
-BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon("BattlePetCompletionist")
-CaptureModule = BattlePetCompletionist:NewModule("CaptureModule", "AceEvent-3.0")
-ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
-DataModule = BattlePetCompletionist:GetModule("DataModule")
+local addonName, _ = ...
+local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
+local CaptureModule = BattlePetCompletionist:NewModule("CaptureModule", "AceEvent-3.0")
+local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
+local DataModule = BattlePetCompletionist:GetModule("DataModule")
 
 function CaptureModule:OnEnable()
     self:RegisterEvent("PET_BATTLE_OPENING_START", "BattleHasStarted")

@@ -18,22 +18,18 @@
 
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
-local TooltipModule = BattlePetCompletionist:NewModule("TooltipModule")
-local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
-local AceHook = LibStub("AceHook-3.0")
+local BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
 
-function TooltipModule:OnEnable()
-    AceHook:SecureHook(_G, "BattlePetToolTip_Show", function(speciesID, ...)
-        if ConfigModule:IsPetCageTooltipEnabled() then
-            TooltipModule.ModifyPetTip(speciesID)
-        end
-    end)
+function BattlePetCompletionist_OnAddonCompartmentClick(addonName, button)
+    BrokerModule:OnClick(button)
 end
 
-function TooltipModule.ModifyPetTip(speciesID)
-    BattlePetTooltip:AddLine(" ")
+function BattlePetCompletionist_OnAddonCompartmentEnter(addonName, button)
+    GameTooltip:SetOwner(AddonCompartmentFrame)
+    BrokerModule:OnTooltipShow(GameTooltip, false)
+    GameTooltip:Show()
+end
 
-    local petInfo = { C_PetJournal.GetPetInfoBySpeciesID(speciesID) }
-
-    BattlePetTooltip:AddLine(petInfo[5], 1, 1, 1, true)
+function BattlePetCompletionist_OnAddonCompartmentLeave(addonName, button)
+    GameTooltip:Hide()
 end
