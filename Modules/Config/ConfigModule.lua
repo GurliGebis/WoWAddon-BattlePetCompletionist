@@ -110,16 +110,16 @@ local options = {
             width = standardControlWidth,
             desc = "The goal to track in the data source.",
             values = {
-                COLLECT = "Collect at least one",
-                COLLECTRARE = "Collect at least one rare",
-                COLLECTMAX = "Collect maximum amount",
-                COLLECTMAXRARE = "Collect maximum amount rare",
+                [_BattlePetCompletionist.Enums.Goal.COLLECT] = "Collect at least one",
+                [_BattlePetCompletionist.Enums.Goal.COLLECTRARE] = "Collect at least one rare",
+                [_BattlePetCompletionist.Enums.Goal.COLLECTMAX] = "Collect maximum amount",
+                [_BattlePetCompletionist.Enums.Goal.COLLECTMAXRARE] = "Collect maximum amount rare",
             },
             sorting = {
-                "COLLECT",
-                "COLLECTRARE",
-                "COLLECTMAX",
-                "COLLECTMAXRARE",
+                _BattlePetCompletionist.Enums.Goal.COLLECT,
+                _BattlePetCompletionist.Enums.Goal.COLLECTRARE,
+                _BattlePetCompletionist.Enums.Goal.COLLECTMAX,
+                _BattlePetCompletionist.Enums.Goal.COLLECTMAXRARE,
             },
             get = function()
                 return ConfigModule.AceDB.profile.brokerGoal
@@ -386,7 +386,7 @@ local defaultOptions = {
             [7] = true
         },
         minimapIconEnabled = true,
-        brokerGoal = "COLLECT",
+        brokerGoal = _BattlePetCompletionist.Enums.Goal.COLLECT,
         brokerGoalTextEnabled = true,
         tomtomIntegration = true,
         combatMode = "V1HAF",

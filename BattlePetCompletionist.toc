@@ -18,6 +18,7 @@
 embeds.xml
 
 # Core
+Globals.lua
 Main.lua
 
 # Modules

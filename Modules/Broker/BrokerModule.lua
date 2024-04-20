@@ -106,6 +106,7 @@ function BrokerModule:OnTooltipShow(tooltip, includeDetails)
     end
 
     tooltip:AddLine(" ")
+    local goal = ConfigModule.AceDB.profile.brokerGoal
     local metGoalCount = 0
     local totalCount = 0
     local petData = self:GetZonePetData()
@@ -113,7 +114,7 @@ function BrokerModule:OnTooltipShow(tooltip, includeDetails)
     for speciesId, _ in pairs(petData) do
         totalCount = totalCount + 1
         local numCollected, numRareCollected, limit = self:GetNumCollectedInfo(speciesId)
-        local metGoal = self:MetGoal(numCollected, numRareCollected, limit)
+        local metGoal = self:MetGoal(goal, numCollected, numRareCollected, limit)
         if metGoal then
             metGoalCount = metGoalCount + 1
         else
@@ -155,15 +156,28 @@ function BrokerModule:OnClick(button)
     end
 end
 
-function BrokerModule:MetGoal(numCollected, numRareCollected, limit)
-    local goal = ConfigModule.AceDB.profile.brokerGoal
-    if goal == "COLLECT" then
+function BrokerModule:GetSuffixForGoal(goal)
+    if goal == _BattlePetCompletionist.Enums.Goal.COLLECT then
+        return " Collected"
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTRARE then
+        return " Rare"
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTMAX then
+        return " Max Collected"
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTMAXRARE then
+        return " Max Rare"
+    else
+        return ""
+    end
+end
+
+function BrokerModule:MetGoal(goal, numCollected, numRareCollected, limit)
+    if goal == _BattlePetCompletionist.Enums.Goal.COLLECT then
         return numCollected > 0
-    elseif goal == "COLLECTRARE" then
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTRARE then
         return numRareCollected > 0
-    elseif goal == "COLLECTMAX" then
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTMAX then
         return numCollected >= limit
-    elseif goal == "COLLECTMAXRARE" then
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTMAXRARE then
         return numRareCollected >= limit
     else
         return false
@@ -173,11 +187,10 @@ end
 function BrokerModule:GetNumCollectedInfo(speciesId)
     local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
     local myPets = DataModule:GetOwnedPets(speciesId) or {}
-    local rareQuality = 4
     local numRareCollected = 0
     for _, myPetInfo in ipairs(myPets) do
         local petQuality = myPetInfo[2]
-        if petQuality >= rareQuality then
+        if petQuality >= _BattlePetCompletionist.Constants.PET_QUALITY_RARE then
             numRareCollected = numRareCollected + 1
         end
     end
@@ -192,21 +205,13 @@ function BrokerModule:RefreshData()
     local goalTextEnabled = ConfigModule.AceDB.profile.brokerGoalTextEnabled
     for speciesId, _ in pairs(petData) do
         totalCount = totalCount + 1
-        if self:MetGoal(self:GetNumCollectedInfo(speciesId)) then
+        if self:MetGoal(goal, self:GetNumCollectedInfo(speciesId)) then
             count = count + 1
         end
     end
     local suffix
-    if not goalTextEnabled then
-        suffix = ""
-    elseif goal == "COLLECT" then
-        suffix = " Collected"
-    elseif goal == "COLLECTRARE" then
-        suffix = " Rare"
-    elseif goal == "COLLECTMAX" then
-        suffix = " Max Collected"
-    elseif goal == "COLLECTMAXRARE" then
-        suffix = " Max Rare"
+    if goalTextEnabled then
+        suffix = self:GetSuffixForGoal(goal)
     else
         suffix = ""
     end
