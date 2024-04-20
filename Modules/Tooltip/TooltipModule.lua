@@ -18,13 +18,13 @@
 
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
+local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local TooltipModule = BattlePetCompletionist:NewModule("TooltipModule")
-local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local AceHook = LibStub("AceHook-3.0")
 
 function TooltipModule:OnEnable()
     AceHook:SecureHook(_G, "BattlePetToolTip_Show", function(speciesID, ...)
-        if ConfigModule:IsPetCageTooltipEnabled() then
+        if DBModule:IsPetCageTooltipEnabled() then
             TooltipModule.ModifyPetTip(speciesID)
         end
     end)

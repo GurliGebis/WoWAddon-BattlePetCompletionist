@@ -18,18 +18,19 @@
 
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
-local MinimapModule = BattlePetCompletionist:NewModule("MinimapModule")
-local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
+local DBModule = BattlePetCompletionist:GetModule("DBModule")
+local MinimapModule = BattlePetCompletionist:NewModule("MinimapModule")
 local LibDBIcon = LibStub("LibDBIcon-1.0")
 
 function MinimapModule:IsMinimapIconEnabled()
-    return ConfigModule.AceDB.profile.minimapIconEnabled
+    return DBModule:GetProfile().minimapIconEnabled
 end
 
 function MinimapModule:InitializeMinimapConfig()
-    ConfigModule.AceDB.global.minimap = ConfigModule.AceDB.global.minimap or {}
-    return ConfigModule.AceDB.global.minimap
+    local global = DBModule:GetGlobal()
+    global.minimap = global.minimap or {}
+    return global.minimap
 end
 
 function MinimapModule:OnInitialize()

@@ -19,8 +19,8 @@
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local CombatModule = BattlePetCompletionist:NewModule("CombatModule", "AceEvent-3.0", "AceComm-3.0")
-local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
+local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local AceSerializer = LibStub("AceSerializer-3.0")
 
 local messagePrefixes = {
@@ -53,7 +53,7 @@ local function CanWeFindPlayerPosition()
 end
 
 function CombatModule:BattleHasStarted()
-    local combatMode = ConfigModule:GetCombatMode()
+    local combatMode = DBModule:GetCombatMode()
 
     if combatMode == "HAF" then
         -- Help a Friend is enabled, so we call that startup function.
@@ -104,8 +104,8 @@ function CombatModule:ForfeitBattleHasStarted()
     end
     
     local notOwnedPets, ownedPets = DataModule.GetEnemyPetsInBattle()
-    local forfeitThreshold = ConfigModule:GetForfeitThreshold()
-    local forfeitPromptUnless = ConfigModule:GetForfeitPromptUnless()
+    local forfeitThreshold = DBModule:GetForfeitThreshold()
+    local forfeitPromptUnless = DBModule:GetForfeitPromptUnless()
 
     if (#notOwnedPets > 0) then
         -- First we see if there is any not owned pets - if there are, we shouldn't be asking the user.

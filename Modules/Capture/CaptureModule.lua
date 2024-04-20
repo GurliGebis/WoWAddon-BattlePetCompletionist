@@ -19,19 +19,19 @@
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local CaptureModule = BattlePetCompletionist:NewModule("CaptureModule", "AceEvent-3.0")
-local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
+local DBModule = BattlePetCompletionist:GetModule("DBModule")
 
 function CaptureModule:OnEnable()
     self:RegisterEvent("PET_BATTLE_OPENING_START", "BattleHasStarted")
 end
 
 function CaptureModule:BattleHasStarted()
-    if ConfigModule:IsPetBattleUnknownNotifyEnabled() == false then
+    if not DBModule:IsPetBattleUnknownNotifyEnabled() then
         return
     end
 
-    if DataModule:CanWeCapturePets() == false then
+    if not DataModule:CanWeCapturePets() then
         return
     end
 

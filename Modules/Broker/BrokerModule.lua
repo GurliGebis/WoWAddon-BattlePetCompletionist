@@ -21,6 +21,7 @@ local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local BrokerModule = BattlePetCompletionist:NewModule("BrokerModule", "AceEvent-3.0")
 local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
+local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local LibDataBroker = LibStub("LibDataBroker-1.1")
 local LibPetJournal = LibStub("LibPetJournal-2.0")
 
@@ -106,7 +107,7 @@ function BrokerModule:OnTooltipShow(tooltip, includeDetails)
     end
 
     tooltip:AddLine(" ")
-    local goal = ConfigModule.AceDB.profile.brokerGoal
+    local goal = DBModule:GetProfile().brokerGoal
     local metGoalCount = 0
     local totalCount = 0
     local petData = self:GetZonePetData()
@@ -201,8 +202,9 @@ function BrokerModule:RefreshData()
     local count = 0
     local totalCount = 0
     local petData = self:GetZonePetData()
-    local goal = ConfigModule.AceDB.profile.brokerGoal
-    local goalTextEnabled = ConfigModule.AceDB.profile.brokerGoalTextEnabled
+    local profile = DBModule:GetProfile()
+    local goal = profile.brokerGoal
+    local goalTextEnabled = profile.brokerGoalTextEnabled
     for speciesId, _ in pairs(petData) do
         totalCount = totalCount + 1
         if self:MetGoal(goal, self:GetNumCollectedInfo(speciesId)) then

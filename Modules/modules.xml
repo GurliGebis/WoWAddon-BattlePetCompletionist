@@ -1,4 +1,5 @@
 <Ui>
+    <Include file="DB\DBModule.xml" />
     <Include file="Config\ConfigModule.xml" />
     <Include file="Data\DataModule.xml" />
 

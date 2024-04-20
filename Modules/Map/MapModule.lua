@@ -19,8 +19,8 @@
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local MapModule = BattlePetCompletionist:NewModule("MapModule")
-local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
+local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local AceHook = LibStub("AceHook-3.0")
 
 MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
@@ -60,7 +60,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     for pet, locations in pairs(petData) do
         if DataModule:ShouldPetBeShown(pet) then
             local _, speciesIcon, petType = C_PetJournal.GetPetInfoBySpeciesID(pet)
-            local petIconType = ConfigModule:GetMapPinsIconType()
+            local petIconType = DBModule:GetMapPinsIconType()
 
             if petIconType == "FAMILY" then
                 local typeIcons = {
@@ -105,7 +105,7 @@ BattlePetCompletionistWorldMapPinMixin.SetPassThroughButtons = function() end
 function BattlePetCompletionistWorldMapPinMixin:OnAcquired(x, y, iconpath)
     self:SetPosition(x, y)
 
-    local scale = ConfigModule:GetMapPinScale()
+    local scale = DBModule:GetMapPinScale()
 
     local iconSize = 12 * scale
     local borderSize = 24 * scale
@@ -161,7 +161,7 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
     end
 
     if IsShiftKeyDown() then
-        if TomTom and ConfigModule.AceDB.profile.tomtomIntegration then
+        if TomTom and DBModule:GetProfile().tomtomIntegration then
             local x, y = self:GetPosition()
             local mapId = self.MapId
             local speciesName = C_PetJournal.GetPetInfoBySpeciesID(self.PetSpeciesID)
@@ -186,11 +186,12 @@ function MapModule:UpdateWorldMap()
 end
 
 local function BattlePetToggle_OnClick()
-    if ConfigModule.AceDB.profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T4NONE then
-        ConfigModule.AceDB.profile.mapPinsToInclude = ConfigModule.AceDB.profile.mapPinsToIncludeOriginal
+    local profile = DBModule:GetProfile()
+    if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T4NONE then
+        profile.mapPinsToInclude = profile.mapPinsToIncludeOriginal
     else
-        ConfigModule.AceDB.profile.mapPinsToIncludeOriginal = ConfigModule.AceDB.profile.mapPinsToInclude
-        ConfigModule.AceDB.profile.mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.T4NONE
+        profile.mapPinsToIncludeOriginal = profile.mapPinsToInclude
+        profile.mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.T4NONE
     end
 
     MapModule:UpdateWorldMap()
@@ -210,7 +211,7 @@ function MapModule:InitializeDropDown()
         battlePetToggle.isNotRadio = true
         battlePetToggle.keepShownOnClick = true
         battlePetToggle.text = "Battle Pets"
-        battlePetToggle.checked = ConfigModule.AceDB.profile.mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.T4NONE
+        battlePetToggle.checked = DBModule:GetProfile().mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.T4NONE
         battlePetToggle.func = BattlePetToggle_OnClick
         UIDropDownMenu_AddButton(battlePetToggle)
     end)

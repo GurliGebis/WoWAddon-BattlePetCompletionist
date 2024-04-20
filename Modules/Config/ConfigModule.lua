@@ -19,16 +19,9 @@
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local ConfigModule = BattlePetCompletionist:NewModule("ConfigModule", "AceConsole-3.0")
+local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local AceConfig = LibStub("AceConfig-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
-local petSources = {
-    [1] = BATTLE_PET_SOURCE_1,
-    [2] = BATTLE_PET_SOURCE_2,
-    [3] = BATTLE_PET_SOURCE_3,
-    [4] = BATTLE_PET_SOURCE_4,
-    [5] = BATTLE_PET_SOURCE_5,
-    [7] = BATTLE_PET_SOURCE_7
-}
 
 local standardControlWidth = 1.2; -- A little wider to allow for longer option labels
 local options = {
@@ -53,10 +46,11 @@ local options = {
             desc = "Show a tooltip when hovering over a Pet Cage item or a pet in the auction UI.",
             width = "full",
             get = function()
-                return ConfigModule.AceDB.profile.petCageTooltipEnabled
+                return DBModule:GetProfile().petCageTooltipEnabled
             end,
             set = function()
-                ConfigModule.AceDB.profile.petCageTooltipEnabled = not ConfigModule.AceDB.profile.petCageTooltipEnabled
+                local profile = DBModule:GetProfile()
+                profile.petCageTooltipEnabled = not profile.petCageTooltipEnabled
             end
         },
         petBattleUnknownNotifyEnabled = {
@@ -66,10 +60,11 @@ local options = {
             desc = "Show a notification window when one or more uncollected pets can be captured",
             width = "full",
             get = function()
-                return ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled
+                return DBModule:GetProfile().petBattleUnknownNotifyEnabled
             end,
             set = function()
-                ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled = not ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled
+                local profile = DBModule:GetProfile()
+                profile.petBattleUnknownNotifyEnabled = not profile.petBattleUnknownNotifyEnabled
             end
         },
         displayHeader = {
@@ -89,10 +84,11 @@ local options = {
             desc = "Show an icon on the minimap.",
             width = "full",
             get = function()
-                return ConfigModule.AceDB.profile.minimapIconEnabled
+                return DBModule:GetProfile().minimapIconEnabled
             end,
             set = function()
-                ConfigModule.AceDB.profile.minimapIconEnabled = not ConfigModule.AceDB.profile.minimapIconEnabled
+                local profile = DBModule:GetProfile()
+                profile.minimapIconEnabled = not profile.minimapIconEnabled
 
                 local MinimapModule = BattlePetCompletionist:GetModule("MinimapModule")
                 MinimapModule:UpdateMinimap()
@@ -122,10 +118,10 @@ local options = {
                 _BattlePetCompletionist.Enums.Goal.COLLECTMAXRARE,
             },
             get = function()
-                return ConfigModule.AceDB.profile.brokerGoal
+                return DBModule:GetProfile().brokerGoal
             end,
             set = function(_, value)
-                ConfigModule.AceDB.profile.brokerGoal = value
+                DBModule:GetProfile().brokerGoal = value
                 local BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
                 BrokerModule:RefreshData()
             end
@@ -137,10 +133,11 @@ local options = {
             desc = "Add a suffix to the displayed text",
             width = standardControlWidth,
             get = function()
-                return ConfigModule.AceDB.profile.brokerGoalTextEnabled
+                return DBModule:GetProfile().brokerGoalTextEnabled
             end,
             set = function()
-                ConfigModule.AceDB.profile.brokerGoalTextEnabled = not ConfigModule.AceDB.profile.brokerGoalTextEnabled
+                local profile = DBModule:GetProfile()
+                profile.brokerGoalTextEnabled = not profile.brokerGoalTextEnabled
                 local BrokerModule = BattlePetCompletionist:GetModule("BrokerModule")
                 BrokerModule:RefreshData()
             end
@@ -180,14 +177,15 @@ local options = {
                 _BattlePetCompletionist.Enums.MapPinFilter.T4NONE,
             },
             get = function()
-                return ConfigModule.AceDB.profile.mapPinsToInclude
+                return DBModule:GetProfile().mapPinsToInclude
             end,
             set = function(_, value)
-                if value == _BattlePetCompletionist.Enums.MapPinFilter.T4NONE and ConfigModule.AceDB.profile.mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.T4NONE then
+                local profile = DBModule:GetProfile()
+                if value == _BattlePetCompletionist.Enums.MapPinFilter.T4NONE and profile.mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.T4NONE then
                     -- Save the value from before "None" was selected, so we can switch to that if enabled from the map dropdown.
-                    ConfigModule.AceDB.profile.mapPinsToIncludeOriginal = ConfigModule.AceDB.profile.mapPinsToInclude
+                    profile.mapPinsToIncludeOriginal = profile.mapPinsToInclude
                 end
-                ConfigModule.AceDB.profile.mapPinsToInclude = value
+                profile.mapPinsToInclude = value
                 local MapModule = BattlePetCompletionist:GetModule("MapModule")
                 MapModule:UpdateWorldMap()
             end
@@ -199,10 +197,10 @@ local options = {
             width = standardControlWidth,
             desc = "Enter part the name to filter by",
             get = function()
-                return ConfigModule.AceDB.profile.mapPinsFilter
+                return DBModule:GetProfile().mapPinsFilter
             end,
             set = function(_, value)
-                ConfigModule.AceDB.profile.mapPinsFilter = value
+                DBModule:GetProfile().mapPinsFilter = value
                 local MapModule = BattlePetCompletionist:GetModule("MapModule")
                 MapModule:UpdateWorldMap()
             end
@@ -224,10 +222,10 @@ local options = {
                 S3 = "Large"
             },
             get = function()
-                return ConfigModule.AceDB.profile.mapPinSize
+                return DBModule:GetProfile().mapPinSize
             end,
             set = function(_, value)
-                ConfigModule.AceDB.profile.mapPinSize = value
+                DBModule:GetProfile().mapPinSize = value
             end
         },
         spacer2 = {
@@ -246,10 +244,10 @@ local options = {
                 T2FAMILY = "Pet Family"
             },
             get = function()
-                return ConfigModule.AceDB.profile.mapPinIconType
+                return DBModule:GetProfile().mapPinIconType
             end,
             set = function(_, value)
-                ConfigModule.AceDB.profile.mapPinIconType = value
+                DBModule:GetProfile().mapPinIconType = value
             end
         },
         spacer3 = {
@@ -262,12 +260,12 @@ local options = {
             name = "Map pin sources",
             type = "multiselect",
             desc = "The sources for pets to show on the map.",
-            values = petSources,
+            values = _BattlePetCompletionist.Constants.PET_SOURCES,
             get = function(_, key)
-                return ConfigModule.AceDB.profile.mapPinSources[key]
+                return DBModule:GetProfile().mapPinSources[key]
             end,
             set = function(_, key, value)
-                ConfigModule.AceDB.profile.mapPinSources[key] = value
+                DBModule:GetProfile().mapPinSources[key] = value
             end
         },
         integrationHeader = {
@@ -287,10 +285,11 @@ local options = {
             desc = "SHIFT + left clicking a map pin creates a TomTom waypoint.",
             width = "full",
             get = function()
-                return ConfigModule.AceDB.profile.tomtomIntegration
+                return DBModule:GetProfile().tomtomIntegration
             end,
             set = function()
-                ConfigModule.AceDB.profile.tomtomIntegration = not ConfigModule.AceDB.profile.tomtomIntegration
+                local profile = DBModule:GetProfile()
+                profile.tomtomIntegration = not profile.tomtomIntegration
             end
         },
         combatHeader = {
@@ -315,10 +314,10 @@ local options = {
                 V3NONE = "None"
             },
             get = function()
-                return ConfigModule.AceDB.profile.combatMode
+                return DBModule:GetProfile().combatMode
             end,
             set = function(_, value)
-                ConfigModule.AceDB.profile.combatMode = value
+                DBModule:GetProfile().combatMode = value
             end
         },
         forfeitThreshold = {
@@ -334,10 +333,10 @@ local options = {
                 C4GREY = "Poor"
             },
             get = function()
-                return ConfigModule.AceDB.profile.forfeitThreshold
+                return DBModule:GetProfile().forfeitThreshold
             end,
             set = function(_, value)
-                ConfigModule.AceDB.profile.forfeitThreshold = value
+                DBModule:GetProfile().forfeitThreshold = value
             end
         },
         forfeitPromptUnless = {
@@ -359,45 +358,16 @@ local options = {
                 "T2MISSING",
             },
             get = function()
-                return ConfigModule.AceDB.profile.forfeitPromptUnless
+                return DBModule:GetProfile().forfeitPromptUnless
             end,
             set = function(_, value)
-                ConfigModule.AceDB.profile.forfeitPromptUnless = value
+                DBModule:GetProfile().forfeitPromptUnless = value
             end
         },
     },
 }
 
-local defaultOptions = {
-    profile = {
-        petCageTooltipEnabled = true,
-        petBattleUnknownNotifyEnabled = true,
-        mapPinSize = "S1",
-        mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.T1ALL,
-        mapPinsToIncludeOriginal = _BattlePetCompletionist.Enums.MapPinFilter.T1ALL,
-        mapPinIconType = "T1PET",
-        mapPinsFilter = "",
-        mapPinSources = {
-            [1] = true,
-            [2] = true,
-            [3] = true,
-            [4] = true,
-            [5] = true,
-            [7] = true
-        },
-        minimapIconEnabled = true,
-        brokerGoal = _BattlePetCompletionist.Enums.Goal.COLLECT,
-        brokerGoalTextEnabled = true,
-        tomtomIntegration = true,
-        combatMode = "V1HAF",
-        forfeitThreshold = "C1BLUE",
-        forfeitPromptUnless = "T3NOTRARE"
-    }
-}
-
 function ConfigModule:OnInitialize()
-    ConfigModule.AceDB = LibStub("AceDB-3.0"):New("BattlePetCompletionistDB", defaultOptions, true)
-
     AceConfig:RegisterOptionsTable("BattlePetCompletionist_options", options)
     ConfigModule.OptionsFrame = AceConfigDialog:AddToBlizOptions("BattlePetCompletionist_options", "Battle Pet Completionist")
 
@@ -406,54 +376,4 @@ end
 
 function ConfigModule:ChatCommandOptions(msg)
     InterfaceOptionsFrame_OpenToCategory(ConfigModule.OptionsFrame)
-end
-
-function ConfigModule:IsPetCageTooltipEnabled()
-    return ConfigModule.AceDB.profile.petCageTooltipEnabled
-end
-
-function ConfigModule:IsPetBattleUnknownNotifyEnabled()
-    return ConfigModule.AceDB.profile.petBattleUnknownNotifyEnabled
-end
-
-function ConfigModule:GetCombatMode()
-    return strsub(ConfigModule.AceDB.profile.combatMode, 3)
-end
-
-function ConfigModule:GetForfeitThreshold()
-    return strsub(ConfigModule.AceDB.profile.forfeitThreshold, 3)
-end
-
-function ConfigModule:GetForfeitPromptUnless()
-    return strsub(ConfigModule.AceDB.profile.forfeitPromptUnless, 3)
-end
-
-function ConfigModule:GetMapPinsIconType()
-    if ConfigModule.AceDB.profile.mapPinIconType == "T1PET" then
-        return "PET"
-    else
-        return "FAMILY"
-    end
-end
-
-function ConfigModule:GetMapPinScale()
-    local scaleMap = {
-        S1 = 1.0,
-        S2 = 1.2,
-        S3 = 1.4
-    }
-
-    return scaleMap[ConfigModule.AceDB.profile.mapPinSize]
-end
-
-function ConfigModule:GetMapPinSources()
-    local sources = {}
-
-    for key, value in pairs(petSources) do
-        if ConfigModule.AceDB.profile.mapPinSources[key] then
-            table.insert(sources, value)
-        end
-    end
-
-    return sources
 end
