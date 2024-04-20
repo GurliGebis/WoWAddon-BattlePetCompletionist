@@ -162,28 +162,28 @@ local options = {
             width = standardControlWidth,
             desc = "Which map pins should be shown on the map.",
             values = {
-                T1ALL = "All",
-                T2MISSING = "Missing",
-                T3NOTRARE = "Not rare",
-                T5NOTMAXCOLLECTED = "Not maximum amount collected",
-                T6NAMEFILTER = "Name filter",
-                T7NOTMAXRARE = "Not maximum rare collected",
-                T4NONE = "None"
+                [_BattlePetCompletionist.Enums.MapPinFilter.T1ALL] = "All",
+                [_BattlePetCompletionist.Enums.MapPinFilter.T2MISSING] = "Missing",
+                [_BattlePetCompletionist.Enums.MapPinFilter.T3NOTRARE] = "Not rare",
+                [_BattlePetCompletionist.Enums.MapPinFilter.T5NOTMAXCOLLECTED] = "Not maximum amount collected",
+                [_BattlePetCompletionist.Enums.MapPinFilter.T6NAMEFILTER] = "Name filter",
+                [_BattlePetCompletionist.Enums.MapPinFilter.T7NOTMAXRARE] = "Not maximum rare collected",
+                [_BattlePetCompletionist.Enums.MapPinFilter.T4NONE] = "None"
             },
             sorting = {
-                "T1ALL",
-                "T7NOTMAXRARE",
-                "T5NOTMAXCOLLECTED",
-                "T3NOTRARE",
-                "T2MISSING",
-                "T6NAMEFILTER",
-                "T4NONE",
+                _BattlePetCompletionist.Enums.MapPinFilter.T1ALL,
+                _BattlePetCompletionist.Enums.MapPinFilter.T7NOTMAXRARE,
+                _BattlePetCompletionist.Enums.MapPinFilter.T5NOTMAXCOLLECTED,
+                _BattlePetCompletionist.Enums.MapPinFilter.T3NOTRARE,
+                _BattlePetCompletionist.Enums.MapPinFilter.T2MISSING,
+                _BattlePetCompletionist.Enums.MapPinFilter.T6NAMEFILTER,
+                _BattlePetCompletionist.Enums.MapPinFilter.T4NONE,
             },
             get = function()
                 return ConfigModule.AceDB.profile.mapPinsToInclude
             end,
             set = function(_, value)
-                if value == "T4NONE" and ConfigModule.AceDB.profile.mapPinsToInclude ~= "T4NONE" then
+                if value == _BattlePetCompletionist.Enums.MapPinFilter.T4NONE and ConfigModule.AceDB.profile.mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.T4NONE then
                     -- Save the value from before "None" was selected, so we can switch to that if enabled from the map dropdown.
                     ConfigModule.AceDB.profile.mapPinsToIncludeOriginal = ConfigModule.AceDB.profile.mapPinsToInclude
                 end
@@ -373,8 +373,8 @@ local defaultOptions = {
         petCageTooltipEnabled = true,
         petBattleUnknownNotifyEnabled = true,
         mapPinSize = "S1",
-        mapPinsToInclude = "T1ALL",
-        mapPinsToIncludeOriginal = "T1ALL",
+        mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.T1ALL,
+        mapPinsToIncludeOriginal = _BattlePetCompletionist.Enums.MapPinFilter.T1ALL,
         mapPinIconType = "T1PET",
         mapPinsFilter = "",
         mapPinSources = {

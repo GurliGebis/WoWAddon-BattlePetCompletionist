@@ -46,11 +46,11 @@ function DataModule:ShouldPetBeShown(speciesId)
         return false
     end
 
-    if ConfigModule.AceDB.profile.mapPinsToInclude == "T1ALL" then
+    if ConfigModule.AceDB.profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T1ALL then
         return true
     end
 
-    if ConfigModule.AceDB.profile.mapPinsToInclude == "T4NONE" then
+    if ConfigModule.AceDB.profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T4NONE then
         return false
     end
 
@@ -64,21 +64,21 @@ function DataModule:ShouldPetBeShown(speciesId)
             local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
             local quality = select(5, C_PetJournal.GetPetStats(petId))
 
-            if ConfigModule.AceDB.profile.mapPinsToInclude == "T2MISSING" then
+            if ConfigModule.AceDB.profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T2MISSING then
                 return numCollected < 1
             end
 
-            if ConfigModule.AceDB.profile.mapPinsToInclude == "T3NOTRARE" then
+            if ConfigModule.AceDB.profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T3NOTRARE then
                 if (quality >= rareQuality) then
                     return false
                 end
             end
 
-            if ConfigModule.AceDB.profile.mapPinsToInclude == "T5NOTMAXCOLLECTED" then
+            if ConfigModule.AceDB.profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T5NOTMAXCOLLECTED then
                 return numCollected < limit
             end
 
-            if ConfigModule.AceDB.profile.mapPinsToInclude == "T7NOTMAXRARE" then
+            if ConfigModule.AceDB.profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T7NOTMAXRARE then
                 if numCollected < limit then
                     return true
                 end
@@ -90,7 +90,7 @@ function DataModule:ShouldPetBeShown(speciesId)
                 noMatchResult = false
             end
 
-            if ConfigModule.AceDB.profile.mapPinsToInclude == "T6NAMEFILTER" then
+            if ConfigModule.AceDB.profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T6NAMEFILTER then
                 if ConfigModule.AceDB.profile.mapPinsFilter == "" then
                     -- Name filter has been selected, but the filter text box is empty
                     -- So we just return true for all pets.

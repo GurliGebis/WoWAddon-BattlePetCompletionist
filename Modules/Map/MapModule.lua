@@ -186,11 +186,11 @@ function MapModule:UpdateWorldMap()
 end
 
 local function BattlePetToggle_OnClick()
-    if ConfigModule.AceDB.profile.mapPinsToInclude == "T4NONE" then
+    if ConfigModule.AceDB.profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T4NONE then
         ConfigModule.AceDB.profile.mapPinsToInclude = ConfigModule.AceDB.profile.mapPinsToIncludeOriginal
     else
         ConfigModule.AceDB.profile.mapPinsToIncludeOriginal = ConfigModule.AceDB.profile.mapPinsToInclude
-        ConfigModule.AceDB.profile.mapPinsToInclude = "T4NONE"
+        ConfigModule.AceDB.profile.mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.T4NONE
     end
 
     MapModule:UpdateWorldMap()
@@ -210,7 +210,7 @@ function MapModule:InitializeDropDown()
         battlePetToggle.isNotRadio = true
         battlePetToggle.keepShownOnClick = true
         battlePetToggle.text = "Battle Pets"
-        battlePetToggle.checked = ConfigModule.AceDB.profile.mapPinsToInclude ~= "T4NONE"
+        battlePetToggle.checked = ConfigModule.AceDB.profile.mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.T4NONE
         battlePetToggle.func = BattlePetToggle_OnClick
         UIDropDownMenu_AddButton(battlePetToggle)
     end)
