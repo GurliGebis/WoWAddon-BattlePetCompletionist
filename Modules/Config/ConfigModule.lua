@@ -159,29 +159,29 @@ local options = {
             width = standardControlWidth,
             desc = "Which map pins should be shown on the map.",
             values = {
-                [_BattlePetCompletionist.Enums.MapPinFilter.T1ALL] = "All",
-                [_BattlePetCompletionist.Enums.MapPinFilter.T2MISSING] = "Missing",
-                [_BattlePetCompletionist.Enums.MapPinFilter.T3NOTRARE] = "Not rare",
-                [_BattlePetCompletionist.Enums.MapPinFilter.T5NOTMAXCOLLECTED] = "Not maximum amount collected",
-                [_BattlePetCompletionist.Enums.MapPinFilter.T6NAMEFILTER] = "Name filter",
-                [_BattlePetCompletionist.Enums.MapPinFilter.T7NOTMAXRARE] = "Not maximum rare collected",
-                [_BattlePetCompletionist.Enums.MapPinFilter.T4NONE] = "None"
+                [_BattlePetCompletionist.Enums.MapPinFilter.ALL] = "All",
+                [_BattlePetCompletionist.Enums.MapPinFilter.MISSING] = "Missing",
+                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_RARE] = "Not rare",
+                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED] = "Not maximum amount collected",
+                [_BattlePetCompletionist.Enums.MapPinFilter.NAME_FILTER] = "Name filter",
+                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_RARE] = "Not maximum rare collected",
+                [_BattlePetCompletionist.Enums.MapPinFilter.NONE] = "None",
             },
             sorting = {
-                _BattlePetCompletionist.Enums.MapPinFilter.T1ALL,
-                _BattlePetCompletionist.Enums.MapPinFilter.T7NOTMAXRARE,
-                _BattlePetCompletionist.Enums.MapPinFilter.T5NOTMAXCOLLECTED,
-                _BattlePetCompletionist.Enums.MapPinFilter.T3NOTRARE,
-                _BattlePetCompletionist.Enums.MapPinFilter.T2MISSING,
-                _BattlePetCompletionist.Enums.MapPinFilter.T6NAMEFILTER,
-                _BattlePetCompletionist.Enums.MapPinFilter.T4NONE,
+                _BattlePetCompletionist.Enums.MapPinFilter.ALL,
+                _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_RARE,
+                _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED,
+                _BattlePetCompletionist.Enums.MapPinFilter.NOT_RARE,
+                _BattlePetCompletionist.Enums.MapPinFilter.MISSING,
+                _BattlePetCompletionist.Enums.MapPinFilter.NAME_FILTER,
+                _BattlePetCompletionist.Enums.MapPinFilter.NONE,
             },
             get = function()
                 return DBModule:GetProfile().mapPinsToInclude
             end,
             set = function(_, value)
                 local profile = DBModule:GetProfile()
-                if value == _BattlePetCompletionist.Enums.MapPinFilter.T4NONE and profile.mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.T4NONE then
+                if value == _BattlePetCompletionist.Enums.MapPinFilter.NONE and profile.mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.NONE then
                     -- Save the value from before "None" was selected, so we can switch to that if enabled from the map dropdown.
                     profile.mapPinsToIncludeOriginal = profile.mapPinsToInclude
                 end

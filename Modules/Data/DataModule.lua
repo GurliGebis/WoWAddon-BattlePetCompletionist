@@ -48,11 +48,11 @@ function DataModule:ShouldPetBeShown(speciesId)
 
     local profile = DBModule:GetProfile()
 
-    if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T1ALL then
+    if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.ALL then
         return true
     end
 
-    if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T4NONE then
+    if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NONE then
         return false
     end
 
@@ -66,21 +66,21 @@ function DataModule:ShouldPetBeShown(speciesId)
             local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
             local quality = select(5, C_PetJournal.GetPetStats(petId))
 
-            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T2MISSING then
+            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.MISSING then
                 return numCollected < 1
             end
 
-            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T3NOTRARE then
+            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NOT_RARE then
                 if (quality >= rareQuality) then
                     return false
                 end
             end
 
-            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T5NOTMAXCOLLECTED then
+            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED then
                 return numCollected < limit
             end
 
-            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T7NOTMAXRARE then
+            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_RARE then
                 if numCollected < limit then
                     return true
                 end
@@ -92,7 +92,7 @@ function DataModule:ShouldPetBeShown(speciesId)
                 noMatchResult = false
             end
 
-            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T6NAMEFILTER then
+            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NAME_FILTER then
                 if profile.mapPinsFilter == "" then
                     -- Name filter has been selected, but the filter text box is empty
                     -- So we just return true for all pets.

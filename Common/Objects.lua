@@ -1,6 +1,14 @@
 _BattlePetCompletionist = {
     Constants = {
         PET_QUALITY_RARE = 4,
+        PET_SOURCES = {
+            [1] = BATTLE_PET_SOURCE_1,
+            [2] = BATTLE_PET_SOURCE_2,
+            [3] = BATTLE_PET_SOURCE_3,
+            [4] = BATTLE_PET_SOURCE_4,
+            [5] = BATTLE_PET_SOURCE_5,
+            [7] = BATTLE_PET_SOURCE_7
+        },
     },
     Enums = {
         Goal = {
@@ -10,13 +18,13 @@ _BattlePetCompletionist = {
             COLLECTMAXRARE = "COLLECTMAXRARE",
         },
         MapPinFilter = {
-            T1ALL = "T1ALL",
-            T2MISSING = "T2MISSING",
-            T3NOTRARE = "T3NOTRARE",
-            T4NONE = "T4NONE",
-            T5NOTMAXCOLLECTED = "T5NOTMAXCOLLECTED",
-            T6NAMEFILTER = "T6NAMEFILTER",
-            T7NOTMAXRARE = "T7NOTMAXRARE",
+            ALL = "ALL",
+            MISSING = "MISSING",
+            NOT_RARE = "NOT_RARE",
+            NONE = "NONE",
+            NOT_MAX_COLLECTED = "NOT_MAX_COLLECTED",
+            NAME_FILTER = "NAME_FILTER",
+            NOT_MAX_RARE = "NOT_MAX_RARE",
         },
     },
 }

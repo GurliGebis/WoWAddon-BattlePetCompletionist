@@ -187,11 +187,11 @@ end
 
 local function BattlePetToggle_OnClick()
     local profile = DBModule:GetProfile()
-    if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.T4NONE then
+    if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NONE then
         profile.mapPinsToInclude = profile.mapPinsToIncludeOriginal
     else
         profile.mapPinsToIncludeOriginal = profile.mapPinsToInclude
-        profile.mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.T4NONE
+        profile.mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.NONE
     end
 
     MapModule:UpdateWorldMap()
@@ -211,7 +211,7 @@ function MapModule:InitializeDropDown()
         battlePetToggle.isNotRadio = true
         battlePetToggle.keepShownOnClick = true
         battlePetToggle.text = "Battle Pets"
-        battlePetToggle.checked = DBModule:GetProfile().mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.T4NONE
+        battlePetToggle.checked = DBModule:GetProfile().mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.NONE
         battlePetToggle.func = BattlePetToggle_OnClick
         UIDropDownMenu_AddButton(battlePetToggle)
     end)

@@ -20,13 +20,14 @@ local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local DBModule = BattlePetCompletionist:NewModule("DBModule")
 
+-- dataVersion is intentionally omitted from the defaults, as we may need to apply migrations to profiles that lack it
 local defaultOptions = {
     profile = {
         petCageTooltipEnabled = true,
         petBattleUnknownNotifyEnabled = true,
         mapPinSize = "S1",
-        mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.T1ALL,
-        mapPinsToIncludeOriginal = _BattlePetCompletionist.Enums.MapPinFilter.T1ALL,
+        mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.ALL,
+        mapPinsToIncludeOriginal = _BattlePetCompletionist.Enums.MapPinFilter.ALL,
         mapPinIconType = "T1PET",
         mapPinsFilter = "",
         mapPinSources = {
@@ -49,6 +50,7 @@ local defaultOptions = {
 
 function DBModule:OnInitialize()
     self.AceDB = LibStub("AceDB-3.0"):New("BattlePetCompletionistDB", defaultOptions, true)
+    DBModule:MigrateProfile()
 end
 
 function DBModule:GetGlobal()
@@ -111,4 +113,43 @@ function DBModule:GetMapPinSources()
     end
 
     return sources
+end
+
+local function dataVersion(profile)
+    return profile.dataVersion or 0
+end
+
+local function migrateV1(profile)
+    local function convertValue(value)
+        if value == "T1ALL" then
+            return _BattlePetCompletionist.Enums.MapPinFilter.ALL
+        elseif value == "T2MISSING" then
+            return _BattlePetCompletionist.Enums.MapPinFilter.MISSING
+        elseif value == "T3NOTRARE" then
+            return _BattlePetCompletionist.Enums.MapPinFilter.NOT_RARE
+        elseif value == "T4NONE" then
+            return _BattlePetCompletionist.Enums.MapPinFilter.NONE
+        elseif value == "T5NOTMAXCOLLECTED" then
+            return _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED
+        elseif value == "T6NAMEFILTER" then
+            return _BattlePetCompletionist.Enums.MapPinFilter.NAME_FILTER
+        elseif value == "T7NOTMAXRARE" then
+            return _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_RARE
+        else
+            return _BattlePetCompletionist.Enums.MapPinFilter.ALL
+        end
+    end
+
+    profile.mapPinsToInclude = convertValue(profile.mapPinsToInclude)
+    profile.mapPinsToIncludeOriginal = convertValue(profile.mapPinsToIncludeOriginal)
+    profile.dataVersion = 1
+    return dataVersion(profile)
+end
+
+function DBModule:MigrateProfile()
+    local profile = self:GetProfile()
+    local version = dataVersion(profile)
+    if version < 1 then
+        version = migrateV1(profile)
+    end
 end
