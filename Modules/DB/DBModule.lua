@@ -137,7 +137,7 @@ local function migrateV1(profile)
         elseif value == "T7NOTMAXRARE" then
             return _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_RARE
         else
-            return _BattlePetCompletionist.Enums.MapPinFilter.ALL
+            return value
         end
     end
 
