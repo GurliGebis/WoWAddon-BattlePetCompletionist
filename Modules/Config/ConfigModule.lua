@@ -217,9 +217,14 @@ local options = {
             width = standardControlWidth,
             desc = "The size of the pins on the map.",
             values = {
-                S1 = "Small",
-                S2 = "Medium",
-                S3 = "Large"
+                [_BattlePetCompletionist.Enums.MapPinSize.SMALL] = "Small",
+                [_BattlePetCompletionist.Enums.MapPinSize.MEDIUM] = "Medium",
+                [_BattlePetCompletionist.Enums.MapPinSize.LARGE] = "Large",
+            },
+            sorting = {
+                _BattlePetCompletionist.Enums.MapPinSize.SMALL,
+                _BattlePetCompletionist.Enums.MapPinSize.MEDIUM,
+                _BattlePetCompletionist.Enums.MapPinSize.LARGE,
             },
             get = function()
                 return DBModule:GetProfile().mapPinSize

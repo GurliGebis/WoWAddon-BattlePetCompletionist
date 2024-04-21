@@ -25,7 +25,7 @@ local defaultOptions = {
     profile = {
         petCageTooltipEnabled = true,
         petBattleUnknownNotifyEnabled = true,
-        mapPinSize = "S1",
+        mapPinSize = _BattlePetCompletionist.Enums.MapPinSize.SMALL,
         mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.ALL,
         mapPinsToIncludeOriginal = _BattlePetCompletionist.Enums.MapPinFilter.ALL,
         mapPinIconType = "T1PET",
@@ -92,16 +92,6 @@ function DBModule:GetMapPinsIconType()
     end
 end
 
-function DBModule:GetMapPinScale()
-    local scaleMap = {
-        S1 = 1.0,
-        S2 = 1.2,
-        S3 = 1.4
-    }
-
-    return scaleMap[self:GetProfile().mapPinSize]
-end
-
 function DBModule:GetMapPinSources()
     local profile = self:GetProfile()
     local sources = {}
@@ -119,7 +109,7 @@ local function dataVersion(profile)
     return profile.dataVersion or 0
 end
 
--- Update MapPinFilter values to eliminate prefix and separate words
+-- Update MapPinFilter values to use enum (eliminate prefix, separate words)
 local function migrateV1(profile)
     local function convertValue(value)
         if value == "T1ALL" then
@@ -147,7 +137,7 @@ local function migrateV1(profile)
     return dataVersion(profile)
 end
 
--- Update Goal values to separate words
+-- Update Goal values to use enum (eliminate prefix, separate words)
 local function migrateV2(profile)
     local function convertValue(value)
         if value == "COLLECTRARE" then
@@ -166,6 +156,25 @@ local function migrateV2(profile)
     return dataVersion(profile)
 end
 
+-- Update MapPinSize to use enum
+local function migrateV3(profile)
+    local function convertValue(value)
+        if value == "S1" then
+            return _BattlePetCompletionist.Enums.MapPinSize.SMALL
+        elseif value == "S2" then
+            return _BattlePetCompletionist.Enums.MapPinSize.MEDIUM
+        elseif value == "S3" then
+            return _BattlePetCompletionist.Enums.MapPinSize.LARGE
+        else
+            return value
+        end
+    end
+
+    profile.mapPinSize = convertValue(profile.mapPinSize)
+    profile.dataVersion = 3
+    return dataVersion(profile)
+end
+
 function DBModule:MigrateProfile()
     local profile = self:GetProfile()
     local version = dataVersion(profile)
@@ -174,5 +183,8 @@ function DBModule:MigrateProfile()
     end
     if version < 2 then
         version = migrateV2(profile)
+    end
+    if version < 3 then
+        version = migrateV3(profile)
     end
 end

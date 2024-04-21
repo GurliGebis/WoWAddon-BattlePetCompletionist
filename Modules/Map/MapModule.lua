@@ -105,7 +105,7 @@ BattlePetCompletionistWorldMapPinMixin.SetPassThroughButtons = function() end
 function BattlePetCompletionistWorldMapPinMixin:OnAcquired(x, y, iconpath)
     self:SetPosition(x, y)
 
-    local scale = DBModule:GetMapPinScale()
+    local scale = MapModule:GetMapPinScale()
 
     local iconSize = 12 * scale
     local borderSize = 24 * scale
@@ -229,4 +229,14 @@ function MapModule:OnDisable()
     if WorldMapFrame.dataProviders[MapModule.WorldMapDataProvider] then
         WorldMapFrame:RemoveDataProvider(MapModule.WorldMapDataProvider)
     end
+end
+
+function MapModule:GetMapPinScale()
+    local scaleMap = {
+        [_BattlePetCompletionist.Enums.MapPinSize.SMALL] = 1.0,
+        [_BattlePetCompletionist.Enums.MapPinSize.MEDIUM] = 1.2,
+        [_BattlePetCompletionist.Enums.MapPinSize.LARGE] = 1.4,
+    }
+
+    return scaleMap[DBModule:GetProfile().mapPinSize]
 end
