@@ -247,8 +247,12 @@ local options = {
             width = standardControlWidth,
             desc = "The kind of icon to show in the pins on the map.",
             values = {
-                T1PET = "Pet Icon",
-                T2FAMILY = "Pet Family"
+                [_BattlePetCompletionist.Enums.MapPinIconType.PET] = "Pet Icon",
+                [_BattlePetCompletionist.Enums.MapPinIconType.FAMILY] = "Pet Family"
+            },
+            sorting = {
+                _BattlePetCompletionist.Enums.MapPinIconType.PET,
+                _BattlePetCompletionist.Enums.MapPinIconType.FAMILY,
             },
             get = function()
                 return DBModule:GetProfile().mapPinIconType

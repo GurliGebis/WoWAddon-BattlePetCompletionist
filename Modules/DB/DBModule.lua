@@ -28,7 +28,7 @@ local defaultOptions = {
         mapPinSize = _BattlePetCompletionist.Enums.MapPinSize.SMALL,
         mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.ALL,
         mapPinsToIncludeOriginal = _BattlePetCompletionist.Enums.MapPinFilter.ALL,
-        mapPinIconType = "T1PET",
+        mapPinIconType = _BattlePetCompletionist.Enums.MapPinIconType.PET,
         mapPinsFilter = "",
         mapPinSources = {
             [1] = true,
@@ -82,14 +82,6 @@ end
 -- TODO: replace with enum
 function DBModule:GetForfeitPromptUnless()
     return strsub(self:GetProfile().forfeitPromptUnless, 3)
-end
-
-function DBModule:GetMapPinsIconType()
-    if self:GetProfile().mapPinIconType == "T1PET" then
-        return "PET"
-    else
-        return "FAMILY"
-    end
 end
 
 function DBModule:GetMapPinSources()
@@ -175,6 +167,23 @@ local function migrateV3(profile)
     return dataVersion(profile)
 end
 
+-- Update MapPinIconType to use enum
+local function migrateV4(profile)
+    local function convertValue(value)
+        if value == "T1PET" then
+            return _BattlePetCompletionist.Enums.MapPinIconType.PET
+        elseif value == "T2FAMILY" then
+            return _BattlePetCompletionist.Enums.MapPinIconType.FAMILY
+        else
+            return value
+        end
+    end
+
+    profile.mapPinIconType = convertValue(profile.mapPinIconType)
+    profile.dataVersion = 4
+    return dataVersion(profile)
+end
+
 function DBModule:MigrateProfile()
     local profile = self:GetProfile()
     local version = dataVersion(profile)
@@ -186,5 +195,8 @@ function DBModule:MigrateProfile()
     end
     if version < 3 then
         version = migrateV3(profile)
+    end
+    if version < 4 then
+        version = migrateV4(profile)
     end
 end

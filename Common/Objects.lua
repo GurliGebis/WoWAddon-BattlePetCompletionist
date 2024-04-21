@@ -26,6 +26,10 @@ _BattlePetCompletionist = {
             NAME_FILTER = "NAME_FILTER",
             NOT_MAX_RARE = "NOT_MAX_RARE",
         },
+        MapPinIconType = {
+            PET = "PET",
+            FAMILY = "FAMILY",
+        },
         MapPinSize = {
             X_SMALL = "X_SMALL",
             SMALL = "SMALL",

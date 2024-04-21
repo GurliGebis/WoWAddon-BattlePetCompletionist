@@ -57,12 +57,12 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
         return
     end
 
+    local petIconType = DBModule:GetProfile().mapPinIconType
     for pet, locations in pairs(petData) do
         if DataModule:ShouldPetBeShown(pet) then
             local _, speciesIcon, petType = C_PetJournal.GetPetInfoBySpeciesID(pet)
-            local petIconType = DBModule:GetMapPinsIconType()
 
-            if petIconType == "FAMILY" then
+            if petIconType == _BattlePetCompletionist.Enums.MapPinIconType.FAMILY then
                 local typeIcons = {
                     "Interface\\icons\\Icon_PetFamily_Humanoid",
                     "Interface\\icons\\Icon_PetFamily_Dragon",
