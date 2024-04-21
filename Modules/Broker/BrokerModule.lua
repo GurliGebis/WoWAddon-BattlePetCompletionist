@@ -160,11 +160,11 @@ end
 function BrokerModule:GetSuffixForGoal(goal)
     if goal == _BattlePetCompletionist.Enums.Goal.COLLECT then
         return " Collected"
-    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTRARE then
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_RARE then
         return " Rare"
-    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTMAX then
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_MAX then
         return " Max Collected"
-    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTMAXRARE then
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_MAX_RARE then
         return " Max Rare"
     else
         return ""
@@ -174,11 +174,11 @@ end
 function BrokerModule:MetGoal(goal, numCollected, numRareCollected, limit)
     if goal == _BattlePetCompletionist.Enums.Goal.COLLECT then
         return numCollected > 0
-    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTRARE then
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_RARE then
         return numRareCollected > 0
-    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTMAX then
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_MAX then
         return numCollected >= limit
-    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECTMAXRARE then
+    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_MAX_RARE then
         return numRareCollected >= limit
     else
         return false

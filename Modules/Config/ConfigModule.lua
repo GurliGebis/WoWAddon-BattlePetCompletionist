@@ -107,15 +107,15 @@ local options = {
             desc = "The goal to track in the data source.",
             values = {
                 [_BattlePetCompletionist.Enums.Goal.COLLECT] = "Collect at least one",
-                [_BattlePetCompletionist.Enums.Goal.COLLECTRARE] = "Collect at least one rare",
-                [_BattlePetCompletionist.Enums.Goal.COLLECTMAX] = "Collect maximum amount",
-                [_BattlePetCompletionist.Enums.Goal.COLLECTMAXRARE] = "Collect maximum amount rare",
+                [_BattlePetCompletionist.Enums.Goal.COLLECT_RARE] = "Collect at least one rare",
+                [_BattlePetCompletionist.Enums.Goal.COLLECT_MAX] = "Collect maximum amount",
+                [_BattlePetCompletionist.Enums.Goal.COLLECT_MAX_RARE] = "Collect maximum amount rare",
             },
             sorting = {
                 _BattlePetCompletionist.Enums.Goal.COLLECT,
-                _BattlePetCompletionist.Enums.Goal.COLLECTRARE,
-                _BattlePetCompletionist.Enums.Goal.COLLECTMAX,
-                _BattlePetCompletionist.Enums.Goal.COLLECTMAXRARE,
+                _BattlePetCompletionist.Enums.Goal.COLLECT_RARE,
+                _BattlePetCompletionist.Enums.Goal.COLLECT_MAX,
+                _BattlePetCompletionist.Enums.Goal.COLLECT_MAX_RARE,
             },
             get = function()
                 return DBModule:GetProfile().brokerGoal

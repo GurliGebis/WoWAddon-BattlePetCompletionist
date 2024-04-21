@@ -13,9 +13,9 @@ _BattlePetCompletionist = {
     Enums = {
         Goal = {
             COLLECT = "COLLECT",
-            COLLECTRARE = "COLLECTRARE",
-            COLLECTMAX = "COLLECTMAX",
-            COLLECTMAXRARE = "COLLECTMAXRARE",
+            COLLECT_RARE = "COLLECT_RARE",
+            COLLECT_MAX = "COLLECT_MAX",
+            COLLECT_MAX_RARE = "COLLECT_MAX_RARE",
         },
         MapPinFilter = {
             ALL = "ALL",

@@ -119,6 +119,7 @@ local function dataVersion(profile)
     return profile.dataVersion or 0
 end
 
+-- Update MapPinFilter values to eliminate prefix and separate words
 local function migrateV1(profile)
     local function convertValue(value)
         if value == "T1ALL" then
@@ -146,10 +147,32 @@ local function migrateV1(profile)
     return dataVersion(profile)
 end
 
+-- Update Goal values to separate words
+local function migrateV2(profile)
+    local function convertValue(value)
+        if value == "COLLECTRARE" then
+            return _BattlePetCompletionist.Enums.Goal.COLLECT_RARE
+        elseif value == "COLLECTMAX" then
+            return _BattlePetCompletionist.Enums.Goal.COLLECT_MAX
+        elseif value == "COLLECTMAXRARE" then
+            return _BattlePetCompletionist.Enums.Goal.COLLECT_MAX_RARE
+        else
+            return value
+        end
+    end
+
+    profile.brokerGoal = convertValue(profile.brokerGoal)
+    profile.dataVersion = 2
+    return dataVersion(profile)
+end
+
 function DBModule:MigrateProfile()
     local profile = self:GetProfile()
     local version = dataVersion(profile)
     if version < 1 then
         version = migrateV1(profile)
+    end
+    if version < 2 then
+        version = migrateV2(profile)
     end
 end
