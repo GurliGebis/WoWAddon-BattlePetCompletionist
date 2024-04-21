@@ -217,11 +217,13 @@ local options = {
             width = standardControlWidth,
             desc = "The size of the pins on the map.",
             values = {
+                [_BattlePetCompletionist.Enums.MapPinSize.X_SMALL] = "Extra small",
                 [_BattlePetCompletionist.Enums.MapPinSize.SMALL] = "Small",
                 [_BattlePetCompletionist.Enums.MapPinSize.MEDIUM] = "Medium",
                 [_BattlePetCompletionist.Enums.MapPinSize.LARGE] = "Large",
             },
             sorting = {
+                _BattlePetCompletionist.Enums.MapPinSize.X_SMALL,
                 _BattlePetCompletionist.Enums.MapPinSize.SMALL,
                 _BattlePetCompletionist.Enums.MapPinSize.MEDIUM,
                 _BattlePetCompletionist.Enums.MapPinSize.LARGE,

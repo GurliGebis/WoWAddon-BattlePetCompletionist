@@ -27,6 +27,7 @@ _BattlePetCompletionist = {
             NOT_MAX_RARE = "NOT_MAX_RARE",
         },
         MapPinSize = {
+            X_SMALL = "X_SMALL",
             SMALL = "SMALL",
             MEDIUM = "MEDIUM",
             LARGE = "LARGE",

@@ -233,6 +233,7 @@ end
 
 function MapModule:GetMapPinScale()
     local scaleMap = {
+        [_BattlePetCompletionist.Enums.MapPinSize.X_SMALL] = 0.8,
         [_BattlePetCompletionist.Enums.MapPinSize.SMALL] = 1.0,
         [_BattlePetCompletionist.Enums.MapPinSize.MEDIUM] = 1.2,
         [_BattlePetCompletionist.Enums.MapPinSize.LARGE] = 1.4,
