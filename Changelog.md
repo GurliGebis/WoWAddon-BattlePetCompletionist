@@ -1,3 +1,7 @@
+# 10.2.6-20240423-1
+* Updated data files with latest data
+* Added Hissing Chitterspine data, provided by davidmc24 on github.
+
 # 10.2.6-20240418-1
 * Add data broker support, implementation provided by davidmc24 on github.
 
