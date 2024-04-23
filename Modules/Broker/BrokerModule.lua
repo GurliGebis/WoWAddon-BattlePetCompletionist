@@ -30,7 +30,11 @@ function BrokerModule:GetDataObject()
 end
 
 function BrokerModule:RegisterEventHandlers()
+    self:RegisterEvent("ZONE_CHANGED", "RefreshData")
+    self:RegisterEvent("ZONE_CHANGED_INDOORS", "RefreshData")
     self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "RefreshData")
+    self:RegisterEvent("NEW_WMO_CHUNK", "RefreshData")
+    self:RegisterEvent("PLAYER_ENTERING_WORLD", "RefreshData")
     LibPetJournal.RegisterCallback(self, "PetListUpdated", "RefreshData")
 end
 
