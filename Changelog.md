@@ -1,3 +1,6 @@
+# 10.2.6-20240423-2
+* Improve broker handling of zone changes, provided by davidmc24 on github.
+
 # 10.2.6-20240423-1
 * Updated data files with latest data
 * Added Hissing Chitterspine data, provided by davidmc24 on github.
