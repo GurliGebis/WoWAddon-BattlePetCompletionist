@@ -42,7 +42,7 @@ local defaultOptions = {
         brokerGoal = _BattlePetCompletionist.Enums.Goal.COLLECT,
         brokerGoalTextEnabled = true,
         tomtomIntegration = true,
-        combatMode = "V1HAF",
+        combatMode = _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND,
         forfeitThreshold = "C1BLUE",
         forfeitPromptUnless = "T3NOTRARE"
     }
@@ -67,11 +67,6 @@ end
 
 function DBModule:IsPetBattleUnknownNotifyEnabled()
     return self:GetProfile().petBattleUnknownNotifyEnabled
-end
-
--- TODO: replace with enum
-function DBModule:GetCombatMode()
-    return strsub(self:GetProfile().combatMode, 3)
 end
 
 -- TODO: replace with enum
@@ -184,6 +179,25 @@ local function migrateV4(profile)
     return dataVersion(profile)
 end
 
+-- Update CombatMode to use enum
+local function migrateV5(profile)
+    local function convertValue(value)
+        if value == "V1HAF" then
+            return _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND
+        elseif value == "V2FORFEIT" then
+            return _BattlePetCompletionist.Enums.CombatMode.FORFEIT
+        elseif value == "V3NONE" then
+            return _BattlePetCompletionist.Enums.CombatMode.NONE
+        else
+            return value
+        end
+    end
+
+    profile.combatMode = convertValue(profile.combatMode)
+    profile.dataVersion = 5
+    return dataVersion(profile)
+end
+
 function DBModule:MigrateProfile()
     local profile = self:GetProfile()
     local version = dataVersion(profile)
@@ -198,5 +212,8 @@ function DBModule:MigrateProfile()
     end
     if version < 4 then
         version = migrateV4(profile)
+    end
+    if version < 5 then
+        version = migrateV5(profile)
     end
 end

@@ -11,6 +11,11 @@ _BattlePetCompletionist = {
         },
     },
     Enums = {
+        CombatMode = {
+            HELP_A_FRIEND = "HELP_A_FRIEND",
+            FORFEIT = "FORFEIT",
+            NONE = "NONE",
+        },
         Goal = {
             COLLECT = "COLLECT",
             COLLECT_RARE = "COLLECT_RARE",

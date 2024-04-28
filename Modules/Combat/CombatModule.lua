@@ -53,12 +53,12 @@ local function CanWeFindPlayerPosition()
 end
 
 function CombatModule:BattleHasStarted()
-    local combatMode = DBModule:GetCombatMode()
+    local combatMode = DBModule:GetProfile().combatMode
 
-    if combatMode == "HAF" then
+    if combatMode == _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND then
         -- Help a Friend is enabled, so we call that startup function.
         self:HafBattleHasStarted()
-    elseif combatMode == "FORFEIT" then
+    elseif combatMode == _BattlePetCompletionist.Enums.CombatMode.FORFEIT then
         -- Forfeit is enabled, so we call that startup function instead.
         self:ForfeitBattleHasStarted()
     else

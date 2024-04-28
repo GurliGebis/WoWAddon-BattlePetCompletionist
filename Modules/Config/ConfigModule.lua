@@ -248,7 +248,7 @@ local options = {
             desc = "The kind of icon to show in the pins on the map.",
             values = {
                 [_BattlePetCompletionist.Enums.MapPinIconType.PET] = "Pet Icon",
-                [_BattlePetCompletionist.Enums.MapPinIconType.FAMILY] = "Pet Family"
+                [_BattlePetCompletionist.Enums.MapPinIconType.FAMILY] = "Pet Family",
             },
             sorting = {
                 _BattlePetCompletionist.Enums.MapPinIconType.PET,
@@ -320,9 +320,14 @@ local options = {
             width = standardControlWidth,
             desc = "How to function when pet battles are started",
             values = {
-                V1HAF = "Help a Friend",
-                V2FORFEIT = "Forfeit",
-                V3NONE = "None"
+                [_BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND] = "Help a Friend",
+                [_BattlePetCompletionist.Enums.CombatMode.FORFEIT] = "Forfeit",
+                [_BattlePetCompletionist.Enums.CombatMode.NONE] = "None",
+            },
+            sorting = {
+                _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND,
+                _BattlePetCompletionist.Enums.CombatMode.FORFEIT,
+                _BattlePetCompletionist.Enums.CombatMode.NONE,
             },
             get = function()
                 return DBModule:GetProfile().combatMode
