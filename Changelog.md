@@ -1,3 +1,6 @@
+# 10.2.6-20240428-1
+* Added Forbidden Reach data, provided by davidmc24 on github.
+
 # 10.2.6-20240423-2
 * Improve broker handling of zone changes, provided by davidmc24 on github.
 
