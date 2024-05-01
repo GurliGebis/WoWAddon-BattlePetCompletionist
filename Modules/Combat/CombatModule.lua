@@ -105,7 +105,7 @@ function CombatModule:ForfeitBattleHasStarted()
     
     local notOwnedPets, ownedPets = DataModule.GetEnemyPetsInBattle()
     local forfeitThreshold = DBModule:GetProfile().forfeitThreshold
-    local forfeitPromptUnless = DBModule:GetForfeitPromptUnless()
+    local forfeitPromptUnless = DBModule:GetProfile().forfeitPromptUnless
 
     if (#notOwnedPets > 0) then
         -- First we see if there is any not owned pets - if there are, we shouldn't be asking the user.
@@ -137,13 +137,13 @@ function CombatModule:ForfeitBattleHasStarted()
             meetsForfeitThreshold = true
         end
 
-        if forfeitPromptUnless == "NOTMAXCOLLECTED" or forfeitPromptUnless == "NOTMAXRARE" then
+        if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED or forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE then
             if numCollected < limit and meetsForfeitThreshold then
                 upgradeFound = true
             end
         end
 
-        if forfeitPromptUnless == "NOTRARE" then
+        if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_RARE then
             -- Find the highest quality of the pet that we own.
             local highestOwnedQuality = 0
             for _, myPetInfo in ipairs(myPets) do
@@ -156,7 +156,7 @@ function CombatModule:ForfeitBattleHasStarted()
             end
         end
 
-        if forfeitPromptUnless == "NOTMAXRARE" then
+        if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE then
             -- Find the lowest quality of the pet that we own.
             local lowestOwnedQuality = 4
             for _, myPetInfo in ipairs(myPets) do

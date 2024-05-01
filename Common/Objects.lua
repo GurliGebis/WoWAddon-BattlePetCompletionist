@@ -22,6 +22,12 @@ _BattlePetCompletionist = {
             COLLECT_MAX = "COLLECT_MAX",
             COLLECT_MAX_RARE = "COLLECT_MAX_RARE",
         },
+        ForfeitPromptUnless = {
+            MISSING = "MISSING",
+            NOT_RARE = "NOT_RARE",
+            NOT_MAX_COLLECTED = "NOT_MAX_COLLECTED",
+            NOT_MAX_RARE = "NOT_MAX_RARE",
+        },
         ForfeitThreshold = {
             RARE = "Rare",
             UNCOMMON = "Uncommon",

@@ -44,7 +44,7 @@ local defaultOptions = {
         tomtomIntegration = true,
         combatMode = _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND,
         forfeitThreshold = _BattlePetCompletionist.Enums.ForfeitThreshold.RARE,
-        forfeitPromptUnless = "T3NOTRARE",
+        forfeitPromptUnless = _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_RARE,
     }
 }
 
@@ -67,11 +67,6 @@ end
 
 function DBModule:IsPetBattleUnknownNotifyEnabled()
     return self:GetProfile().petBattleUnknownNotifyEnabled
-end
-
--- TODO: replace with enum
-function DBModule:GetForfeitPromptUnless()
-    return strsub(self:GetProfile().forfeitPromptUnless, 3)
 end
 
 function DBModule:GetMapPinSources()
@@ -214,6 +209,27 @@ local function migrateV6(profile)
     return dataVersion(profile)
 end
 
+-- Update ForfeitPromptUnless to use enum
+local function migrateV7(profile)
+    local function convertValue(value)
+        if value == "T2MISSING" then
+            return _BattlePetCompletionist.Enums.ForfeitPromptUnless.MISSING
+        elseif value == "T3NOTRARE" then
+            return _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_RARE
+        elseif value == "T5NOTMAXCOLLECTED" then
+            return _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED
+        elseif value == "T7NOTMAXRARE" then
+            return _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE
+        else
+            return value
+        end
+    end
+
+    profile.forfeitPromptUnless = convertValue(profile.forfeitPromptUnless)
+    profile.dataVersion = 7
+    return dataVersion(profile)
+end
+
 function DBModule:MigrateProfile()
     local profile = self:GetProfile()
     local version = dataVersion(profile)
@@ -234,5 +250,8 @@ function DBModule:MigrateProfile()
     end
     if version < 6 then
         version = migrateV6(profile)
+    end
+    if version < 7 then
+        version = migrateV7(profile)
     end
 end

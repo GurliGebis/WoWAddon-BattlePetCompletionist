@@ -368,16 +368,16 @@ local options = {
             width = standardControlWidth,
             desc = "The condition for when to not forfeit.",
             values = {
-                T2MISSING = "Missing",
-                T3NOTRARE = "Not rare",
-                T5NOTMAXCOLLECTED = "Not maximum amount collected",
-                T7NOTMAXRARE = "Not maximum rare collected",
+                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.MISSING] = "Missing",
+                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_RARE] = "Not rare",
+                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED] = "Not maximum amount collected",
+                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE] = "Not maximum rare collected",
             },
             sorting = {
-                "T7NOTMAXRARE",
-                "T5NOTMAXCOLLECTED",
-                "T3NOTRARE",
-                "T2MISSING",
+                _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE,
+                _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED,
+                _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_RARE,
+                _BattlePetCompletionist.Enums.ForfeitPromptUnless.MISSING,
             },
             get = function()
                 return DBModule:GetProfile().forfeitPromptUnless
