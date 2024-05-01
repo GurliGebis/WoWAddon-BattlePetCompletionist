@@ -43,8 +43,8 @@ local defaultOptions = {
         brokerGoalTextEnabled = true,
         tomtomIntegration = true,
         combatMode = _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND,
-        forfeitThreshold = "C1BLUE",
-        forfeitPromptUnless = "T3NOTRARE"
+        forfeitThreshold = _BattlePetCompletionist.Enums.ForfeitThreshold.RARE,
+        forfeitPromptUnless = "T3NOTRARE",
     }
 }
 
@@ -67,11 +67,6 @@ end
 
 function DBModule:IsPetBattleUnknownNotifyEnabled()
     return self:GetProfile().petBattleUnknownNotifyEnabled
-end
-
--- TODO: replace with enum
-function DBModule:GetForfeitThreshold()
-    return strsub(self:GetProfile().forfeitThreshold, 3)
 end
 
 -- TODO: replace with enum
@@ -198,6 +193,27 @@ local function migrateV5(profile)
     return dataVersion(profile)
 end
 
+-- Update ForfeitThreshold to use enum
+local function migrateV6(profile)
+    local function convertValue(value)
+        if value == "C1BLUE" then
+            return _BattlePetCompletionist.Enums.ForfeitThreshold.RARE
+        elseif value == "C2GREEN" then
+            return _BattlePetCompletionist.Enums.ForfeitThreshold.UNCOMMON
+        elseif value == "C3WHITE" then
+            return _BattlePetCompletionist.Enums.ForfeitThreshold.COMMON
+        elseif value == "C4GREY" then
+            return _BattlePetCompletionist.Enums.ForfeitThreshold.POOR
+        else
+            return value
+        end
+    end
+
+    profile.forfeitThreshold = convertValue(profile.forfeitThreshold)
+    profile.dataVersion = 6
+    return dataVersion(profile)
+end
+
 function DBModule:MigrateProfile()
     local profile = self:GetProfile()
     local version = dataVersion(profile)
@@ -215,5 +231,8 @@ function DBModule:MigrateProfile()
     end
     if version < 5 then
         version = migrateV5(profile)
+    end
+    if version < 6 then
+        version = migrateV6(profile)
     end
 end

@@ -104,7 +104,7 @@ function CombatModule:ForfeitBattleHasStarted()
     end
     
     local notOwnedPets, ownedPets = DataModule.GetEnemyPetsInBattle()
-    local forfeitThreshold = DBModule:GetForfeitThreshold()
+    local forfeitThreshold = DBModule:GetProfile().forfeitThreshold
     local forfeitPromptUnless = DBModule:GetForfeitPromptUnless()
 
     if (#notOwnedPets > 0) then
@@ -127,13 +127,13 @@ function CombatModule:ForfeitBattleHasStarted()
         local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
 
         local meetsForfeitThreshold = false
-        if forfeitThreshold == "BLUE" and breedQuality >= 4 then
+        if forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.RARE and breedQuality >= 4 then
             meetsForfeitThreshold = true
-        elseif forfeitThreshold == "GREEN" and breedQuality >= 3 then
+        elseif forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.UNCOMMON and breedQuality >= 3 then
             meetsForfeitThreshold = true
-        elseif forfeitThreshold == "WHITE" and breedQuality >= 2 then
+        elseif forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.COMMON and breedQuality >= 2 then
             meetsForfeitThreshold = true
-        elseif forfeitThreshold == "GREY" and breedQuality >= 1 then
+        elseif forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.POOR and breedQuality >= 1 then
             meetsForfeitThreshold = true
         end
 

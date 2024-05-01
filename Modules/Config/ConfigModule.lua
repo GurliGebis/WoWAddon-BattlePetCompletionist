@@ -343,10 +343,16 @@ local options = {
             width = standardControlWidth,
             desc = "The threshold for when to always suggest forfeit.",
             values = {
-                C1BLUE = "Rare",
-                C2GREEN = "Uncommon",
-                C3WHITE = "Common",
-                C4GREY = "Poor"
+                [_BattlePetCompletionist.Enums.ForfeitThreshold.RARE] = "Rare",
+                [_BattlePetCompletionist.Enums.ForfeitThreshold.UNCOMMON] = "Uncommon",
+                [_BattlePetCompletionist.Enums.ForfeitThreshold.COMMON] = "Common",
+                [_BattlePetCompletionist.Enums.ForfeitThreshold.POOR] = "Poor"
+            },
+            sorting = {
+                _BattlePetCompletionist.Enums.ForfeitThreshold.RARE,
+                _BattlePetCompletionist.Enums.ForfeitThreshold.UNCOMMON,
+                _BattlePetCompletionist.Enums.ForfeitThreshold.COMMON,
+                _BattlePetCompletionist.Enums.ForfeitThreshold.POOR,
             },
             get = function()
                 return DBModule:GetProfile().forfeitThreshold
