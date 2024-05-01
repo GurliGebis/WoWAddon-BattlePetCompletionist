@@ -1,3 +1,6 @@
+# 10.2.6-20240501-1
+* Refactor entire configuration logic, provided by davidmc24 on github.
+
 # 10.2.6-20240428-1
 * Added Forbidden Reach data, provided by davidmc24 on github.
 

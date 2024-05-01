@@ -21,4 +21,5 @@ embeds.xml
 Main.lua
 
 # Modules
+Common\common.xml
 Modules\modules.xml

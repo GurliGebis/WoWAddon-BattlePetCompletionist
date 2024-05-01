@@ -19,8 +19,8 @@
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local CombatModule = BattlePetCompletionist:NewModule("CombatModule", "AceEvent-3.0", "AceComm-3.0")
-local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
+local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local AceSerializer = LibStub("AceSerializer-3.0")
 
 local messagePrefixes = {
@@ -53,12 +53,12 @@ local function CanWeFindPlayerPosition()
 end
 
 function CombatModule:BattleHasStarted()
-    local combatMode = ConfigModule:GetCombatMode()
+    local combatMode = DBModule:GetProfile().combatMode
 
-    if combatMode == "HAF" then
+    if combatMode == _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND then
         -- Help a Friend is enabled, so we call that startup function.
         self:HafBattleHasStarted()
-    elseif combatMode == "FORFEIT" then
+    elseif combatMode == _BattlePetCompletionist.Enums.CombatMode.FORFEIT then
         -- Forfeit is enabled, so we call that startup function instead.
         self:ForfeitBattleHasStarted()
     else
@@ -104,8 +104,8 @@ function CombatModule:ForfeitBattleHasStarted()
     end
     
     local notOwnedPets, ownedPets = DataModule.GetEnemyPetsInBattle()
-    local forfeitThreshold = ConfigModule:GetForfeitThreshold()
-    local forfeitPromptUnless = ConfigModule:GetForfeitPromptUnless()
+    local forfeitThreshold = DBModule:GetProfile().forfeitThreshold
+    local forfeitPromptUnless = DBModule:GetProfile().forfeitPromptUnless
 
     if (#notOwnedPets > 0) then
         -- First we see if there is any not owned pets - if there are, we shouldn't be asking the user.
@@ -127,23 +127,23 @@ function CombatModule:ForfeitBattleHasStarted()
         local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
 
         local meetsForfeitThreshold = false
-        if forfeitThreshold == "BLUE" and breedQuality >= 4 then
+        if forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.RARE and breedQuality >= 4 then
             meetsForfeitThreshold = true
-        elseif forfeitThreshold == "GREEN" and breedQuality >= 3 then
+        elseif forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.UNCOMMON and breedQuality >= 3 then
             meetsForfeitThreshold = true
-        elseif forfeitThreshold == "WHITE" and breedQuality >= 2 then
+        elseif forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.COMMON and breedQuality >= 2 then
             meetsForfeitThreshold = true
-        elseif forfeitThreshold == "GREY" and breedQuality >= 1 then
+        elseif forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.POOR and breedQuality >= 1 then
             meetsForfeitThreshold = true
         end
 
-        if forfeitPromptUnless == "NOTMAXCOLLECTED" or forfeitPromptUnless == "NOTMAXRARE" then
+        if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED or forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE then
             if numCollected < limit and meetsForfeitThreshold then
                 upgradeFound = true
             end
         end
 
-        if forfeitPromptUnless == "NOTRARE" then
+        if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_RARE then
             -- Find the highest quality of the pet that we own.
             local highestOwnedQuality = 0
             for _, myPetInfo in ipairs(myPets) do
@@ -156,7 +156,7 @@ function CombatModule:ForfeitBattleHasStarted()
             end
         end
 
-        if forfeitPromptUnless == "NOTMAXRARE" then
+        if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE then
             -- Find the lowest quality of the pet that we own.
             local lowestOwnedQuality = 4
             for _, myPetInfo in ipairs(myPets) do

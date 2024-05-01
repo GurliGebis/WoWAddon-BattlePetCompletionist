@@ -19,13 +19,13 @@
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local DataModule = BattlePetCompletionist:NewModule("DataModule")
-local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
+local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local LibPetJournal = LibStub('LibPetJournal-2.0')
 
 local function DoesPetMatchSourceFilters(speciesId)
     local petSource = DataModule:GetPetSource(speciesId)
 
-    local enabledSources = ConfigModule:GetMapPinSources()
+    local enabledSources = DBModule:GetMapPinSources()
 
     for _, v in ipairs(enabledSources) do
         if v == petSource then
@@ -46,11 +46,13 @@ function DataModule:ShouldPetBeShown(speciesId)
         return false
     end
 
-    if ConfigModule.AceDB.profile.mapPinsToInclude == "T1ALL" then
+    local profile = DBModule:GetProfile()
+
+    if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.ALL then
         return true
     end
 
-    if ConfigModule.AceDB.profile.mapPinsToInclude == "T4NONE" then
+    if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NONE then
         return false
     end
 
@@ -64,21 +66,21 @@ function DataModule:ShouldPetBeShown(speciesId)
             local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
             local quality = select(5, C_PetJournal.GetPetStats(petId))
 
-            if ConfigModule.AceDB.profile.mapPinsToInclude == "T2MISSING" then
+            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.MISSING then
                 return numCollected < 1
             end
 
-            if ConfigModule.AceDB.profile.mapPinsToInclude == "T3NOTRARE" then
+            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NOT_RARE then
                 if (quality >= rareQuality) then
                     return false
                 end
             end
 
-            if ConfigModule.AceDB.profile.mapPinsToInclude == "T5NOTMAXCOLLECTED" then
+            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED then
                 return numCollected < limit
             end
 
-            if ConfigModule.AceDB.profile.mapPinsToInclude == "T7NOTMAXRARE" then
+            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_RARE then
                 if numCollected < limit then
                     return true
                 end
@@ -90,15 +92,15 @@ function DataModule:ShouldPetBeShown(speciesId)
                 noMatchResult = false
             end
 
-            if ConfigModule.AceDB.profile.mapPinsToInclude == "T6NAMEFILTER" then
-                if ConfigModule.AceDB.profile.mapPinsFilter == "" then
+            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NAME_FILTER then
+                if profile.mapPinsFilter == "" then
                     -- Name filter has been selected, but the filter text box is empty
                     -- So we just return true for all pets.
                     return true
                 end
                 
                 -- Since string.find is case sensitive, we convert everything to lowercase first.
-                local loweredTextBoxValue = string.lower(ConfigModule.AceDB.profile.mapPinsFilter)
+                local loweredTextBoxValue = string.lower(profile.mapPinsFilter)
                 local loweredPetName = string.lower(petName)
 
                 return string.find(loweredPetName, loweredTextBoxValue)
