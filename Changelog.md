@@ -1,3 +1,7 @@
+# 10.2.7-20240508-1
+* Updated data files with data from 10.2.7
+* Updated TOC to support 10.2.7
+
 # 10.2.6-20240501-1
 * Refactor entire configuration logic, provided by davidmc24 on github.
 
