@@ -31,17 +31,41 @@ function BrokerModule:GetDataObject()
 end
 
 function BrokerModule:RegisterEventHandlers()
-    self:RegisterEvent("ZONE_CHANGED", "RefreshData")
-    self:RegisterEvent("ZONE_CHANGED_INDOORS", "RefreshData")
-    self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "RefreshData")
-    self:RegisterEvent("NEW_WMO_CHUNK", "RefreshData")
-    self:RegisterEvent("PLAYER_ENTERING_WORLD", "RefreshData")
-    LibPetJournal.RegisterCallback(self, "PetListUpdated", "RefreshData")
+    self:RegisterEvent("ZONE_CHANGED", "HandleZoneChange")
+    self:RegisterEvent("ZONE_CHANGED_INDOORS", "HandleZoneChange")
+    self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "HandleZoneChange")
+    self:RegisterEvent("NEW_WMO_CHUNK", "HandleZoneChange")
+    self:RegisterEvent("PLAYER_ENTERING_WORLD", "HandleZoneChange")
+    LibPetJournal.RegisterCallback(self, "PetListUpdated", "HandlePetChange")
 end
 
+function BrokerModule:HandleZoneChange()
+    local mapID = self:DetermineMap()
+    -- self.mapID will be nil on first check
+    if mapID ~= self.mapID
+    then
+        self.mapID = mapID
+        self:RefreshData()
+    end
+end
+
+function BrokerModule:HandlePetChange()
+    -- Ensure mapID is set even if it wasn't before
+    self.mapID = self:DetermineMap()
+    self:RefreshData()
+end
+
+function BrokerModule:DetermineMap()
+    -- If we wanted to exclude certain sub-zones from being eligible for selection, we could do so using data from
+    -- C_Map.GetMapInfo, such as parentMapID.  However, this appears sufficient for now.
+    return C_Map.GetBestMapForUnit("player")
+end
+
+-- Get the pets in the current zone.
+-- We store the mapID rather than calling the API every time, so that we can detect changes.
+-- This allows skipping updates when nothing we care about has changed, improving CPU usage.
 function BrokerModule:GetZonePetData()
-    local mapId = C_Map.GetBestMapForUnit("player")
-    return DataModule:GetPetsInMap(mapId) or {}
+    return DataModule:GetPetsInMap(self.mapID) or {}
 end
 
 function BrokerModule:OnInitialize()
