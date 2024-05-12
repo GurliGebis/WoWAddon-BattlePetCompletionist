@@ -1,3 +1,6 @@
+# 10.2.7-20240512-1
+* Implement fix for high CPU usage when changing zone, provided by davidmc24 on github.
+
 # 10.2.7-20240508-1
 * Updated data files with data from 10.2.7
 * Updated TOC to support 10.2.7
