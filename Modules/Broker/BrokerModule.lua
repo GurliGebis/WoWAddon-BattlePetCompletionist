@@ -22,6 +22,7 @@ local BrokerModule = BattlePetCompletionist:NewModule("BrokerModule", "AceEvent-
 local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
+local GoalTrackerModule = BattlePetCompletionist:GetModule("GoalTrackerModule")
 local LibDataBroker = LibStub("LibDataBroker-1.1")
 local LibPetJournal = LibStub("LibPetJournal-2.0")
 
@@ -126,8 +127,8 @@ end
 -- Also used by AddonCompartmentModule
 function BrokerModule:OnTooltipShow(tooltip, includeDetails)
     tooltip:AddLine("Battle Pet Completionist")
-    -- TODO: left vs. right click instructions
-    tooltip:AddLine("|cffffff00Click|r to open the options dialog.")
+    tooltip:AddLine("|cffffff00Left Click|r to toggle goal tracker")
+    tooltip:AddLine("|cffffff00Right Click|r for options")
 
     if not includeDetails then
         return
@@ -177,10 +178,20 @@ end
 -- Also used by AddonCompartmentModule
 function BrokerModule:OnClick(button)
     if button == "LeftButton" then
-        -- TODO: show new window
-        InterfaceOptionsFrame_OpenToCategory(ConfigModule.OptionsFrame)
+        GoalTrackerModule:ToggleWindow()
     elseif button == "RightButton" then
-        InterfaceOptionsFrame_OpenToCategory(ConfigModule.OptionsFrame)
+        self:ToggleConfig()
+    end
+end
+
+function BrokerModule:ToggleConfig()
+    local optionsFrame = ConfigModule.OptionsFrame
+    if optionsFrame then
+        if SettingsPanel:IsShown() then
+            SettingsPanel:Hide()
+        else
+            InterfaceOptionsFrame_OpenToCategory(optionsFrame)
+        end
     end
 end
 
