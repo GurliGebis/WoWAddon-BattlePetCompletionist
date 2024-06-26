@@ -65,12 +65,18 @@ end
 
 function GoalTrackerModule:CreateWindow()
     local profile = DBModule:GetProfile()
+    for key,_ in pairs(profile.goalTrackerStatus) do
+        print("goalTrackerStatus has ", key)
+    end
+    for key,_ in pairs(profile.goalTrackerTabStatus) do
+        print("goalTrackerTabStatus has ", key)
+    end
     if not self.window then
         -- TODO: load from config
-        local pos = profile.goalTrackerPos or {}
-        local width = 500
-        local height = 320
+        --local width = profile.goalTrackerWidth or 500
+        --local height = profile.goalTrackerHeight or 320
         local window = AceGUI:Create("Window")
+        window:SetStatusTable(profile.goalTrackerStatus)
         -- TODO: consider strata
         --window.frame:SetFrameStrata("MEDIUM")
         --window.frame:Raise()
@@ -86,17 +92,12 @@ function GoalTrackerModule:CreateWindow()
         end)
         window:SetLayout("Fill")
         window.frame:SetClampedToScreen(true)
-        window.pos = pos
-        window:SetStatusTable(pos)
-        -- TODO: allow resize, and save in settings
-        window:EnableResize(false)
-        window:SetWidth(width)
-        window:SetHeight(height)
-        window:SetAutoAdjustHeight(true)
 
         -- Create the TabGroup
         local tab = AceGUI:Create("TabGroup")
+        tab:SetStatusTable(profile.goalTrackerTabStatus)
         tab:SetLayout("Flow")
+        -- TODO: use constants
         -- Setup which tabs to show
         tab:SetTabs({{text="One Collected", value="oneCollected"}, {text="Max Rare", value="maxRare"}, {text="All", value="all"}})
         -- Register callback
@@ -117,8 +118,8 @@ function GoalTrackerModule:CreateWindow()
             end
         end)
         -- Set initial Tab (this will fire the OnGroupSelected callback)
-        -- TODO: select based on config
-        tab:SelectTab("oneCollected")
+        -- TODO: select based on config, or just retain selection?
+        tab:SelectTab(profile.goalTrackerTabStatus.selected)
 
         -- add to the frame container
         window:AddChild(tab)
