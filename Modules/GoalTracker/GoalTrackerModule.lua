@@ -18,33 +18,58 @@
 
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
-local GoalTrackerModule = BattlePetCompletionist:NewModule("GoalTrackerModule")
+local GoalTrackerModule = BattlePetCompletionist:NewModule("GoalTrackerModule", "AceEvent-3.0")
 --local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 --local DataModule = BattlePetCompletionist:GetModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local AceGUI = LibStub("AceGUI-3.0")
 --local LibDataBroker = LibStub("LibDataBroker-1.1")
---local LibPetJournal = LibStub("LibPetJournal-2.0")
+local LibPetJournal = LibStub("LibPetJournal-2.0")
 
--- TODO: auto-show on login based on config
+function GoalTrackerModule:UpdateWindow()
+    -- TODO
+end
+
+function GoalTrackerModule:RegisterEventHandlers()
+    self:RegisterMessage(_BattlePetCompletionist.Events.ZONE_CHANGE, "UpdateWindow")
+    LibPetJournal.RegisterCallback(self, "PetListUpdated", "UpdateWindow")
+end
+
+function GoalTrackerModule:OnInitialize()
+    -- TODO: auto-show on login based on config
+    self:RegisterEventHandlers()
+    self:InitializeWindow()
+end
+
+function GoalTrackerModule:InitializeWindow()
+    local profile = DBModule:GetProfile()
+    if profile.goalTrackerOpen then
+        local window = self:CreateWindow()
+        window:Show()
+        self:UpdateWindow()
+    end
+end
 
 function GoalTrackerModule:ToggleWindow()
+    local profile = DBModule:GetProfile()
     local window = self:CreateWindow()
     if window.frame:IsShown() then
+        profile.goalTrackerOpen = false
         window:Hide()
     else
+        profile.goalTrackerOpen = true
         window:Show()
         self:UpdateWindow()
     end
 end
 
 function GoalTrackerModule:CreateWindow()
+    local profile = DBModule:GetProfile()
     if not self.window then
         -- TODO: load from config
-        local pos = nil or {}
-        local minWidth = 500
-        local minHeight = 320
-
+        local pos = profile.goalTrackerPos or {}
+        local width = 500
+        local height = 320
         local window = AceGUI:Create("Window")
         -- TODO: consider strata
         --window.frame:SetFrameStrata("MEDIUM")
@@ -55,6 +80,7 @@ function GoalTrackerModule:CreateWindow()
         self.window = window
         window:SetTitle("BattlePets Goal Tracker")
         window:SetCallback("OnClose", function(widget)
+            profile.goalTrackerOpen = false
             AceGUI:Release(widget)
             self.window = nil
         end)
@@ -62,9 +88,10 @@ function GoalTrackerModule:CreateWindow()
         window.frame:SetClampedToScreen(true)
         window.pos = pos
         window:SetStatusTable(pos)
+        -- TODO: allow resize, and save in settings
         window:EnableResize(false)
-        window:SetWidth(minWidth)
-        window:SetHeight(minHeight)
+        window:SetWidth(width)
+        window:SetHeight(height)
         window:SetAutoAdjustHeight(true)
 
         -- Create the TabGroup
@@ -97,10 +124,6 @@ function GoalTrackerModule:CreateWindow()
         window:AddChild(tab)
     end
     return self.window
-end
-
-function GoalTrackerModule:UpdateWindow()
-    -- TODO
 end
 
 function GoalTrackerModule:PopulateOneCollectedTab(container)

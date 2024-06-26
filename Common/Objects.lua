@@ -54,4 +54,7 @@ _BattlePetCompletionist = {
             LARGE = "LARGE",
         },
     },
+    Events = {
+        ZONE_CHANGE = "BattlePetCompletionist_ZoneChange",
+    },
 }

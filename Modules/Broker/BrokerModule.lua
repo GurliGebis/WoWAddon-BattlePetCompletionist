@@ -23,6 +23,7 @@ local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local GoalTrackerModule = BattlePetCompletionist:GetModule("GoalTrackerModule")
+local ZoneModule = BattlePetCompletionist:GetModule("ZoneModule")
 local LibDataBroker = LibStub("LibDataBroker-1.1")
 local LibPetJournal = LibStub("LibPetJournal-2.0")
 
@@ -31,41 +32,38 @@ function BrokerModule:GetDataObject()
     return self.dataSource
 end
 
-function BrokerModule:RegisterEventHandlers()
-    self:RegisterEvent("ZONE_CHANGED", "HandleZoneChange")
-    self:RegisterEvent("ZONE_CHANGED_INDOORS", "HandleZoneChange")
-    self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "HandleZoneChange")
-    self:RegisterEvent("NEW_WMO_CHUNK", "HandleZoneChange")
-    self:RegisterEvent("PLAYER_ENTERING_WORLD", "HandleZoneChange")
-    LibPetJournal.RegisterCallback(self, "PetListUpdated", "HandlePetChange")
-end
-
-function BrokerModule:HandleZoneChange()
-    local mapID = self:DetermineMap()
-    -- self.mapID will be nil on first check
-    if mapID ~= self.mapID then
-        self.mapID = mapID
-        self:RefreshData()
+function BrokerModule:RefreshData()
+    local count = 0
+    local totalCount = 0
+    local petData = self:GetZonePetData()
+    local profile = DBModule:GetProfile()
+    local goal = profile.brokerGoal
+    local goalTextEnabled = profile.brokerGoalTextEnabled
+    for speciesId, _ in pairs(petData) do
+        totalCount = totalCount + 1
+        if self:MetGoal(goal, self:GetNumCollectedInfo(speciesId)) then
+            count = count + 1
+        end
     end
+    local suffix
+    if goalTextEnabled then
+        suffix = self:GetSuffixForGoal(goal)
+    else
+        suffix = ""
+    end
+    self.dataSource.text = string.format("%d/%d%s", count, totalCount, suffix)
 end
 
-function BrokerModule:HandlePetChange()
-    -- Ensure mapID is set even if it wasn't before
-    self.mapID = self:DetermineMap()
-    self:RefreshData()
-end
-
-function BrokerModule:DetermineMap()
-    -- If we wanted to exclude certain sub-zones from being eligible for selection, we could do so using data from
-    -- C_Map.GetMapInfo, such as parentMapID.  However, this appears sufficient for now.
-    return C_Map.GetBestMapForUnit("player")
+function BrokerModule:RegisterEventHandlers()
+    self:RegisterMessage(_BattlePetCompletionist.Events.ZONE_CHANGE, "RefreshData")
+    LibPetJournal.RegisterCallback(self, "PetListUpdated", "RefreshData")
 end
 
 -- Get the pets in the current zone.
--- We store the mapID rather than calling the API every time, so that we can detect changes.
--- This allows skipping updates when nothing we care about has changed, improving CPU usage.
+-- The map determination logic may skip some changes to improve CPU usage.
 function BrokerModule:GetZonePetData()
-    return DataModule:GetPetsInMap(self.mapID) or {}
+    local mapID = ZoneModule:ResolveZone()
+    return DataModule:GetPetsInMap(mapID) or {}
 end
 
 function BrokerModule:OnInitialize()
@@ -234,26 +232,4 @@ function BrokerModule:GetNumCollectedInfo(speciesId)
         end
     end
     return numCollected, numRareCollected, limit
-end
-
-function BrokerModule:RefreshData()
-    local count = 0
-    local totalCount = 0
-    local petData = self:GetZonePetData()
-    local profile = DBModule:GetProfile()
-    local goal = profile.brokerGoal
-    local goalTextEnabled = profile.brokerGoalTextEnabled
-    for speciesId, _ in pairs(petData) do
-        totalCount = totalCount + 1
-        if self:MetGoal(goal, self:GetNumCollectedInfo(speciesId)) then
-            count = count + 1
-        end
-    end
-    local suffix
-    if goalTextEnabled then
-        suffix = self:GetSuffixForGoal(goal)
-    else
-        suffix = ""
-    end
-    self.dataSource.text = string.format("%d/%d%s", count, totalCount, suffix)
 end
