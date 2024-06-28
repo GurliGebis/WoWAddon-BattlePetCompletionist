@@ -65,33 +65,21 @@ end
 
 function GoalTrackerModule:CreateWindow()
     local profile = DBModule:GetProfile()
-    for key,_ in pairs(profile.goalTrackerStatus) do
-        print("goalTrackerStatus has ", key)
-    end
-    for key,_ in pairs(profile.goalTrackerTabStatus) do
-        print("goalTrackerTabStatus has ", key)
-    end
     if not self.window then
-        -- TODO: load from config
-        --local width = profile.goalTrackerWidth or 500
-        --local height = profile.goalTrackerHeight or 320
         local window = AceGUI:Create("Window")
         window:SetStatusTable(profile.goalTrackerStatus)
-        -- TODO: consider strata
-        --window.frame:SetFrameStrata("MEDIUM")
-        --window.frame:Raise()
-        --window.content:SetFrameStrata("MEDIUM")
-        --window.content:Raise()
-        window:Hide()
+        window.frame:SetFrameStrata("LOW")
+        window.frame:Raise()
+        window.content:SetFrameStrata("LOW")
+        window.content:Raise()
         self.window = window
         window:SetTitle("BattlePets Goal Tracker")
-        window:SetCallback("OnClose", function(widget)
-            profile.goalTrackerOpen = false
-            AceGUI:Release(widget)
-            self.window = nil
-        end)
         window:SetLayout("Fill")
         window.frame:SetClampedToScreen(true)
+        window.closebutton:SetScript("OnClick", function()
+            profile.goalTrackerOpen = false
+            window:Hide()
+        end)
 
         -- Create the TabGroup
         local tab = AceGUI:Create("TabGroup")
