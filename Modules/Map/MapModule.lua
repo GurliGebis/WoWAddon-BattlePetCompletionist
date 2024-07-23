@@ -198,24 +198,23 @@ local function BattlePetToggle_OnClick()
 end
 
 function MapModule:InitializeDropDown()
-    AceHook:SecureHook(WorldMapFrame.overlayFrames[2], "InitializeDropDown", function()
-        UIDropDownMenu_AddSeparator()
-
-        local header = UIDropDownMenu_CreateInfo()
-        header.isTitle = true
-        header.notCheckable = true
-        header.text = "Battle Pet Completionist"
-        UIDropDownMenu_AddButton(header)
-
-        local battlePetToggle = UIDropDownMenu_CreateInfo()
-        battlePetToggle.isNotRadio = true
-        battlePetToggle.keepShownOnClick = true
-        battlePetToggle.text = "Battle Pets"
-        battlePetToggle.checked = DBModule:GetProfile().mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.NONE
-        battlePetToggle.func = BattlePetToggle_OnClick
-        UIDropDownMenu_AddButton(battlePetToggle)
-    end)
-
+--    AceHook:SecureHook(WorldMapFrame.overlayFrames[2], "InitializeDropDown", function()
+--        UIDropDownMenu_AddSeparator()
+--
+--        local header = UIDropDownMenu_CreateInfo()
+--        header.isTitle = true
+--        header.notCheckable = true
+--        header.text = "Battle Pet Completionist"
+--        UIDropDownMenu_AddButton(header)
+--
+--        local battlePetToggle = UIDropDownMenu_CreateInfo()
+--        battlePetToggle.isNotRadio = true
+--        battlePetToggle.keepShownOnClick = true
+--        battlePetToggle.text = "Battle Pets"
+--        battlePetToggle.checked = DBModule:GetProfile().mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.NONE
+--        battlePetToggle.func = BattlePetToggle_OnClick
+--        UIDropDownMenu_AddButton(battlePetToggle)
+--    end)
 end
 
 function MapModule:OnEnable()

@@ -1,5 +1,6 @@
 # 11.0.0-20240723-1
 * Updated Ace3 to support The War Within.
+* Comment out map dropdown, since the logic is not compatible with The War Within.
 
 # 10.2.7-20240512-1
 * Implement fix for high CPU usage when changing zone, provided by davidmc24 on github.
