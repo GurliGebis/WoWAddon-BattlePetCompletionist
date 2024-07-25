@@ -1,3 +1,6 @@
+# 11.0.0-20240725-3
+* Fix logic to open settings dialog.
+
 # 11.0.0-20240725-2
 * Updated data files with data from 11.0.0
 

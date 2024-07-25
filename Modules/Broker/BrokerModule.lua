@@ -178,9 +178,9 @@ end
 function BrokerModule:OnClick(button)
     if button == "LeftButton" then
         -- TODO: show new window
-        InterfaceOptionsFrame_OpenToCategory(ConfigModule.OptionsFrame)
+        Settings.OpenToCategory(ConfigModule.OptionsFrame.name)
     elseif button == "RightButton" then
-        InterfaceOptionsFrame_OpenToCategory(ConfigModule.OptionsFrame)
+        Settings.OpenToCategory(ConfigModule.OptionsFrame.name)
     end
 end
 
