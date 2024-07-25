@@ -2,6 +2,7 @@
 * Fix logic to open settings dialog.
 * Change so libraries are downloaded when package is built.
 * Add github actions workflow to build package.
+* LibDataBroker should not be downloaded on build.
 
 # 11.0.0-20240725-2
 * Updated data files with data from 11.0.0
