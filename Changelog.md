@@ -1,3 +1,6 @@
+# 11.0.0-20240725-2
+* Updated data files with data from 11.0.0
+
 # 11.0.0-20240725-1
 * Fix for C_PetBattles.GetBreedQuality being indexed from 0 (used to be 1).
 
