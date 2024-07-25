@@ -1,3 +1,6 @@
+# 11.0.0-20240725-1
+* Fix for C_PetBattles.GetBreedQuality being indexed from 0 (used to be 1).
+
 # 11.0.0-20240723-1
 * Updated Ace3 to support The War Within.
 * Comment out map dropdown, since the logic is not compatible with The War Within.
