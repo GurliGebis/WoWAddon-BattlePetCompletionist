@@ -143,6 +143,11 @@ function DataModule:GetEnemyPetsInBattle()
         local breedQuality = C_PetBattles.GetBreedQuality(Enum.BattlePetOwner.Enemy, i)
         local obtainable = select(11, C_PetJournal.GetPetInfoBySpeciesID(speciesId));
 
+        -- In 11.0.0, Blizzard changed the C_PetBattles.GetBreedQuality to be indexed from 0.
+        -- However, all other functions related to pet quality is still indexed from 1.
+        -- So until everything is changed, we just add 1 to the result.
+        breedQuality = breedQuality + 1
+
         if obtainable then
             local ownedPets = DataModule:GetOwnedPets(speciesId)
 
