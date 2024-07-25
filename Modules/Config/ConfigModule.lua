@@ -397,5 +397,5 @@ function ConfigModule:OnInitialize()
 end
 
 function ConfigModule:ChatCommandOptions(msg)
-    InterfaceOptionsFrame_OpenToCategory(ConfigModule.OptionsFrame)
+    Settings.OpenToCategory(ConfigModule.OptionsFrame.name)
 end
