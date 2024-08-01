@@ -1,3 +1,6 @@
+# 11.0.0-20240801-1
+* Change how the pet sources are being compared.
+
 # 11.0.0-20240725-3
 * Fix logic to open settings dialog.
 * Change so libraries are downloaded when package is built.
