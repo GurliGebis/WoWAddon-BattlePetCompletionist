@@ -1,3 +1,6 @@
+# 11.0.2-20240813-1
+* Updated TOC to support 11.0.2
+
 # 11.0.0-20240801-1
 * Change how the pet sources are being compared.
 
