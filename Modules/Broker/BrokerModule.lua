@@ -188,7 +188,7 @@ function BrokerModule:ToggleConfig()
         if SettingsPanel:IsShown() then
             SettingsPanel:Hide()
         else
-            InterfaceOptionsFrame_OpenToCategory(optionsFrame)
+            Settings.OpenToCategory(optionsFrame)
         end
     end
 end

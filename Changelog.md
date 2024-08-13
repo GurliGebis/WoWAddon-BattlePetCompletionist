@@ -1,3 +1,26 @@
+# 11.0.2-20240813-1
+* Updated TOC to support 11.0.2
+
+# 11.0.0-20240801-1
+* Change how the pet sources are being compared.
+
+# 11.0.0-20240725-3
+* Fix logic to open settings dialog.
+* Change so libraries are downloaded when package is built.
+* Add github actions workflow to build package.
+* LibDataBroker should not be downloaded on build.
+
+# 11.0.0-20240725-2
+* Updated data files with data from 11.0.0
+
+# 11.0.0-20240725-1
+* Fix for C_PetBattles.GetBreedQuality being indexed from 0 (used to be 1).
+
+# 11.0.0-20240723-1
+* Updated Ace3 to support The War Within.
+* Comment out map dropdown, since the logic is not compatible with The War Within.
+* Updated TOC to support 11.0.0
+
 # 10.2.7-20240512-1
 * Implement fix for high CPU usage when changing zone, provided by davidmc24 on github.
 

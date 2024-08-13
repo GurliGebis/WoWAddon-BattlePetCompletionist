@@ -143,6 +143,11 @@ function DataModule:GetEnemyPetsInBattle()
         local breedQuality = C_PetBattles.GetBreedQuality(Enum.BattlePetOwner.Enemy, i)
         local obtainable = select(11, C_PetJournal.GetPetInfoBySpeciesID(speciesId));
 
+        -- In 11.0.0, Blizzard changed the C_PetBattles.GetBreedQuality to be indexed from 0.
+        -- However, all other functions related to pet quality is still indexed from 1.
+        -- So until everything is changed, we just add 1 to the result.
+        breedQuality = breedQuality + 1
+
         if obtainable then
             local ownedPets = DataModule:GetOwnedPets(speciesId)
 
@@ -188,24 +193,20 @@ function DataModule:CanWeCapturePets()
 end
 
 function DataModule:GetPetSource(speciesId)
-    local _, _, _, _, tooltipSource = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
-    local index = string.find(tooltipSource, ":")
-    local source = ""
+    local tooltipSource = select(5, C_PetJournal.GetPetInfoBySpeciesID(speciesId))
 
-    if index then
-        source = string.sub(tooltipSource, 1, index - 1)
+    -- Remove the color part of the name
+    local trimmed = string.sub(tooltipSource, 11, string.len(tooltipSource) - 1)
+
+    for i = 1, C_PetJournal.GetNumPetSources() do
+        local filter = _G["BATTLE_PET_SOURCE_"..i]
+
+        -- Then we look at the length that matches the length of the BATTLE_PET_SOURCE string.
+        -- If they match, we return.
+        if string.sub(trimmed, 1, #filter) == filter then
+            return filter
+        end
     end
 
-    if     string.find(source, BATTLE_PET_SOURCE_1) ~= nil then return BATTLE_PET_SOURCE_1
-    elseif string.find(source, BATTLE_PET_SOURCE_2) ~= nil then return BATTLE_PET_SOURCE_2
-    elseif string.find(source, BATTLE_PET_SOURCE_3) ~= nil then return BATTLE_PET_SOURCE_3
-    elseif string.find(source, BATTLE_PET_SOURCE_4) ~= nil then return BATTLE_PET_SOURCE_4
-    elseif string.find(source, BATTLE_PET_SOURCE_5) ~= nil then return BATTLE_PET_SOURCE_5
-    elseif string.find(source, BATTLE_PET_SOURCE_6) ~= nil then return BATTLE_PET_SOURCE_6
-    elseif string.find(source, BATTLE_PET_SOURCE_7) ~= nil then return BATTLE_PET_SOURCE_7
-    elseif string.find(source, BATTLE_PET_SOURCE_8) ~= nil then return BATTLE_PET_SOURCE_8
-    elseif string.find(source, BATTLE_PET_SOURCE_9) ~= nil then return BATTLE_PET_SOURCE_9
-    elseif string.find(source, BATTLE_PET_SOURCE_10) ~= nil then return BATTLE_PET_SOURCE_10
-    elseif string.find(source, BATTLE_PET_SOURCE_11) ~= nil then return BATTLE_PET_SOURCE_11
-    else return nil end
+    return nil
 end
