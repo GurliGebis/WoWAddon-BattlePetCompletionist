@@ -49,10 +49,6 @@ local defaultOptions = {
             width = 500,
             height = 320,
         },
-        goalTrackerTabStatus = {
-            -- TODO: use constant
-            selected = "oneCollected",
-        },
     }
 }
 
