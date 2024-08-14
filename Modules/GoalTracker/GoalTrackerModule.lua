@@ -19,15 +19,91 @@
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local GoalTrackerModule = BattlePetCompletionist:NewModule("GoalTrackerModule", "AceEvent-3.0")
---local ConfigModule = BattlePetCompletionist:GetModule("ConfigModule")
---local DataModule = BattlePetCompletionist:GetModule("DataModule")
+local DataModule = BattlePetCompletionist:GetModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
+local ZoneModule = BattlePetCompletionist:GetModule("ZoneModule")
 local AceGUI = LibStub("AceGUI-3.0")
---local LibDataBroker = LibStub("LibDataBroker-1.1")
 local LibPetJournal = LibStub("LibPetJournal-2.0")
 
 function GoalTrackerModule:UpdateWindow()
-    -- TODO
+    local petData = self:GetZonePetData()
+
+    local collectedSpeciesCount = 0
+    local totalSpeciesCount = 0
+    local entries = {}
+    if petData then
+        for speciesId, _ in pairs(petData) do
+            local numCollected, _ = C_PetJournal.GetNumCollectedInfo(speciesId)
+            totalSpeciesCount = totalSpeciesCount + 1
+            if numCollected > 0 then
+                collectedSpeciesCount = collectedSpeciesCount + 1
+            else
+                local speciesName, speciesIconPath = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
+                table.insert(entries, {speciesId, speciesName, speciesIconPath})
+            end
+        end
+        function compare(a, b)
+            return a[2] < b[2]
+        end
+        table.sort(entries, compare)
+    end
+
+    if (self.content) then
+        self.content:ReleaseChildren()
+        local heading = AceGUI:Create("Heading")
+        heading:SetText(string.format("%d/%d Uncollected", totalSpeciesCount - collectedSpeciesCount, totalSpeciesCount))
+        heading:SetRelativeWidth(1)
+        self.content:AddChild(heading)
+
+        for _, entry in pairs(entries) do
+            local speciesId = entry[1]
+            local speciesName = entry[2]
+            local speciesIconPath = entry[3]
+            local sourceTypeIconPath = self:TooltipToSourceTypeIcon(speciesId)
+
+            local function openJournalToSpecies()
+                if not CollectionsJournal then
+                    CollectionsJournal_LoadUI()
+                end
+                SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
+                PetJournal_UpdateAll()
+                PetJournal_SelectSpecies(PetJournal, speciesId)
+                if RematchFrame and RematchFrame.PetsPanel.Top.SearchBox then
+                    RematchFrame.PetsPanel.Top.SearchBox:SetText('"' .. speciesName .. '"')
+                    RematchFrame.PetsPanel.Top.SearchBox:OnTextChanged('"' .. speciesName .. '"')
+                elseif PetJournalSearchBox then
+                    PetJournalSearchBox:SetText('"' .. speciesName .. '"')
+                end
+            end
+
+            local row = AceGUI:Create("SimpleGroup")
+            row:SetLayout("Flow")
+            local speciesIcon = AceGUI:Create("Icon")
+            speciesIcon:SetImage(speciesIconPath)
+            speciesIcon:SetImageSize(16, 16)
+            speciesIcon:SetHeight(18)
+            speciesIcon:SetWidth(18)
+            speciesIcon:SetCallback("OnClick", openJournalToSpecies)
+            local sourceTypeIcon = AceGUI:Create("Icon")
+            sourceTypeIcon:SetImage(sourceTypeIconPath)
+            sourceTypeIcon:SetImageSize(16, 16)
+            sourceTypeIcon:SetHeight(18)
+            sourceTypeIcon:SetWidth(18)
+            sourceTypeIcon:SetCallback("OnClick", openJournalToSpecies)
+            local label = AceGUI:Create("InteractiveLabel")
+            label:SetText(speciesName)
+            label:SetCallback("OnClick", openJournalToSpecies)
+            label:SetFont(GameFontNormal:GetFont())
+            row:AddChild(speciesIcon)
+            row:AddChild(sourceTypeIcon)
+            row:AddChild(label)
+            self.content:AddChild(row)
+        end
+        local heading = AceGUI:Create("Heading")
+        heading:SetText(string.format("%d/%d Collected", collectedSpeciesCount, totalSpeciesCount))
+        heading:SetRelativeWidth(1)
+        self.content:AddChild(heading)
+    end
 end
 
 function GoalTrackerModule:RegisterEventHandlers()
@@ -36,7 +112,6 @@ function GoalTrackerModule:RegisterEventHandlers()
 end
 
 function GoalTrackerModule:OnInitialize()
-    -- TODO: auto-show on login based on config
     self:RegisterEventHandlers()
     self:InitializeWindow()
 end
@@ -81,320 +156,44 @@ function GoalTrackerModule:CreateWindow()
             window:Hide()
         end)
 
-        -- Create the TabGroup
-        local tab = AceGUI:Create("TabGroup")
-        tab:SetStatusTable(profile.goalTrackerTabStatus)
-        tab:SetLayout("Flow")
-        -- TODO: use constants
-        -- Setup which tabs to show
-        tab:SetTabs({{text="One Collected", value="oneCollected"}, {text="Max Rare", value="maxRare"}, {text="All", value="all"}})
-        -- Register callback
-        tab:SetCallback("OnGroupSelected", function (container, event, group)
-            container:ReleaseChildren()
-            -- TODO: more modes
-            if group == "oneCollected" then
-                self:PopulateOneCollectedTab(container)
-                --elseif group == "oneRare" then
-                --    BrokerModule:PopulateOneRareTab(container)
-                --elseif group == "maxCollected" then
-                --    BrokerModule:PopulateMaxCollectedTab(container)
-            elseif group == "maxRare" then
-                self:PopulateMaxRareTab(container)
-                -- TODO: level based?
-            elseif group == "all" then
-                self:PopulateAllTab(container)
-            end
-        end)
-        -- Set initial Tab (this will fire the OnGroupSelected callback)
-        -- TODO: select based on config, or just retain selection?
-        tab:SelectTab(profile.goalTrackerTabStatus.selected)
-
-        -- add to the frame container
-        window:AddChild(tab)
+        local content = AceGUI:Create("SimpleGroup")
+        window:AddChild(content)
+        self.content = content
     end
     return self.window
 end
 
-function GoalTrackerModule:PopulateOneCollectedTab(container)
-    --local petData = self:GetZonePetData()
-    --
-    --if not petData then
-    --    local label = AceGUI:Create("InteractiveLabel")
-    --    label:SetText("No pets found for current zone")
-    --    container:AddChild(label)
-    --    return
-    --end
-    --
-    --local scrollContainer = AceGUI:Create("SimpleGroup") -- "InlineGroup" is also good
-    --scrollContainer:SetFullWidth(true)
-    --scrollContainer:SetFullHeight(true) -- probably?
-    --scrollContainer:SetLayout("Fill") -- important!
-    --
-    --container:AddChild(scrollContainer)
-    --
-    --local scroll = AceGUI:Create("ScrollFrame")
-    --scroll:SetLayout("Flow") -- probably?
-    --scrollContainer:AddChild(scroll)
-    --
-    ---- TODO: handle no pets situation (no petData)
-    ---- TODO: sort
-    --
-    --local collectedSpeciesCount = 0
-    --local totalSpeciesCount = 0
-    --for speciesId, _ in pairs(petData) do
-    --    local speciesName, speciesIconPath, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
-    --    local numCollected, _ = C_PetJournal.GetNumCollectedInfo(speciesId)
-    --
-    --    totalSpeciesCount = totalSpeciesCount + 1
-    --    if numCollected > 0 then
-    --        collectedSpeciesCount = collectedSpeciesCount + 1
-    --    else
-    --        local function openJournalToSpecies()
-    --            if not CollectionsJournal then
-    --                CollectionsJournal_LoadUI()
-    --            end
-    --            SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
-    --            PetJournal_UpdateAll()
-    --            PetJournal_SelectSpecies(PetJournal, speciesId)
-    --            if RematchFrame.PetsPanel.Top.SearchBox then
-    --                RematchFrame.PetsPanel.Top.SearchBox:SetText('"' .. speciesName .. '"')
-    --                RematchFrame.PetsPanel.Top.SearchBox:OnTextChanged('"' .. speciesName .. '"')
-    --            elseif PetJournalSearchBox then
-    --                PetJournalSearchBox:SetText('"' .. speciesName .. '"')
-    --            end
-    --        end
-    --
-    --        local sourceTypeIconPath = self:TooltipToSourceTypeIcon(speciesId)
-    --        local speciesIcon = AceGUI:Create("Icon")
-    --        speciesIcon:SetImage(speciesIconPath)
-    --        speciesIcon:SetImageSize(16, 16)
-    --        speciesIcon:SetHeight(18)
-    --        speciesIcon:SetWidth(18)
-    --        speciesIcon:SetCallback("OnClick", openJournalToSpecies)
-    --        local sourceTypeIcon = AceGUI:Create("Icon")
-    --        sourceTypeIcon:SetImage(sourceTypeIconPath)
-    --        sourceTypeIcon:SetImageSize(16, 16)
-    --        sourceTypeIcon:SetHeight(18)
-    --        sourceTypeIcon:SetWidth(18)
-    --        local label = AceGUI:Create("InteractiveLabel")
-    --        label:SetText(speciesName)
-    --        label:SetCallback("OnClick", openJournalToSpecies)
-    --        local line = AceGUI:Create("SimpleGroup")
-    --        line:SetAutoAdjustHeight(true)
-    --        line:SetFullWidth(true)
-    --        line:SetLayout("Flow")
-    --        line:AddChild(speciesIcon)
-    --        line:AddChild(sourceTypeIcon)
-    --        line:AddChild(label)
-    --
-    --        scroll:AddChild(line)
-    --    end
-    --end
-    --local label = AceGUI:Create("InteractiveLabel")
-    --label:SetText(string.format("%d/%d Complete", collectedSpeciesCount, totalSpeciesCount))
-    --
-    --local line = AceGUI:Create("SimpleGroup")
-    --line:SetAutoAdjustHeight(true)
-    --line:SetFullWidth(true)
-    --line:SetLayout("Flow")
-    --line:AddChild(label)
-    --
-    --scroll:AddChild(line)
+-- Get the pets in the current zone.
+-- The map determination logic may skip some changes to improve CPU usage.
+function GoalTrackerModule:GetZonePetData()
+    local mapID = ZoneModule:ResolveZone()
+    return DataModule:GetPetsInMap(mapID) or {}
 end
 
-function GoalTrackerModule:PopulateMaxRareTab(container)
-    --local petData = self:GetZonePetData()
-    --
-    --if not petData then
-    --    local label = AceGUI:Create("InteractiveLabel")
-    --    label:SetText("No pets found for current zone")
-    --    container:AddChild(label)
-    --    return
-    --end
-    --
-    --local scrollContainer = AceGUI:Create("SimpleGroup") -- "InlineGroup" is also good
-    --scrollContainer:SetFullWidth(true)
-    --scrollContainer:SetFullHeight(true) -- probably?
-    --scrollContainer:SetLayout("Fill") -- important!
-    --
-    --container:AddChild(scrollContainer)
-    --
-    --local scroll = AceGUI:Create("ScrollFrame")
-    --scroll:SetLayout("Flow") -- probably?
-    --scrollContainer:AddChild(scroll)
-    --
-    ---- TODO: handle no pets situation (no petData)
-    ---- TODO: sort
-    --
-    --local maxRareCollectedCount = 0
-    --local totalSpeciesCount = 0
-    --for speciesId, _ in pairs(petData) do
-    --    local speciesName, speciesIconPath, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
-    --    local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
-    --    local myPets = DataModule:GetOwnedPets(speciesId)
-    --    local rareQuality = 4
-    --    local rareCollected = 0
-    --    local maxQuality = -1
-    --    local petStrings = {}
-    --    local petSummary
-    --    if myPets ~= nil then
-    --        for _, myPetInfo in ipairs(myPets) do
-    --            local petLevel, petQuality = myPetInfo[1], myPetInfo[2]
-    --            table.insert(petStrings, self:QualityToColorCode(petQuality) .. "L" .. petLevel .. FONT_COLOR_CODE_CLOSE)
-    --            if petQuality > maxQuality then
-    --                maxQuality = petQuality
-    --            end
-    --            if petQuality >= rareQuality then
-    --                rareCollected = rareCollected + 1
-    --            end
-    --        end
-    --    end
-    --    while #petStrings < limit do
-    --        table.insert(petStrings, RED_FONT_COLOR_CODE .. "L0" .. FONT_COLOR_CODE_CLOSE)
-    --    end
-    --    petSummary = table.concat(petStrings, "/")
-    --    totalSpeciesCount = totalSpeciesCount + 1
-    --    if rareCollected >= limit then
-    --        maxRareCollectedCount = maxRareCollectedCount + 1
-    --    else
-    --        local function openJournalToSpecies()
-    --            if not CollectionsJournal then
-    --                CollectionsJournal_LoadUI()
-    --            end
-    --            SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
-    --            PetJournal_UpdateAll()
-    --            PetJournal_SelectSpecies(PetJournal, speciesId)
-    --            if RematchFrame.PetsPanel.Top.SearchBox then
-    --                RematchFrame.PetsPanel.Top.SearchBox:SetText('"' .. speciesName .. '"')
-    --                RematchFrame.PetsPanel.Top.SearchBox:OnTextChanged('"' .. speciesName .. '"')
-    --            elseif PetJournalSearchBox then
-    --                PetJournalSearchBox:SetText('"' .. speciesName .. '"')
-    --            end
-    --        end
-    --        local sourceTypeIconPath = self:TooltipToSourceTypeIcon(speciesId)
-    --        local speciesIcon = AceGUI:Create("Icon")
-    --        speciesIcon:SetImage(speciesIconPath)
-    --        speciesIcon:SetImageSize(16, 16)
-    --        speciesIcon:SetHeight(18)
-    --        speciesIcon:SetWidth(18)
-    --        speciesIcon:SetCallback("OnClick", openJournalToSpecies)
-    --        local sourceTypeIcon = AceGUI:Create("Icon")
-    --        sourceTypeIcon:SetImage(sourceTypeIconPath)
-    --        sourceTypeIcon:SetImageSize(16, 16)
-    --        sourceTypeIcon:SetHeight(18)
-    --        sourceTypeIcon:SetWidth(18)
-    --        local label = AceGUI:Create("InteractiveLabel")
-    --        label:SetText(speciesName .. " " .. petSummary) -- TODO: more styling
-    --        label:SetCallback("OnClick", openJournalToSpecies)
-    --        local line = AceGUI:Create("SimpleGroup")
-    --        line:SetAutoAdjustHeight(true)
-    --        line:SetFullWidth(true)
-    --        line:SetLayout("Flow")
-    --        line:AddChild(speciesIcon)
-    --        line:AddChild(sourceTypeIcon)
-    --        line:AddChild(label)
-    --
-    --        scroll:AddChild(line)
-    --    end
-    --end
-    --local label = AceGUI:Create("InteractiveLabel")
-    --label:SetText(string.format("%d/%d Complete", maxRareCollectedCount, totalSpeciesCount))
-    --
-    --local line = AceGUI:Create("SimpleGroup")
-    --line:SetAutoAdjustHeight(true)
-    --line:SetFullWidth(true)
-    --line:SetLayout("Flow")
-    --line:AddChild(label)
-    --
-    --scroll:AddChild(line)
-end
-
-function GoalTrackerModule:PopulateAllTab(container)
-    --local petData = self:GetZonePetData()
-    --
-    --if not petData then
-    --    local label = AceGUI:Create("InteractiveLabel")
-    --    label:SetText("No pets found for current zone")
-    --    container:AddChild(label)
-    --    return
-    --end
-    --
-    --local scrollContainer = AceGUI:Create("SimpleGroup") -- "InlineGroup" is also good
-    --scrollContainer:SetFullWidth(true)
-    --scrollContainer:SetFullHeight(true) -- probably?
-    --scrollContainer:SetLayout("Fill") -- important!
-    --
-    --container:AddChild(scrollContainer)
-    --
-    --local scroll = AceGUI:Create("ScrollFrame")
-    --scroll:SetLayout("Flow") -- probably?
-    --scrollContainer:AddChild(scroll)
-    --
-    ---- TODO: handle no pets situation (no petData)
-    ---- TODO: sort
-    --
-    --for speciesId, _ in pairs(petData) do
-    --    local speciesName, speciesIconPath, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
-    --    local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
-    --    local myPets = DataModule:GetOwnedPets(speciesId)
-    --    local rareQuality = 4
-    --    local rareCollected = 0
-    --    local maxQuality = -1
-    --    local petStrings = {}
-    --    local petSummary
-    --    if myPets ~= nil then
-    --        for _, myPetInfo in ipairs(myPets) do
-    --            local petLevel, petQuality = myPetInfo[1], myPetInfo[2]
-    --            table.insert(petStrings, self:QualityToColorCode(petQuality) .. "L" .. petLevel .. FONT_COLOR_CODE_CLOSE)
-    --            if petQuality > maxQuality then
-    --                maxQuality = petQuality
-    --            end
-    --            if petQuality >= rareQuality then
-    --                rareCollected = rareCollected + 1
-    --            end
-    --        end
-    --    end
-    --    while #petStrings < limit do
-    --        table.insert(petStrings, RED_FONT_COLOR_CODE .. "L0" .. FONT_COLOR_CODE_CLOSE)
-    --    end
-    --    petSummary = table.concat(petStrings, "/")
-    --    local function openJournalToSpecies()
-    --        if not CollectionsJournal then
-    --            CollectionsJournal_LoadUI()
-    --        end
-    --        SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
-    --        PetJournal_UpdateAll()
-    --        PetJournal_SelectSpecies(PetJournal, speciesId)
-    --        if RematchFrame.PetsPanel.Top.SearchBox then
-    --            RematchFrame.PetsPanel.Top.SearchBox:SetText('"' .. speciesName .. '"')
-    --            RematchFrame.PetsPanel.Top.SearchBox:OnTextChanged('"' .. speciesName .. '"')
-    --        elseif PetJournalSearchBox then
-    --            PetJournalSearchBox:SetText('"' .. speciesName .. '"')
-    --        end
-    --    end
-    --    local sourceTypeIconPath = self:TooltipToSourceTypeIcon(speciesId)
-    --    local speciesIcon = AceGUI:Create("Icon")
-    --    speciesIcon:SetImage(speciesIconPath)
-    --    speciesIcon:SetImageSize(16, 16)
-    --    speciesIcon:SetHeight(18)
-    --    speciesIcon:SetWidth(18)
-    --    speciesIcon:SetCallback("OnClick", openJournalToSpecies)
-    --    local sourceTypeIcon = AceGUI:Create("Icon")
-    --    sourceTypeIcon:SetImage(sourceTypeIconPath)
-    --    sourceTypeIcon:SetImageSize(16, 16)
-    --    sourceTypeIcon:SetHeight(18)
-    --    sourceTypeIcon:SetWidth(18)
-    --    local label = AceGUI:Create("InteractiveLabel")
-    --    label:SetText(speciesName .. " " .. petSummary) -- TODO: more styling
-    --    label:SetCallback("OnClick", openJournalToSpecies)
-    --    local line = AceGUI:Create("SimpleGroup")
-    --    line:SetAutoAdjustHeight(true)
-    --    line:SetFullWidth(true)
-    --    line:SetLayout("Flow")
-    --    line:AddChild(speciesIcon)
-    --    line:AddChild(sourceTypeIcon)
-    --    line:AddChild(label)
-    --
-    --    scroll:AddChild(line)
-    --end
+function GoalTrackerModule:TooltipToSourceTypeIcon(speciesId)
+    local sourceType = DataModule:GetPetSource(speciesId)
+    local icon
+    if sourceType == BATTLE_PET_SOURCE_1 then -- Drop
+        icon = "Interface/WorldMap/TreasureChest_64"
+    elseif sourceType == BATTLE_PET_SOURCE_2 then -- Quest
+        icon = "Interface/GossipFrame/AvailableQuestIcon"
+    elseif sourceType == BATTLE_PET_SOURCE_3 then -- Vendor
+        icon = "Interface/Minimap/Tracking/Banker"
+    elseif sourceType == BATTLE_PET_SOURCE_4 then -- Profession
+        icon = "Interface/Archeology/Arch-Icon-Marker"
+    elseif sourceType == BATTLE_PET_SOURCE_5 then -- Pet Battle
+        icon = "Interface/Icons/Tracking_WildPet"
+        -- 6 Achievement; no icon assigned
+    elseif sourceType == BATTLE_PET_SOURCE_7 then -- World Event
+        icon = "Interface/GossipFrame/DailyQuestIcon"
+    elseif sourceType == BATTLE_PET_SOURCE_8 then -- Promotion
+        icon = "Interface/Minimap/Tracking/Banker"
+        -- 9 Trading Card Game; no icon assigned
+        -- 10 Shop; no icon assigned
+        -- 11 Discovery; no icon assigned
+        -- 12 Trading Post; no icon assigned
+    else -- In case we encounter an unhandled source type
+        icon = "Interface/Icons/Inv_misc_questionmark"
+    end
+    return icon
 end
