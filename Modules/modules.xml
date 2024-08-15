@@ -6,6 +6,8 @@
     <Include file="Capture\CaptureModule.xml" />
     <Include file="Combat\CombatModule.xml" />
     <Include file="Map\MapModule.xml"/>
+    <Include file="Zone\ZoneModule.xml"/>
+    <Include file="GoalTracker\GoalTrackerModule.xml"/>
     <Include file="Broker\BrokerModule.xml" />
     <Include file="AddonCompartment\AddonCompartmentModule.xml"/>
     <Include file="Minimap\MinimapModule.xml"/>

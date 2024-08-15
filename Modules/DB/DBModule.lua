@@ -45,6 +45,10 @@ local defaultOptions = {
         combatMode = _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND,
         forfeitThreshold = _BattlePetCompletionist.Enums.ForfeitThreshold.RARE,
         forfeitPromptUnless = _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_RARE,
+        goalTrackerStatus = {
+            width = 500,
+            height = 320,
+        },
     }
 }
 
