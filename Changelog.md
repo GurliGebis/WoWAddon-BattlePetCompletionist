@@ -1,3 +1,7 @@
+# 11.0.2-20240815-1
+* Added goal tracker window, provided by davidmc24 on github.
+* Updated data files with data from 11.0.2.
+
 # 11.0.2-20240813-1
 * Updated TOC to support 11.0.2
 
