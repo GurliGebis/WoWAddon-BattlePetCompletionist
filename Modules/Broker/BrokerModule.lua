@@ -184,11 +184,12 @@ end
 
 function BrokerModule:ToggleConfig()
     local optionsFrame = ConfigModule.OptionsFrame
+    local categoryId = ConfigModule.CategoryId
     if optionsFrame then
         if SettingsPanel:IsShown() then
             SettingsPanel:Hide()
         else
-            Settings.OpenToCategory(optionsFrame)
+            Settings.OpenToCategory(categoryId)
         end
     end
 end
