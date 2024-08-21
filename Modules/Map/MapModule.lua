@@ -18,7 +18,7 @@
 
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
-local MapModule = BattlePetCompletionist:NewModule("MapModule")
+local MapModule = BattlePetCompletionist:NewModule("MapModule", "AceConsole-3.0")
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local AceHook = LibStub("AceHook-3.0")
@@ -185,13 +185,15 @@ function MapModule:UpdateWorldMap()
     MapModule.WorldMapDataProvider:RefreshAllData()
 end
 
-local function BattlePetToggle_OnClick()
+function MapModule:BattlePetToggle_OnClick()
     local profile = DBModule:GetProfile()
     if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NONE then
         profile.mapPinsToInclude = profile.mapPinsToIncludeOriginal
+        MapModule:Print("Battle Pet Completionist - Tracking enabled.")
     else
         profile.mapPinsToIncludeOriginal = profile.mapPinsToInclude
         profile.mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.NONE
+        MapModule:Print("Battle Pet Completionist - Tracking disabled.")
     end
 
     MapModule:UpdateWorldMap()
@@ -212,7 +214,7 @@ function MapModule:InitializeDropDown()
 --        battlePetToggle.keepShownOnClick = true
 --        battlePetToggle.text = "Battle Pets"
 --        battlePetToggle.checked = DBModule:GetProfile().mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.NONE
---        battlePetToggle.func = BattlePetToggle_OnClick
+--        battlePetToggle.func = MapModule.BattlePetToggle_OnClick
 --        UIDropDownMenu_AddButton(battlePetToggle)
 --    end)
 end
@@ -239,4 +241,8 @@ function MapModule:GetMapPinScale()
     }
 
     return scaleMap[DBModule:GetProfile().mapPinSize]
+end
+
+function MapModule:OnInitialize()
+    MapModule:RegisterChatCommand("bpcom-toggle", "BattlePetToggle_OnClick")
 end
