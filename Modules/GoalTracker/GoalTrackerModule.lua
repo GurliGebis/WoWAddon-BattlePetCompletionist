@@ -119,21 +119,24 @@ end
 function GoalTrackerModule:InitializeWindow()
     local profile = DBModule:GetProfile()
     if profile.goalTrackerOpen then
-        local window = self:CreateWindow()
-        window:Show()
+        self:CreateWindow()
         self:UpdateWindow()
     end
 end
 
 function GoalTrackerModule:ToggleWindow()
     local profile = DBModule:GetProfile()
-    local window = self:CreateWindow()
-    if window.frame:IsShown() then
-        profile.goalTrackerOpen = false
+    local window = self.window
+    if not window then
+        window = self:CreateWindow()
+    elseif window.frame:IsShown() then
         window:Hide()
     else
-        profile.goalTrackerOpen = true
         window:Show()
+    end
+    local isShown = window.frame:IsShown()
+    profile.goalTrackerOpen = isShown
+    if isShown then
         self:UpdateWindow()
     end
 end
