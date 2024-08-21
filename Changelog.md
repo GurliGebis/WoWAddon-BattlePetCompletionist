@@ -1,3 +1,7 @@
+# 11.0.2-20240821-1
+* Right click on broker plug-in fix, provided by davidmc24 on github.
+* Fix goal tracker toggle window behavior, provided by davidmc24 on github.
+
 # 11.0.2-20240815-1
 * Added goal tracker window, provided by davidmc24 on github.
 * Updated data files with data from 11.0.2.
