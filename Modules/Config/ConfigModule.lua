@@ -391,8 +391,7 @@ local options = {
 
 function ConfigModule:OnInitialize()
     AceConfig:RegisterOptionsTable("BattlePetCompletionist_options", options)
-    ConfigModule.OptionsFrame = AceConfigDialog:AddToBlizOptions("BattlePetCompletionist_options", "Battle Pet Completionist")
-
+    ConfigModule.OptionsFrame, ConfigModule.CategoryId = AceConfigDialog:AddToBlizOptions("BattlePetCompletionist_options", "Battle Pet Completionist")
     ConfigModule:RegisterChatCommand("bpcom", "ChatCommandOptions")
 end
 
