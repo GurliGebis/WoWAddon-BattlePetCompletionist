@@ -185,6 +185,10 @@ function MapModule:UpdateWorldMap()
     MapModule.WorldMapDataProvider:RefreshAllData()
 end
 
+function MapModule:BattlePetToggle_GetStatus()
+    return DBModule:GetProfile().mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.NONE
+end
+
 function MapModule:BattlePetToggle_OnClick()
     local profile = DBModule:GetProfile()
     if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NONE then
@@ -200,23 +204,11 @@ function MapModule:BattlePetToggle_OnClick()
 end
 
 function MapModule:InitializeDropDown()
---    AceHook:SecureHook(WorldMapFrame.overlayFrames[2], "InitializeDropDown", function()
---        UIDropDownMenu_AddSeparator()
---
---        local header = UIDropDownMenu_CreateInfo()
---        header.isTitle = true
---        header.notCheckable = true
---        header.text = "Battle Pet Completionist"
---        UIDropDownMenu_AddButton(header)
---
---        local battlePetToggle = UIDropDownMenu_CreateInfo()
---        battlePetToggle.isNotRadio = true
---        battlePetToggle.keepShownOnClick = true
---        battlePetToggle.text = "Battle Pets"
---        battlePetToggle.checked = DBModule:GetProfile().mapPinsToInclude ~= _BattlePetCompletionist.Enums.MapPinFilter.NONE
---        battlePetToggle.func = MapModule.BattlePetToggle_OnClick
---        UIDropDownMenu_AddButton(battlePetToggle)
---    end)
+    Menu.ModifyMenu("MENU_WORLD_MAP_TRACKING", function(_, rootDescription)
+		rootDescription:CreateDivider()
+		rootDescription:CreateTitle("Battle Pet Completionist:")
+		rootDescription:CreateCheckbox("Show Battle Pets", MapModule.BattlePetToggle_GetStatus, MapModule.BattlePetToggle_OnClick)
+    end)
 end
 
 function MapModule:OnEnable()

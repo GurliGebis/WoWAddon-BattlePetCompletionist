@@ -1,3 +1,6 @@
+# 11.0.2-20240823-1
+* Re-added map dropdown, using new logic that is compatible with The War Within.
+
 # 11.0.2-20240821-2
 * Added support for toggling map pins using chat command.
 
