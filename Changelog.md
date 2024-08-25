@@ -1,3 +1,6 @@
+# 11.0.2-20240825-1
+* Updated data files with latest data from 11.0.2 week 2024-35
+
 # 11.0.2-20240823-1
 * Re-added map dropdown, using new logic that is compatible with The War Within.
 
