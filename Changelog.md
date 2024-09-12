@@ -1,6 +1,7 @@
 # 11.0.2-20240912-1
 
 * Updated data files with latest data from 11.0.2 week 2024-37
+* Github actions fixes.
 
 # 11.0.2-20240825-1
 * Updated data files with latest data from 11.0.2 week 2024-35
