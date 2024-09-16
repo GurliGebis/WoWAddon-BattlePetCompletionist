@@ -1,3 +1,6 @@
+# 11.0.2-20240916-1
+* The Ravenous Shalewing pet is unlisted, so don't include it.
+
 # 11.0.2-20240912-1
 * Updated data files with latest data from 11.0.2 week 2024-37
 * Github actions fixes.
