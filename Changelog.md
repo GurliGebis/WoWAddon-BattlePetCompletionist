@@ -1,3 +1,7 @@
+# 11.0.2-20241003-1
+* The Shalewing Devourer pet is unlisted, so don't include it.
+* Updated data files with latest data from 11.0.2 week 2024-40
+
 # 11.0.2-20240916-1
 * The Ravenous Shalewing pet is unlisted, so don't include it.
 
