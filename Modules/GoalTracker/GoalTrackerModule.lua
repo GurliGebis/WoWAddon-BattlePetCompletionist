@@ -25,6 +25,8 @@ local ZoneModule = BattlePetCompletionist:GetModule("ZoneModule")
 local AceGUI = LibStub("AceGUI-3.0")
 local LibPetJournal = LibStub("LibPetJournal-2.0")
 
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_GoalTracker")
+
 function GoalTrackerModule:UpdateWindow()
     local petData = self:GetZonePetData()
 
@@ -51,7 +53,7 @@ function GoalTrackerModule:UpdateWindow()
     if (self.content) then
         self.content:ReleaseChildren()
         local heading = AceGUI:Create("Heading")
-        heading:SetText(string.format("%d/%d Uncollected", totalSpeciesCount - collectedSpeciesCount, totalSpeciesCount))
+        heading:SetText(string.format(L["Uncollected"], totalSpeciesCount - collectedSpeciesCount, totalSpeciesCount))
         heading:SetRelativeWidth(1)
         self.content:AddChild(heading)
 
@@ -100,7 +102,7 @@ function GoalTrackerModule:UpdateWindow()
             self.content:AddChild(row)
         end
         local heading = AceGUI:Create("Heading")
-        heading:SetText(string.format("%d/%d Collected", collectedSpeciesCount, totalSpeciesCount))
+        heading:SetText(string.format(L["Collected"], collectedSpeciesCount, totalSpeciesCount))
         heading:SetRelativeWidth(1)
         self.content:AddChild(heading)
     end
@@ -151,7 +153,7 @@ function GoalTrackerModule:CreateWindow()
         window.content:SetFrameStrata("LOW")
         window.content:Raise()
         self.window = window
-        window:SetTitle("BattlePets Goal Tracker")
+        window:SetTitle(L["BattlePets Goal Tracker"])
         window:SetLayout("Fill")
         window.frame:SetClampedToScreen(true)
         window.closebutton:SetScript("OnClick", function()

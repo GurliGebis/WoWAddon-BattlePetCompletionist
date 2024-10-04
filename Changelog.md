@@ -1,3 +1,6 @@
+# 11.0.2-20241008-1
+* Moved hardcoded strings into localization.
+
 # 11.0.2-20241003-1
 * The Shalewing Devourer pet is unlisted, so don't include it.
 * Updated data files with latest data from 11.0.2 week 2024-40
