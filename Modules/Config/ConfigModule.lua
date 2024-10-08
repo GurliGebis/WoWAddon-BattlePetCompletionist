@@ -23,27 +23,29 @@ local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local AceConfig = LibStub("AceConfig-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Config")
+
 local standardControlWidth = 1.2; -- A little wider to allow for longer option labels
 local options = {
-    name = "Battle Pet Completionist",
+    name = L["Config Section - Battle Pet Completionist"],
     handler = ConfigModule,
     type = "group",
     args = {
         tooltipsAndNotificationsHeader = {
             order = 1,
-            name = "Tooltips and Notifications",
+            name = L["Header - Tooltips and Notifications"],
             type = "header"
         },
         tooltipsDescription = {
             order = 2,
-            name = "Tooltip and notification settings" .. "\n",
+            name = L["Description - Tooltip and notification settings"] .. "\n",
             type = "description"
         },
         petCageTooltipEnabled = {
             order = 3,
-            name = "Enable tooltips for pet cages and auction listings",
+            name = L["Enable tooltips for pet cages and auction listings"],
             type = "toggle",
-            desc = "Show a tooltip when hovering over a Pet Cage item or a pet in the auction UI.",
+            desc = L["Show a tooltip when hovering over a Pet Cage item or a pet in the auction UI"],
             width = "full",
             get = function()
                 return DBModule:GetProfile().petCageTooltipEnabled
@@ -55,9 +57,9 @@ local options = {
         },
         petBattleUnknownNotifyEnabled = {
             order = 4,
-            name = "Show notification when uncollected pets are in the enemy team.",
+            name = L["Show notification when uncollected pets are in the enemy team"],
             type = "toggle",
-            desc = "Show a notification window when one or more uncollected pets can be captured",
+            desc = L["Show a notification window when one or more uncollected pets can be captured"],
             width = "full",
             get = function()
                 return DBModule:GetProfile().petBattleUnknownNotifyEnabled
@@ -69,19 +71,19 @@ local options = {
         },
         displayHeader = {
             order = 5,
-            name = "Display",
+            name = L["Header - Display"],
             type = "header"
         },
         minimapDescription = {
             order = 6,
-            name = "Minimap settings" .. "\n",
+            name = L["Description - Minimap settings"] .. "\n",
             type = "description"
         },
         minimapIconEnabled = {
             order = 7,
-            name = "Enable the minimap icon",
+            name = L["Enable the minimap icon"],
             type = "toggle",
-            desc = "Show an icon on the minimap.",
+            desc = L["Show an icon on the minimap"],
             width = "full",
             get = function()
                 return DBModule:GetProfile().minimapIconEnabled
@@ -96,20 +98,20 @@ local options = {
         },
         brokerDescription = {
             order = 8,
-            name = "Data Broker settings" .. "\n",
+            name = L["Description - Data Broker settings"] .. "\n",
             type = "description"
         },
         brokerGoal = {
             order = 9,
-            name = "Display Goal",
+            name = L["Display Goal"],
             type = "select",
             width = standardControlWidth,
-            desc = "The goal to track in the data source.",
+            desc = L["The goal to track in the data source"],
             values = {
-                [_BattlePetCompletionist.Enums.Goal.COLLECT] = "Collect at least one",
-                [_BattlePetCompletionist.Enums.Goal.COLLECT_RARE] = "Collect at least one rare",
-                [_BattlePetCompletionist.Enums.Goal.COLLECT_MAX] = "Collect maximum amount",
-                [_BattlePetCompletionist.Enums.Goal.COLLECT_MAX_RARE] = "Collect maximum amount rare",
+                [_BattlePetCompletionist.Enums.Goal.COLLECT] = L["Broker Goal - Collect at least one"],
+                [_BattlePetCompletionist.Enums.Goal.COLLECT_RARE] = L["Broker Goal - Collect at least one rare"],
+                [_BattlePetCompletionist.Enums.Goal.COLLECT_MAX] = L["Broker Goal - Collect maximum amount"],
+                [_BattlePetCompletionist.Enums.Goal.COLLECT_MAX_RARE] = L["Broker Goal - Collect maximum amount rare"],
             },
             sorting = {
                 _BattlePetCompletionist.Enums.Goal.COLLECT,
@@ -128,9 +130,9 @@ local options = {
         },
         brokerGoalTextEnabled = {
             order = 10,
-            name = "Include goal text",
+            name = L["Include goal text"],
             type = "toggle",
-            desc = "Add a suffix to the displayed text",
+            desc = L["Add a suffix to the displayed text"],
             width = standardControlWidth,
             get = function()
                 return DBModule:GetProfile().brokerGoalTextEnabled
@@ -144,28 +146,28 @@ local options = {
         },
         mapPinsHeader = {
             order = 11,
-            name = "Map pins",
+            name = L["Header - Map pins"],
             type = "header"
         },
         mapPinsDescription = {
             order = 12,
-            name = "Map pins settings" .. "\n",
+            name = L["Description - Map pins settings"] .. "\n",
             type = "description"
         },
         mapPinsToInclude = {
             order = 13,
-            name = "Map pins to include",
+            name = L["Map pins to include"],
             type = "select",
             width = standardControlWidth,
-            desc = "Which map pins should be shown on the map.",
+            desc = L["Which map pins should be shown on the map"],
             values = {
-                [_BattlePetCompletionist.Enums.MapPinFilter.ALL] = "All",
-                [_BattlePetCompletionist.Enums.MapPinFilter.MISSING] = "Missing",
-                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_RARE] = "Not rare",
-                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED] = "Not maximum amount collected",
-                [_BattlePetCompletionist.Enums.MapPinFilter.NAME_FILTER] = "Name filter",
-                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_RARE] = "Not maximum rare collected",
-                [_BattlePetCompletionist.Enums.MapPinFilter.NONE] = "None",
+                [_BattlePetCompletionist.Enums.MapPinFilter.ALL] = L["Map Pin Filter - All"],
+                [_BattlePetCompletionist.Enums.MapPinFilter.MISSING] = L["Map Pin Filter - Missing"],
+                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_RARE] = L["Map Pin Filter - Not rare"],
+                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED] = L["Map Pin Filter - Not maximum amount collected"],
+                [_BattlePetCompletionist.Enums.MapPinFilter.NAME_FILTER] = L["Map Pin Filter - Name filter"],
+                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_RARE] = L["Map Pin Filter - Not maximum rare collected"],
+                [_BattlePetCompletionist.Enums.MapPinFilter.NONE] = L["Map Pin Filter - None"],
             },
             sorting = {
                 _BattlePetCompletionist.Enums.MapPinFilter.ALL,
@@ -192,10 +194,10 @@ local options = {
         },
         mapPinsFilter = {
             order = 14,
-            name = "Partial pet name",
+            name = L["Partial pet name"],
             type = "input",
             width = standardControlWidth,
-            desc = "Enter part the name to filter by",
+            desc = L["Enter part the name to filter by"],
             get = function()
                 return DBModule:GetProfile().mapPinsFilter
             end,
@@ -212,15 +214,15 @@ local options = {
         },
         mapPinSize = {
             order = 16,
-            name = "Map pin size",
+            name = L["Map pin size"],
             type = "select",
             width = standardControlWidth,
-            desc = "The size of the pins on the map.",
+            desc = L["The size of the pins on the map"],
             values = {
-                [_BattlePetCompletionist.Enums.MapPinSize.X_SMALL] = "Extra small",
-                [_BattlePetCompletionist.Enums.MapPinSize.SMALL] = "Small",
-                [_BattlePetCompletionist.Enums.MapPinSize.MEDIUM] = "Medium",
-                [_BattlePetCompletionist.Enums.MapPinSize.LARGE] = "Large",
+                [_BattlePetCompletionist.Enums.MapPinSize.X_SMALL] = L["Map Pin Size - Extra small"],
+                [_BattlePetCompletionist.Enums.MapPinSize.SMALL] = L["Map Pin Size - Small"],
+                [_BattlePetCompletionist.Enums.MapPinSize.MEDIUM] = L["Map Pin Size - Medium"],
+                [_BattlePetCompletionist.Enums.MapPinSize.LARGE] = L["Map Pin Size - Large"],
             },
             sorting = {
                 _BattlePetCompletionist.Enums.MapPinSize.X_SMALL,
@@ -242,13 +244,13 @@ local options = {
         },
         mapPinIconType = {
             order = 18,
-            name = "Map pin icon type",
+            name = L["Map pin icon type"],
             type = "select",
             width = standardControlWidth,
-            desc = "The kind of icon to show in the pins on the map.",
+            desc = L["The kind of icon to show in the pins on the map"],
             values = {
-                [_BattlePetCompletionist.Enums.MapPinIconType.PET] = "Pet Icon",
-                [_BattlePetCompletionist.Enums.MapPinIconType.FAMILY] = "Pet Family",
+                [_BattlePetCompletionist.Enums.MapPinIconType.PET] = L["Map Pin Icon Type - Pet Icon"],
+                [_BattlePetCompletionist.Enums.MapPinIconType.FAMILY] = L["Map Pin Icon Type - Pet Family"],
             },
             sorting = {
                 _BattlePetCompletionist.Enums.MapPinIconType.PET,
@@ -268,9 +270,9 @@ local options = {
         },
         mapPinSources = {
             order = 20,
-            name = "Map pin sources",
+            name = L["Map pin sources"],
             type = "multiselect",
-            desc = "The sources for pets to show on the map.",
+            desc = L["The sources for pets to show on the map"],
             values = _BattlePetCompletionist.Constants.PET_SOURCES,
             get = function(_, key)
                 return DBModule:GetProfile().mapPinSources[key]
@@ -281,19 +283,19 @@ local options = {
         },
         integrationHeader = {
             order = 21,
-            name = "Integrations",
+            name = L["Header - Integrations"],
             type = "header"
         },
         integrationDescription = {
             order = 22,
-            name = "Integration settings" .. "\n",
+            name = L["Description - Integration settings"] .. "\n",
             type = "description"
         },
         tomtomIntegrationEnabled = {
             order = 23,
-            name = "Tomtom",
+            name = L["Tomtom"],
             type = "toggle",
-            desc = "SHIFT + left clicking a map pin creates a TomTom waypoint.",
+            desc = L["SHIFT + left clicking a map pin creates a TomTom waypoint"],
             width = "full",
             get = function()
                 return DBModule:GetProfile().tomtomIntegration
@@ -305,24 +307,24 @@ local options = {
         },
         combatHeader = {
             order = 24,
-            name = "Combat",
+            name = L["Header - Combat"],
             type = "header"
         },
         combatDescription = {
             order = 25,
-            name = "Combat settings" .. "\n",
+            name = L["Description - Combat settings"] .. "\n",
             type = "description"
         },
         combatMode = {
             order = 26,
-            name = "Combat mode",
+            name = L["Combat mode"],
             type = "select",
             width = standardControlWidth,
-            desc = "How to function when pet battles are started",
+            desc = L["How to function when pet battles are started"],
             values = {
-                [_BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND] = "Help a Friend",
-                [_BattlePetCompletionist.Enums.CombatMode.FORFEIT] = "Forfeit",
-                [_BattlePetCompletionist.Enums.CombatMode.NONE] = "None",
+                [_BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND] = L["Combat Mode - Help a Friend"],
+                [_BattlePetCompletionist.Enums.CombatMode.FORFEIT] = L["Combat Mode - Forfeit"],
+                [_BattlePetCompletionist.Enums.CombatMode.NONE] = L["Combat Mode - None"],
             },
             sorting = {
                 _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND,
@@ -338,15 +340,15 @@ local options = {
         },
         forfeitThreshold = {
             order = 27,
-            name = "Forfeit threshold",
+            name = L["Forfeit threshold"],
             type = "select",
             width = standardControlWidth,
-            desc = "The threshold for when to always suggest forfeit.",
+            desc = L["The threshold for when to always suggest forfeit"],
             values = {
-                [_BattlePetCompletionist.Enums.ForfeitThreshold.RARE] = "Rare",
-                [_BattlePetCompletionist.Enums.ForfeitThreshold.UNCOMMON] = "Uncommon",
-                [_BattlePetCompletionist.Enums.ForfeitThreshold.COMMON] = "Common",
-                [_BattlePetCompletionist.Enums.ForfeitThreshold.POOR] = "Poor"
+                [_BattlePetCompletionist.Enums.ForfeitThreshold.RARE] = L["Forfeit Threshold - Rare"],
+                [_BattlePetCompletionist.Enums.ForfeitThreshold.UNCOMMON] = L["Forfeit Threshold - Uncommon"],
+                [_BattlePetCompletionist.Enums.ForfeitThreshold.COMMON] = L["Forfeit Threshold - Common"],
+                [_BattlePetCompletionist.Enums.ForfeitThreshold.POOR] = L["Forfeit Threshold - Poor"],
             },
             sorting = {
                 _BattlePetCompletionist.Enums.ForfeitThreshold.RARE,
@@ -363,15 +365,15 @@ local options = {
         },
         forfeitPromptUnless = {
             order = 28,
-            name = "Forfeit prompt unless",
+            name = L["Forfeit prompt unless"],
             type = "select",
             width = standardControlWidth,
-            desc = "The condition for when to not forfeit.",
+            desc = L["The condition for when to not forfeit"],
             values = {
-                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.MISSING] = "Missing",
-                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_RARE] = "Not rare",
-                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED] = "Not maximum amount collected",
-                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE] = "Not maximum rare collected",
+                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.MISSING] = L["Forfeit Prompt Unless - Missing"],
+                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_RARE] = L["Forfeit Prompt Unless - Not rare"],
+                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED] = L["Forfeit Prompt Unless - Not maximum amount collected"],
+                [_BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE] = L["Forfeit Prompt Unless - Not maximum rare collected"],
             },
             sorting = {
                 _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE,

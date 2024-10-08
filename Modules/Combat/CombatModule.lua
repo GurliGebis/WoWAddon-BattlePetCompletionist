@@ -23,6 +23,8 @@ local DataModule = BattlePetCompletionist:GetModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local AceSerializer = LibStub("AceSerializer-3.0")
 
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Combat")
+
 local messagePrefixes = {
     ANNOUNCE_PETS = "BPC_ANNOUNCE",
     I_NEED_PETS   = "BPC_INEEDPETS",
@@ -174,7 +176,7 @@ function CombatModule:ForfeitBattleHasStarted()
         return
     end
 
-    local dialogMessage = "There are no pet upgrades available (or they are below the threshold)|n|nWould you like to forfeit?"
+    local dialogMessage = L["No pet upgrades, forfeit?"]
     _G.StaticPopupDialogs[messagePrefixes.FORFEIT] = {
         text = dialogMessage,
         OnAccept = function()
@@ -256,7 +258,7 @@ function CombatModule:HaFOnReceivedINeedPets(_, msg, _, sender)
         ["petNames"] = petNames
     }
 
-    local dialogMessage = "Someone (" .. sender .. ") in your party needs one or more pets you are battling.|n|nDo you want to offer them these pets and send your location?|n|nNeeded pets: " .. table.concat(petNames, ", ")
+    local dialogMessage = string.format(L["Friend needs pets"], sender, table.concat(petNames, ", "))
 
     -- Ask the player if they want to notify the party member.
     _G.StaticPopupDialogs[messagePrefixes.I_NEED_PETS] = {
@@ -292,7 +294,7 @@ function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
     -- We have received an offer for some pets from a party member.
     -- First we find out which map the user is on and ask the player if they want the pets.
     local mapInfo = C_Map.GetMapInfo(tonumber(message["mapId"]))
-    local dialogMessage = "Someone (" .. sender .. " - in zone: " .. mapInfo["name"] .. ") in your party is offering you the following battle pets.|n|nBy clicking Accept, a TomTom waypoint will be created, and a notifaction will be sent.|n|nNeeded pets: " .. table.concat(message["petNames"], ", ")
+    local dialogMessage = string.format(L["Friend has pets"], sender, mapInfo["name"], table.concat(message["petNames"], ", "))
 
     _G.StaticPopupDialogs[messagePrefixes.OFFER_PETS] = {
         text = dialogMessage,
@@ -301,7 +303,7 @@ function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
             local icon = "Interface\\icons\\inv_pet_achievement_captureawildpet"
 
             local options = {
-                title = "Battle Pet Completionist friend - " .. sender,
+                title = string.format(L["Tomtom Waypoint Text"], sender),
                 minimap_icon = icon,
                 worldmap_icon = icon
             }
@@ -344,7 +346,7 @@ function CombatModule:HaFOnReceivedAcceptOffer(_, msg, _, sender)
 
     -- The other player accepted our offer.
     offerSentTo = ""
-    local dialogMessage = sender .. " has accepted your offer|n|nPlease wait for them before forfeiting."
+    local dialogMessage = string.format(L["Friend accepted"], sender)
 
     _G.StaticPopupDialogs[messagePrefixes.ACCEPT_OFFER] = {
         text = dialogMessage,
@@ -377,7 +379,7 @@ function CombatModule:HaFOnReceivedDeclineOffer(_, msg, _, sender)
 
     -- The other player declined our offer.
     offerSentTo = ""
-    local dialogMessage = sender .. " has declined your offer."
+    local dialogMessage = string.format(L["Friend declined"], sender)
 
     _G.StaticPopupDialogs[messagePrefixes.DECLINE_OFFER] = {
         text = dialogMessage,

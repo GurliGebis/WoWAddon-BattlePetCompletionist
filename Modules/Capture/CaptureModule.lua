@@ -22,6 +22,8 @@ local CaptureModule = BattlePetCompletionist:NewModule("CaptureModule", "AceEven
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
 
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Capture")
+
 function CaptureModule:OnEnable()
     self:RegisterEvent("PET_BATTLE_OPENING_START", "BattleHasStarted")
 end
@@ -53,9 +55,9 @@ function CaptureModule:CreateUncollectPetsDialog(pets)
     local header = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 
     if (#pets == 1) then
-        header:SetText("Uncollected pet found!")
+        header:SetText(L["Uncollected pet found"])
     else
-        header:SetText("Uncollected pets found!")
+        header:SetText(L["Uncollected pets found"])
     end
 
     header:SetPoint("TOPLEFT", frame, 16, -40)

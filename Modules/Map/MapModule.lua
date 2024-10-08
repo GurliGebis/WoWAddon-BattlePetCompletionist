@@ -23,6 +23,8 @@ local DataModule = BattlePetCompletionist:GetModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local AceHook = LibStub("AceHook-3.0")
 
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Map")
+
 MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 function MapModule.WorldMapDataProvider:RemoveAllData()
@@ -144,7 +146,7 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
             table.insert(ownedPetTexts, color .. v[1] .. "|r")
         end
 
-        GameTooltip:AddLine("Collected: " .. table.concat(ownedPetTexts, ", "))
+        GameTooltip:AddLine(string.format(L["Collected"], table.concat(ownedPetTexts, ", ")))
     end
 
     GameTooltip:AddLine(tooltipSource, 1, 1, 1, true)
@@ -174,7 +176,7 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
             }
 
             TomTom:AddWaypoint(mapId, x, y, options)
-        end        
+        end
     else
         SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS);
         PetJournal_SelectSpecies(PetJournal, self.PetSpeciesID);
@@ -193,11 +195,11 @@ function MapModule:BattlePetToggle_OnClick()
     local profile = DBModule:GetProfile()
     if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NONE then
         profile.mapPinsToInclude = profile.mapPinsToIncludeOriginal
-        MapModule:Print("Battle Pet Completionist - Tracking enabled.")
+        MapModule:Print(L["Tracking enabled"])
     else
         profile.mapPinsToIncludeOriginal = profile.mapPinsToInclude
         profile.mapPinsToInclude = _BattlePetCompletionist.Enums.MapPinFilter.NONE
-        MapModule:Print("Battle Pet Completionist - Tracking disabled.")
+        MapModule:Print(L["Tracking disabled"])
     end
 
     MapModule:UpdateWorldMap()
@@ -206,8 +208,8 @@ end
 function MapModule:InitializeDropDown()
     Menu.ModifyMenu("MENU_WORLD_MAP_TRACKING", function(_, rootDescription)
 		rootDescription:CreateDivider()
-		rootDescription:CreateTitle("Battle Pet Completionist:")
-		rootDescription:CreateCheckbox("Show Battle Pets", MapModule.BattlePetToggle_GetStatus, MapModule.BattlePetToggle_OnClick)
+		rootDescription:CreateTitle(L["Dropdown Headline"])
+		rootDescription:CreateCheckbox(L["Show Battle Pets"], MapModule.BattlePetToggle_GetStatus, MapModule.BattlePetToggle_OnClick)
     end)
 end
 

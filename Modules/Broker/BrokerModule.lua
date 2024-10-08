@@ -27,6 +27,8 @@ local ZoneModule = BattlePetCompletionist:GetModule("ZoneModule")
 local LibDataBroker = LibStub("LibDataBroker-1.1")
 local LibPetJournal = LibStub("LibPetJournal-2.0")
 
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Broker")
+
 -- Also used by MinimapModule
 function BrokerModule:GetDataObject()
     return self.dataSource
@@ -47,7 +49,7 @@ function BrokerModule:RefreshData()
     end
     local suffix
     if goalTextEnabled then
-        suffix = self:GetSuffixForGoal(goal)
+        suffix = " " .. self:GetSuffixForGoal(goal)
     else
         suffix = ""
     end
@@ -69,7 +71,7 @@ end
 function BrokerModule:OnInitialize()
     self.dataSource = LibDataBroker:NewDataObject(addonName, {
         type = "data source",
-        label = "Battle Pets",
+        label = L["Battle Pets"],
         icon = "Interface\\Icons\\Inv_Pet_Achievement_CaptureAWildPet",
         OnClick = function(_, button)
             self:OnClick(button)
@@ -124,9 +126,9 @@ end
 
 -- Also used by AddonCompartmentModule
 function BrokerModule:OnTooltipShow(tooltip, includeDetails)
-    tooltip:AddLine("Battle Pet Completionist")
-    tooltip:AddLine("|cffffff00Left Click|r to toggle goal tracker")
-    tooltip:AddLine("|cffffff00Right Click|r for options")
+    tooltip:AddLine(L["Battle Pet Completionist"])
+    tooltip:AddLine(L["Left Click to toggle goal tracker"])
+    tooltip:AddLine(L["Right Click for options"])
 
     if not includeDetails then
         return
@@ -167,9 +169,9 @@ function BrokerModule:OnTooltipShow(tooltip, includeDetails)
         tooltip:AddLine(table.concat(entry, " "))
     end
     if not petData then
-        tooltip:AddLine("No pets found for current zone")
+        tooltip:AddLine(L["No pets found for current zone"])
     else
-        tooltip:AddLine(string.format("Met goal: %d/%d", metGoalCount, totalCount))
+        tooltip:AddLine(string.format(L["Met goal"], metGoalCount, totalCount))
     end
 end
 
@@ -196,13 +198,13 @@ end
 
 function BrokerModule:GetSuffixForGoal(goal)
     if goal == _BattlePetCompletionist.Enums.Goal.COLLECT then
-        return " Collected"
+        return L["Suffix - Collected"]
     elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_RARE then
-        return " Rare"
+        return L["Suffix - Rare"]
     elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_MAX then
-        return " Max Collected"
+        return L["Suffix - Max Collected"]
     elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_MAX_RARE then
-        return " Max Rare"
+        return L["Suffix - Max Rare"]
     else
         return ""
     end
