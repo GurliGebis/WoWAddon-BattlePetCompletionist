@@ -1,3 +1,6 @@
+# 11.0.2-20241015-1
+* Added installation of missing github runner packages.
+
 # 11.0.2-20241008-1
 * Moved hardcoded strings into localization.
 
