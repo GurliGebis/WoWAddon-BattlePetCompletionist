@@ -1,3 +1,6 @@
+## 11.0.7-20250128-1
+* Added category to TOC file.
+
 ## 11.0.7-20241218-1
 * Updated data files with latest data from 11.0.7 week 2024-51
 * Updated TOC to match WoW 11.0.7
