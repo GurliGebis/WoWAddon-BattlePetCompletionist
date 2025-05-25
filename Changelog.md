@@ -2,6 +2,7 @@
 * Refactor files to add support for MoP Classic.
 * Added MoP Classic data files from week 2025-21
 * Updated TOC to support MoP Classic.
+* Updated data files with latest data from 11.1.5 week 2025-21
 
 ## 11.1.5-20250423-1
 * Updated data files with latest data from 11.1.5 week 2025-17
