@@ -1,4 +1,4 @@
-﻿$jsonData = Get-Content -Path "PetData.json" | ConvertFrom-Json
+﻿$jsonData = Get-Content -Path "PetDataRetail.json" | ConvertFrom-Json
 $stringBuilder = [System.Text.StringBuilder]::new()
 
 $stringBuilder.Append("{") | Out-Null
@@ -68,6 +68,6 @@ $stringBuilder.Append("}") | Out-Null
 
 ################## SAVE DATA ##################
 
-$result = Get-Content -Path "Templates\PetData.lua"
+$result = Get-Content -Path "Templates\PetDataRetail.lua"
 $result = $result.Replace("{DATA}", $stringBuilder.ToString())
-$result | Out-File -FilePath "..\PetData.lua" -Encoding ascii
+$result | Out-File -FilePath "..\PetDataRetail.lua" -Encoding ascii
