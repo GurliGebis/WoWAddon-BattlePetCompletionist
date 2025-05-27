@@ -45,7 +45,15 @@ function CaptureModule:BattleHasStarted()
 end
 
 function CaptureModule:CreateUncollectPetsDialog(pets)
-    local frame = CreateFrame("Frame", nil, UIParent, "SimplePanelTemplate")
+    local frameTemplate
+
+    if BattlePetCompletionist.GetGameEdition() == _BattlePetCompletionist.Enums.GameEdition.RETAIL then
+        frameTemplate = "SimplePanelTemplate"
+    elseif BattlePetCompletionist.GetGameEdition() == _BattlePetCompletionist.Enums.GameEdition.CLASSIC then
+        frameTemplate = "BPCSimplePanelTemplate"
+    end
+
+    local frame = CreateFrame("Frame", nil, UIParent, frameTemplate)
     frame:SetPoint("TOP", 0, -100)
     frame:SetSize(240, 95 + (#pets * 35))
     frame:SetResizable(false)

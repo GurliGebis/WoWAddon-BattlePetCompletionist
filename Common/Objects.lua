@@ -53,6 +53,10 @@ _BattlePetCompletionist = {
             MEDIUM = "MEDIUM",
             LARGE = "LARGE",
         },
+        GameEdition = {
+            RETAIL = "Retail",
+            CLASSIC = "Classic"
+        },
     },
     Events = {
         ZONE_CHANGE = "BattlePetCompletionist_ZoneChange",

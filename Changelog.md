@@ -1,3 +1,6 @@
+## 11.1.5-20250527-1
+* Fixed issue with missing frame template in MoP Classic.
+
 ## 11.1.5-20250526-1
 * Refactor files to add support for MoP Classic.
 * Added MoP Classic data files from week 2025-21
