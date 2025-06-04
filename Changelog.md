@@ -1,3 +1,6 @@
+## 11.1.5-20250604-1
+* Added deDE, ruRU and zhCN locales.
+
 ## 11.1.5-20250527-1
 * Fixed issue with missing frame template in MoP Classic.
 
