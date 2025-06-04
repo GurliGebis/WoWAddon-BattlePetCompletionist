@@ -37,7 +37,13 @@ local function DoesPetMatchSourceFilters(speciesId)
 end
 
 function DataModule:GetPetsInMap(mapId)
-    return DataModule.PetData[mapId]
+    if BattlePetCompletionist.GetGameEdition() == _BattlePetCompletionist.Enums.GameEdition.RETAIL then
+        return DataModule.PetDataRetail[mapId]
+    elseif DBModule:GetProfile().useRetailDataInClassicEnabled then
+        return DataModule.PetDataRetail[mapId]
+    else
+        return DataModule.PetDataClassic[mapId]
+    end
 end
 
 function DataModule:ShouldPetBeShown(speciesId)
@@ -196,6 +202,11 @@ function DataModule:GetPetSource(speciesId)
     local tooltipSource = select(5, C_PetJournal.GetPetInfoBySpeciesID(speciesId))
 
     -- Remove the color part of the name
+
+    if tooltipSource == nil then
+        return nil
+    end
+
     local trimmed = string.sub(tooltipSource, 11, string.len(tooltipSource) - 1)
 
     for i = 1, C_PetJournal.GetNumPetSources() do

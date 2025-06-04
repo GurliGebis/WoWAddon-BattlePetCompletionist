@@ -1,3 +1,7 @@
+## 11.1.5-20250604-1
+* Added deDE, ruRU and zhCN locales.
+* Changes needed to allow Retail data to be used in Classic.
+
 ## 11.1.5-20250527-1
 * Fixed issue with missing frame template in MoP Classic.
 

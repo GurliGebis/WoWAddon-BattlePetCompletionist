@@ -35,13 +35,16 @@ function GoalTrackerModule:UpdateWindow()
     local entries = {}
     if petData then
         for speciesId, _ in pairs(petData) do
-            local numCollected, _ = C_PetJournal.GetNumCollectedInfo(speciesId)
+            local numCollected = C_PetJournal.GetNumCollectedInfo(speciesId)
             totalSpeciesCount = totalSpeciesCount + 1
-            if numCollected > 0 then
-                collectedSpeciesCount = collectedSpeciesCount + 1
-            else
-                local speciesName, speciesIconPath = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
-                table.insert(entries, {speciesId, speciesName, speciesIconPath})
+
+            if numCollected ~= nil then
+                if numCollected > 0 then
+                    collectedSpeciesCount = collectedSpeciesCount + 1
+                else
+                    local speciesName, speciesIconPath = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
+                    table.insert(entries, {speciesId, speciesName, speciesIconPath})
+                end
             end
         end
         function compare(a, b)
