@@ -39,6 +39,7 @@ local defaultOptions = {
             [7] = true
         },
         minimapIconEnabled = true,
+        useRetailDataInClassicEnabled = false,
         brokerGoal = _BattlePetCompletionist.Enums.Goal.COLLECT,
         brokerGoalTextEnabled = true,
         tomtomIntegration = true,
