@@ -62,11 +62,27 @@ function DataModule:ShouldPetBeShown(speciesId)
         return false
     end
 
+    if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NAME_FILTER then
+        if profile.mapPinsFilter == "" then
+            -- Name filter has been selected, but the filter text box is empty
+            -- So we just return true for all pets.
+            return true
+        end
+
+        local petName = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
+
+        -- Since string.find is case sensitive, we convert everything to lowercase first.
+        local loweredTextBoxValue = string.lower(profile.mapPinsFilter)
+        local loweredPetName = string.lower(petName)
+
+        return string.find(loweredPetName, loweredTextBoxValue)
+    end
+
     local rareQuality = 4 -- Rare / Blue
     -- Filter species based on pet journal entries
     local noMatchResult = true
     for _, petId in LibPetJournal:IteratePetIDs() do
-        local speciesIdFromJournal, _, _, _, _, _, _, petName = C_PetJournal.GetPetInfoByPetID(petId)
+        local speciesIdFromJournal = C_PetJournal.GetPetInfoByPetID(petId)
 
         if speciesIdFromJournal == speciesId then
             local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
@@ -96,20 +112,6 @@ function DataModule:ShouldPetBeShown(speciesId)
                     return true
                 end
                 noMatchResult = false
-            end
-
-            if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NAME_FILTER then
-                if profile.mapPinsFilter == "" then
-                    -- Name filter has been selected, but the filter text box is empty
-                    -- So we just return true for all pets.
-                    return true
-                end
-                
-                -- Since string.find is case sensitive, we convert everything to lowercase first.
-                local loweredTextBoxValue = string.lower(profile.mapPinsFilter)
-                local loweredPetName = string.lower(petName)
-
-                return string.find(loweredPetName, loweredTextBoxValue)
             end
         end
     end
