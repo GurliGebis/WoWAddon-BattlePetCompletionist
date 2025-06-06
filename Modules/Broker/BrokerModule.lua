@@ -239,5 +239,9 @@ function BrokerModule:GetNumCollectedInfo(speciesId)
         numCollected = 0
     end
 
+    if limit == nil then
+        limit = 0
+    end
+
     return numCollected, numRareCollected, limit
 end

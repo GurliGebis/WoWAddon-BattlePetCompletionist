@@ -1,3 +1,6 @@
+## 11.1.5-20250606-1
+* Fixed bug where limit might be nil.
+
 ## 11.1.5-20250604-1
 * Added deDE, ruRU and zhCN locales.
 * Changes needed to allow Retail data to be used in Classic.
