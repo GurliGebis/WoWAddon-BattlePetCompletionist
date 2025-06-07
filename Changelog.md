@@ -1,3 +1,6 @@
+## 11.1.5-20250607-1
+* Added frFR locale.
+
 ## 11.1.5-20250606-1
 * Fixed bug where limit might be nil.
 * Fixed bug causing name filter to only work for already collected pets.

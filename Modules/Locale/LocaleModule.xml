@@ -2,6 +2,7 @@
     <Script file="Locale_enUS.lua" />
 
     <Script file="Locale_deDE.lua" />
+    <Script file="Locale_frFR.lua" />
     <Script file="Locale_ruRU.lua" />
     <Script file="Locale_zhCN.lua" />
 </Ui>
