@@ -1,5 +1,6 @@
 ## 11.1.7-20250619-1
 * Updated TOC to match WoW 11.1.7
+* Updated data files with latest data from 11.1.7 week 2025-25
 
 ## 11.1.5-20250607-1
 * Added frFR locale.
