@@ -201,25 +201,38 @@ function DataModule:CanWeCapturePets()
 end
 
 function DataModule:GetPetSource(speciesId)
-    local tooltipSource = select(5, C_PetJournal.GetPetInfoBySpeciesID(speciesId))
+    local function cleanColorTags(text)
+        if not text then return nil end
+        return text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
+    end
 
-    -- Remove the color part of the name
+    local function extractMainSource(text)
+        return (text:match("^%s*(.-):") or text or ""):gsub("^%s+", "")
+    end
 
-    if tooltipSource == nil then
+    local function normalize(str)
+        return (str or ""):lower():gsub("%s+", "")
+    end
+
+    local function findPetSource(mainSource)
+        local normalizedMain = normalize(mainSource)
+        for i = 1, C_PetJournal.GetNumPetSources() do
+            local filter = _G["BATTLE_PET_SOURCE_"..i]
+            local normalizedFilter = normalize(filter)
+            if normalizedMain:sub(1, 5) == normalizedFilter:sub(1, 5)
+                or normalizedMain:find(normalizedFilter, 1, true)
+                or normalizedFilter:find(normalizedMain, 1, true)
+            then
+                return filter
+            end
+        end
         return nil
     end
 
-    local trimmed = string.sub(tooltipSource, 11, string.len(tooltipSource) - 1)
+    local tooltipSource = select(5, C_PetJournal.GetPetInfoBySpeciesID(speciesId))
+    if not tooltipSource then return nil end
 
-    for i = 1, C_PetJournal.GetNumPetSources() do
-        local filter = _G["BATTLE_PET_SOURCE_"..i]
-
-        -- Then we look at the length that matches the length of the BATTLE_PET_SOURCE string.
-        -- If they match, we return.
-        if string.sub(trimmed, 1, #filter) == filter then
-            return filter
-        end
-    end
-
-    return nil
+    local cleaned = cleanColorTags(tooltipSource)
+    local mainSource = extractMainSource(cleaned)
+    return findPetSource(mainSource) or mainSource
 end

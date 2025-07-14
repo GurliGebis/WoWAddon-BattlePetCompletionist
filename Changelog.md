@@ -1,3 +1,6 @@
+## 11.1.7-20250714-1
+* Fixed filtering issue when non-english game client, provided by Kachankapusta on github.
+
 ## 11.1.7-20250619-1
 * Updated TOC to match WoW 11.1.7
 * Updated data files with latest data from 11.1.7 week 2025-25
