@@ -1,3 +1,6 @@
+## 11.1.7-20250723-1
+* Removed temporary workaround that allowed using Retail data in Classic.
+
 ## 11.1.7-20250714-1
 * Fixed filtering issue when non-english game client, provided by Kachankapusta on github.
 
