@@ -96,35 +96,13 @@ local options = {
                 MinimapModule:UpdateMinimap()
             end
         },
-        useRetailDataInClassic = {
-            order = 8,
-            name = L["Description - Classic settings"] .. "\n",
-            type = "description"
-        },
-        useRetailDataInClassicEnabled = {
-            order = 9,
-            name = L["Use Retail data in Classic"],
-            type = "toggle",
-            desc = L["Use the data from Retail in Classic"],
-            width = "full",
-            get = function()
-                return DBModule:GetProfile().useRetailDataInClassicEnabled
-            end,
-            set = function()
-                local profile = DBModule:GetProfile()
-                profile.useRetailDataInClassicEnabled = not profile.useRetailDataInClassicEnabled
-
-                local MapModule = BattlePetCompletionist:GetModule("MapModule")
-                MapModule:UpdateWorldMap()
-            end
-        },
         brokerDescription = {
-            order = 10,
+            order = 8,
             name = L["Description - Data Broker settings"] .. "\n",
             type = "description"
         },
         brokerGoal = {
-            order = 11,
+            order = 9,
             name = L["Display Goal"],
             type = "select",
             width = standardControlWidth,
@@ -151,7 +129,7 @@ local options = {
             end
         },
         brokerGoalTextEnabled = {
-            order = 12,
+            order = 10,
             name = L["Include goal text"],
             type = "toggle",
             desc = L["Add a suffix to the displayed text"],
@@ -167,17 +145,17 @@ local options = {
             end
         },
         mapPinsHeader = {
-            order = 13,
+            order = 11,
             name = L["Header - Map pins"],
             type = "header"
         },
         mapPinsDescription = {
-            order = 14,
+            order = 12,
             name = L["Description - Map pins settings"] .. "\n",
             type = "description"
         },
         mapPinsToInclude = {
-            order = 15,
+            order = 13,
             name = L["Map pins to include"],
             type = "select",
             width = standardControlWidth,
@@ -215,7 +193,7 @@ local options = {
             end
         },
         mapPinsFilter = {
-            order = 16,
+            order = 14,
             name = L["Partial pet name"],
             type = "input",
             width = standardControlWidth,
@@ -230,12 +208,12 @@ local options = {
             end
         },
         spacer1 = {
-            order = 17,
+            order = 15,
             name = "",
             type = "description"
         },
         mapPinSize = {
-            order = 18,
+            order = 16,
             name = L["Map pin size"],
             type = "select",
             width = standardControlWidth,
@@ -260,12 +238,12 @@ local options = {
             end
         },
         spacer2 = {
-            order = 19,
+            order = 17,
             name = "",
             type = "description"
         },
         mapPinIconType = {
-            order = 20,
+            order = 18,
             name = L["Map pin icon type"],
             type = "select",
             width = standardControlWidth,
@@ -286,12 +264,12 @@ local options = {
             end
         },
         spacer3 = {
-            order = 21,
+            order = 19,
             name = "",
             type = "description"
         },
         mapPinSources = {
-            order = 22,
+            order = 20,
             name = L["Map pin sources"],
             type = "multiselect",
             desc = L["The sources for pets to show on the map"],
@@ -304,17 +282,17 @@ local options = {
             end
         },
         integrationHeader = {
-            order = 23,
+            order = 21,
             name = L["Header - Integrations"],
             type = "header"
         },
         integrationDescription = {
-            order = 24,
+            order = 22,
             name = L["Description - Integration settings"] .. "\n",
             type = "description"
         },
         tomtomIntegrationEnabled = {
-            order = 25,
+            order = 23,
             name = L["Tomtom"],
             type = "toggle",
             desc = L["SHIFT + left clicking a map pin creates a TomTom waypoint"],
@@ -328,17 +306,17 @@ local options = {
             end
         },
         combatHeader = {
-            order = 26,
+            order = 24,
             name = L["Header - Combat"],
             type = "header"
         },
         combatDescription = {
-            order = 27,
+            order = 25,
             name = L["Description - Combat settings"] .. "\n",
             type = "description"
         },
         combatMode = {
-            order = 28,
+            order = 26,
             name = L["Combat mode"],
             type = "select",
             width = standardControlWidth,
@@ -361,7 +339,7 @@ local options = {
             end
         },
         forfeitThreshold = {
-            order = 29,
+            order = 27,
             name = L["Forfeit threshold"],
             type = "select",
             width = standardControlWidth,
@@ -386,7 +364,7 @@ local options = {
             end
         },
         forfeitPromptUnless = {
-            order = 30,
+            order = 28,
             name = L["Forfeit prompt unless"],
             type = "select",
             width = standardControlWidth,

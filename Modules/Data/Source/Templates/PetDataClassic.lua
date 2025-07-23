@@ -25,6 +25,6 @@ local DataModule = BattlePetCompletionist:GetModule("DataModule")
 
 if BattlePetCompletionist.GetGameEdition() == _BattlePetCompletionist.Enums.GameEdition.CLASSIC then
 
-DataModule.PetDataClassic={DATA}
+DataModule.PetData={DATA}
 
 end

@@ -37,13 +37,7 @@ local function DoesPetMatchSourceFilters(speciesId)
 end
 
 function DataModule:GetPetsInMap(mapId)
-    if BattlePetCompletionist.GetGameEdition() == _BattlePetCompletionist.Enums.GameEdition.RETAIL then
-        return DataModule.PetDataRetail[mapId]
-    elseif DBModule:GetProfile().useRetailDataInClassicEnabled then
-        return DataModule.PetDataRetail[mapId]
-    else
-        return DataModule.PetDataClassic[mapId]
-    end
+    return DataModule.PetData[mapId]
 end
 
 function DataModule:ShouldPetBeShown(speciesId)
