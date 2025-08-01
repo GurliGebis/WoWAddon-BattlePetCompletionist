@@ -1,60 +1,60 @@
-## 11.1.7-20250730-1
+# 11.1.7-20250730-1
 * Updated data files with latest data from 11.1.7 week 2025-31
 * Changed import tool to import data from Retail where Classic is missing.
 
-## 11.1.7-20250727-1
+# 11.1.7-20250727-1
 * Updated data files with latest data from 11.1.7 week 2025-30
 
-## 11.1.7-20250723-1
+# 11.1.7-20250723-1
 * Removed temporary workaround that allowed using Retail data in Classic.
 * Updated data files with latest data from 11.1.7 week 2025-30
 
-## 11.1.7-20250714-1
+# 11.1.7-20250714-1
 * Fixed filtering issue when non-english game client, provided by Kachankapusta on github.
 
-## 11.1.7-20250619-1
+# 11.1.7-20250619-1
 * Updated TOC to match WoW 11.1.7
 * Updated data files with latest data from 11.1.7 week 2025-25
 
-## 11.1.5-20250607-1
+# 11.1.5-20250607-1
 * Added frFR locale.
 
-## 11.1.5-20250606-1
+# 11.1.5-20250606-1
 * Fixed bug where limit might be nil.
 * Fixed bug causing name filter to only work for already collected pets.
 
-## 11.1.5-20250604-1
+# 11.1.5-20250604-1
 * Added deDE, ruRU and zhCN locales.
 * Changes needed to allow Retail data to be used in Classic.
 
-## 11.1.5-20250527-1
+# 11.1.5-20250527-1
 * Fixed issue with missing frame template in MoP Classic.
 
-## 11.1.5-20250526-1
+# 11.1.5-20250526-1
 * Refactor files to add support for MoP Classic.
 * Added MoP Classic data files from week 2025-21
 * Updated TOC to support MoP Classic.
 * Updated data files with latest data from 11.1.5 week 2025-21
 
-## 11.1.5-20250423-1
+# 11.1.5-20250423-1
 * Updated data files with latest data from 11.1.5 week 2025-17
 
-## 11.1.5-20250422-1
+# 11.1.5-20250422-1
 * Updated TOC to match WoW 11.1.5
 
-## 11.1.0-20250305-1
+# 11.1.0-20250305-1
 * Updated data files with latest data from 11.1.0 week 2025-10
 
-## 11.1.0-20250226-1
+# 11.1.0-20250226-1
 * Updated data files with latest data from 11.1.0 week 2025-09
 
-## 11.1.0-20250225-1
+# 11.1.0-20250225-1
 * Updated TOC to match WoW 11.1.0
 
-## 11.0.7-20250128-1
+# 11.0.7-20250128-1
 * Added category to TOC file.
 
-## 11.0.7-20241218-1
+# 11.0.7-20241218-1
 * Updated data files with latest data from 11.0.7 week 2024-51
 * Updated TOC to match WoW 11.0.7
 
