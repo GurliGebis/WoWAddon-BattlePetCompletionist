@@ -1,3 +1,7 @@
+# 11.2.0-20250806-1
+* Updated TOC to match WoW 11.2.0
+* Updated data files with latest data from 11.2.0 week 2025-32
+
 # 11.1.7-20250730-1
 * Updated data files with latest data from 11.1.7 week 2025-31
 * Changed import tool to import data from Retail where Classic is missing.
