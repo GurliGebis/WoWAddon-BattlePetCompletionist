@@ -1,3 +1,6 @@
+# 11.2.0-20250820-1
+* Updated data files with latest data from 11.2.0 week 2025-34
+
 # 11.2.0-20250806-1
 * Updated TOC to match WoW 11.2.0
 * Updated data files with latest data from 11.2.0 week 2025-32
