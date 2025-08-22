@@ -7,7 +7,8 @@ _BattlePetCompletionist = {
             [3] = BATTLE_PET_SOURCE_3,
             [4] = BATTLE_PET_SOURCE_4,
             [5] = BATTLE_PET_SOURCE_5,
-            [7] = BATTLE_PET_SOURCE_7
+            [7] = BATTLE_PET_SOURCE_7,
+            [9] = BATTLE_PET_SOURCE_9
         },
     },
     Enums = {
