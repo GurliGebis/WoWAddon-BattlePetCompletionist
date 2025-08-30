@@ -1,3 +1,6 @@
+# 11.2.0-20250830-1
+* Updated data files with latest data from 11.2.0 week 2025-35
+
 # 11.2.0-20250822-1
 * Added Trading Card Game as a valid filtering source.
 
