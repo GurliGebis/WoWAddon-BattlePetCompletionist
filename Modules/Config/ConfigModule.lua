@@ -388,6 +388,25 @@ local options = {
                 DBModule:GetProfile().forfeitPromptUnless = value
             end
         },
+        rareUpgradeDescription = {
+            order = 29,
+            name = L["Description - Rare Upgrade"] .. "\n",
+            type = "description"
+        },
+        rareUpgrade = {
+            order = 30,
+            name = L["Notify on Rare upgrade"],
+            type = "toggle",
+            desc = L["Notify if a Rare upgrade is found to an existing pet"],
+            width = "full",
+            get = function()
+                return DBModule:GetProfile().notifyForRareUpgrade
+            end,
+            set = function()
+                local profile = DBModule:GetProfile()
+                profile.notifyForRareUpgrade = not profile.notifyForRareUpgrade
+            end
+        }
     },
 }
 

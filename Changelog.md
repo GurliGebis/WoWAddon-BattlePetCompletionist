@@ -1,3 +1,6 @@
+# 11.2.0-20250902-1
+* Added option to notify when a rare upgrade is found.
+
 # 11.2.0-20250830-1
 * Updated data files with latest data from 11.2.0 week 2025-35
 

@@ -37,14 +37,43 @@ function CaptureModule:BattleHasStarted()
         return
     end
 
-    local notOwnedPets = DataModule:GetEnemyPetsInBattle()
+    local notOwnedPets, ownedPets = DataModule:GetEnemyPetsInBattle()
 
     if (#notOwnedPets > 0) then
-        self:CreateUncollectPetsDialog(notOwnedPets)
+        self:CreatePetsDialog(notOwnedPets, "uncollected")
+    end
+
+    local notifyForRareUpgrade = DBModule:GetProfile().notifyForRareUpgrade
+    local rareUpgrades = {}
+
+    if (#ownedPets > 0 and notifyForRareUpgrade) then
+        -- Iterate over all the enemy pets that we own
+        for i = 1, #ownedPets do
+            local enemyPetSpeciesId = ownedPets[i][1]
+            local enemyPetQuality = ownedPets[i][2]
+
+            -- Is the enemy pet we can capture of Rare quality?
+            if enemyPetQuality == 4 then
+                -- Look up the owned pets we have of that breed
+                local ownedPetsOfBreed = DataModule:GetOwnedPets(enemyPetSpeciesId)
+
+                -- Iterate over them to see if we have a below-rare quality pet
+                for j = 1, #ownedPetsOfBreed do
+                    if ownedPetsOfBreed[j][2] < 4 then
+                        -- Add to the list
+                        table.insert(rareUpgrades, ownedPets[i])
+                    end
+                end
+            end
+        end
+    end
+
+    if (#rareUpgrades > 0) then
+        self:CreatePetsDialog(rareUpgrades, "upgrade")
     end
 end
 
-function CaptureModule:CreateUncollectPetsDialog(pets)
+function CaptureModule:CreatePetsDialog(pets, mode)
     local frameTemplate
 
     if BattlePetCompletionist.GetGameEdition() == _BattlePetCompletionist.Enums.GameEdition.RETAIL then
@@ -63,9 +92,17 @@ function CaptureModule:CreateUncollectPetsDialog(pets)
     local header = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 
     if (#pets == 1) then
-        header:SetText(L["Uncollected pet found"])
+        if mode == "uncollected" then
+            header:SetText(L["Uncollected pet found"])
+        elseif mode == "upgrade" then
+            header:SetText(L["Rare pet upgrade found"])
+        end
     else
-        header:SetText(L["Uncollected pets found"])
+        if mode == "uncollected" then
+            header:SetText(L["Uncollected pets found"])
+        elseif mode == "upgrade" then
+            header:SetText(L["Rare pet upgrades found"])
+        end
     end
 
     header:SetPoint("TOPLEFT", frame, 16, -40)
