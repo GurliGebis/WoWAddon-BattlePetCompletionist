@@ -1,3 +1,6 @@
+# 11.2.0-20250904-1
+* Optimization - Break early, when upgrade is found.
+
 # 11.2.0-20250902-1
 * Added option to notify when a rare upgrade is found.
 

@@ -142,6 +142,7 @@ function CombatModule:ForfeitBattleHasStarted()
         if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED or forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE then
             if numCollected < limit and meetsForfeitThreshold then
                 upgradeFound = true
+                break
             end
         end
 
@@ -155,6 +156,7 @@ function CombatModule:ForfeitBattleHasStarted()
             end
             if breedQuality > highestOwnedQuality and meetsForfeitThreshold then
                 upgradeFound = true
+                break
             end
         end
 
@@ -168,6 +170,7 @@ function CombatModule:ForfeitBattleHasStarted()
             end
             if breedQuality > lowestOwnedQuality and meetsForfeitThreshold then
                 upgradeFound = true
+                break
             end
         end
     end
