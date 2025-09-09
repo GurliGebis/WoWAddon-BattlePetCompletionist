@@ -35,6 +35,7 @@ local messagePrefixes = {
 }
 
 local offerSentTo = ""
+local myName = UnitName("player")
 
 function CombatModule:OnEnable()
     self:RegisterEvent("PET_BATTLE_OPENING_START", "BattleHasStarted")
@@ -194,8 +195,6 @@ function CombatModule:ForfeitBattleHasStarted()
 end
 
 function CombatModule:HaFOnReceivedAnnounce(_, msg, _, sender)
-    local myName = UnitName("player")
-
     if sender == myName then
         return
     end
@@ -228,8 +227,6 @@ function CombatModule:HaFOnReceivedAnnounce(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedINeedPets(_, msg, _, sender)
-    local myName = UnitName("player")
-
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return
@@ -281,8 +278,6 @@ function CombatModule:HaFOnReceivedINeedPets(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
-    local myName = UnitName("player")
-
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return
@@ -329,8 +324,6 @@ function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedAcceptOffer(_, msg, _, sender)
-    local myName = UnitName("player")
-
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return
@@ -362,8 +355,6 @@ function CombatModule:HaFOnReceivedAcceptOffer(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedDeclineOffer(_, msg, _, sender)
-    local myName = UnitName("player")
-
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return
