@@ -92,36 +92,25 @@ function BrokerModule:QualityToColorCode(quality)
     end
 end
 
+local sourceIcons = {
+    [BATTLE_PET_SOURCE_1]  = "Interface/WorldMap/TreasureChest_64", -- Drop
+    [BATTLE_PET_SOURCE_2]  = "Interface/GossipFrame/AvailableQuestIcon", -- Quest
+    [BATTLE_PET_SOURCE_3]  = "Interface/Minimap/Tracking/Banker", -- Vendor
+    [BATTLE_PET_SOURCE_4]  = "Interface/Archeology/Arch-Icon-Marker", -- Profession
+    [BATTLE_PET_SOURCE_5]  = "Interface/Icons/Tracking_WildPet", -- Pet Battle
+    -- 6 Achievement; no icon assigned
+    [BATTLE_PET_SOURCE_7]  = "Interface/GossipFrame/DailyQuestIcon", -- World Event
+    [BATTLE_PET_SOURCE_8]  = "Interface/Minimap/Tracking/Banker", -- Promotion
+    [BATTLE_PET_SOURCE_9]  = "Interface/Icons/inv_misc_hearthstonecard_legendary", -- Trading Card Game
+    [BATTLE_PET_SOURCE_10] = "Interface/Icons/item_shop_giftbox01", -- Shop
+    [BATTLE_PET_SOURCE_11] = "Interface/Icons/Garrison_Building_MageTower", -- Discovery
+    [BATTLE_PET_SOURCE_12] = "Interface/Icons/TradingPostCurrency" -- Trading Post
+}
+
 function BrokerModule:TooltipToSourceTypeIcon(speciesId)
     local sourceType = DataModule:GetPetSource(speciesId)
-    local icon
-    if sourceType == BATTLE_PET_SOURCE_1 then -- Drop
-        icon = "Interface/WorldMap/TreasureChest_64"
-    elseif sourceType == BATTLE_PET_SOURCE_2 then -- Quest
-        icon = "Interface/GossipFrame/AvailableQuestIcon"
-    elseif sourceType == BATTLE_PET_SOURCE_3 then -- Vendor
-        icon = "Interface/Minimap/Tracking/Banker"
-    elseif sourceType == BATTLE_PET_SOURCE_4 then -- Profession
-        icon = "Interface/Archeology/Arch-Icon-Marker"
-    elseif sourceType == BATTLE_PET_SOURCE_5 then -- Pet Battle
-        icon = "Interface/Icons/Tracking_WildPet"
-    -- 6 Achievement; no icon assigned
-    elseif sourceType == BATTLE_PET_SOURCE_7 then -- World Event
-        icon = "Interface/GossipFrame/DailyQuestIcon"
-    elseif sourceType == BATTLE_PET_SOURCE_8 then -- Promotion
-        icon = "Interface/Minimap/Tracking/Banker"
-    elseif sourceType == BATTLE_PET_SOURCE_9 then -- Trading Card Game
-        icon = "Interface/Icons/inv_misc_hearthstonecard_legendary"
-    elseif sourceType == BATTLE_PET_SOURCE_10 then -- Shop
-        icon = "Interface/Icons/item_shop_giftbox01"
-    elseif sourceType == BATTLE_PET_SOURCE_11 then -- Discovery
-        icon = "Interface/Icons/Garrison_Building_MageTower"
-    elseif sourceType == BATTLE_PET_SOURCE_12 then -- Trading Post
-        icon = "Interface/Icons/TradingPostCurrency"
-    else -- In case we encounter an unhandled source type
-        icon = "Interface/Icons/Inv_misc_questionmark"
-    end
-    return icon
+
+    return sourceIcons[sourceType] or "Interface/Icons/Inv_misc_questionmark" -- In case we encounter an unhandled source type
 end
 
 -- Also used by AddonCompartmentModule
@@ -196,18 +185,15 @@ function BrokerModule:ToggleConfig()
     end
 end
 
+local goalSuffixes = {
+    [_BattlePetCompletionist.Enums.Goal.COLLECT]          = L["Suffix - Collected"],
+    [_BattlePetCompletionist.Enums.Goal.COLLECT_RARE]     = L["Suffix - Rare"],
+    [_BattlePetCompletionist.Enums.Goal.COLLECT_MAX]      = L["Suffix - Max Collected"],
+    [_BattlePetCompletionist.Enums.Goal.COLLECT_MAX_RARE] = L["Suffix - Max Rare"],
+}
+
 function BrokerModule:GetSuffixForGoal(goal)
-    if goal == _BattlePetCompletionist.Enums.Goal.COLLECT then
-        return L["Suffix - Collected"]
-    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_RARE then
-        return L["Suffix - Rare"]
-    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_MAX then
-        return L["Suffix - Max Collected"]
-    elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_MAX_RARE then
-        return L["Suffix - Max Rare"]
-    else
-        return ""
-    end
+    return goalSuffixes[goal] or ""
 end
 
 function BrokerModule:MetGoal(goal, numCollected, numRareCollected, limit)

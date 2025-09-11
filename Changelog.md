@@ -1,3 +1,6 @@
+# 11.2.0-20250911-1
+* Optimization - Replace long if-elseif chains with lookup tables.
+
 # 11.2.0-20250909-1
 * Updated data files with latest data from 11.2.0 week 2025-37
 * Optimization - Avoid repeated identical calls.

@@ -100,6 +100,13 @@ function CombatModule:HafBattleHasStarted()
     self:SendCommMessage(messagePrefixes.ANNOUNCE_PETS, AceSerializer:Serialize(ownedPets), "PARTY")
 end
 
+local thresholdValues = {
+    [_BattlePetCompletionist.Enums.ForfeitThreshold.RARE] = 4,
+    [_BattlePetCompletionist.Enums.ForfeitThreshold.UNCOMMON] = 3,
+    [_BattlePetCompletionist.Enums.ForfeitThreshold.COMMON] = 2,
+    [_BattlePetCompletionist.Enums.ForfeitThreshold.POOR] = 1
+}
+
 function CombatModule:ForfeitBattleHasStarted()
     if DataModule:CanWeCapturePets() == false then
         -- We cannot capture any pets in this battle, so we shouldn't ask for forfeit.
@@ -129,16 +136,7 @@ function CombatModule:ForfeitBattleHasStarted()
         local myPets = DataModule:GetOwnedPets(speciesId)
         local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
 
-        local meetsForfeitThreshold = false
-        if forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.RARE and breedQuality >= 4 then
-            meetsForfeitThreshold = true
-        elseif forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.UNCOMMON and breedQuality >= 3 then
-            meetsForfeitThreshold = true
-        elseif forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.COMMON and breedQuality >= 2 then
-            meetsForfeitThreshold = true
-        elseif forfeitThreshold == _BattlePetCompletionist.Enums.ForfeitThreshold.POOR and breedQuality >= 1 then
-            meetsForfeitThreshold = true
-        end
+        local meetsForfeitThreshold = breedQuality >= (thresholdValues[forfeitThreshold] or 0)
 
         if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED or forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE then
             if numCollected < limit and meetsForfeitThreshold then
