@@ -1,3 +1,6 @@
+# 11.2.0-20250918-1
+* Implement objective tracker.
+
 # 11.2.0-20250911-1
 * Optimization - Replace long if-elseif chains with lookup tables.
 

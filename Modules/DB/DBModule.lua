@@ -51,6 +51,8 @@ local defaultOptions = {
             width = 500,
             height = 320,
         },
+        objectiveTrackerEnabled = true,
+        objectiveTrackerFilter = _BattlePetCompletionist.Enums.MapPinFilter.ALL,
     }
 }
 

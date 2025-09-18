@@ -40,3 +40,7 @@ local L_GoalTracker = LibStub("AceLocale-3.0"):NewLocale(addonName .. "_GoalTrac
 local L_Map = LibStub("AceLocale-3.0"):NewLocale(addonName .. "_Map", "enUS", true, true)
 
 --@localization(locale="enUS", format="lua_additive_table", same-key-is-true=false, namespace="Map", table-name="L_Map")@
+
+local L_ObjectiveTracker = LibStub("AceLocale-3.0"):NewLocale(addonName .. "_ObjectiveTracker", "enUS", true, true)
+
+--@localization(locale="enUS", format="lua_additive_table", same-key-is-true=false, namespace="ObjectiveTracker", table-name="L_ObjectiveTracker")@

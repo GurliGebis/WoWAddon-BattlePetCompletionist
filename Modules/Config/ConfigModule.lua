@@ -406,6 +406,58 @@ local options = {
                 local profile = DBModule:GetProfile()
                 profile.notifyForRareUpgrade = not profile.notifyForRareUpgrade
             end
+        },
+        objectiveTrackerHeader = {
+            order = 31,
+            name = L["Header - Objective Tracker"],
+            type = "header"
+        },
+        objectiveTrackerDescription = {
+            order = 32,
+            name = L["Description - Objective Tracker settings"] .. "\n",
+            type = "description"
+        },
+        objectiveTrackerEnabled = {
+            order = 33,
+            name = L["Enable Objective Tracker"],
+            type = "toggle",
+            desc = L["Show battle pets in the objective tracker"],
+            width = standardControlWidth,
+            get = function()
+                return DBModule:GetProfile().objectiveTrackerEnabled
+            end,
+            set = function()
+                local profile = DBModule:GetProfile()
+                profile.objectiveTrackerEnabled = not profile.objectiveTrackerEnabled
+                
+                local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
+                ObjectiveTrackerModule:OnEvent("CONFIG_CHANGED")
+            end
+        },
+        objectiveTrackerFilter = {
+            order = 34,
+            name = L["Pets to show in tracker"],
+            type = "select",
+            desc = L["Which pets to show in the objective tracker"],
+            width = standardControlWidth,
+            values = {
+                [_BattlePetCompletionist.Enums.MapPinFilter.ALL] = L["Objective Tracker - All pets"],
+                [_BattlePetCompletionist.Enums.MapPinFilter.MISSING] = L["Objective Tracker - Missing pets only"],
+            },
+            sorting = {
+                _BattlePetCompletionist.Enums.MapPinFilter.ALL,
+                _BattlePetCompletionist.Enums.MapPinFilter.MISSING,
+            },
+            get = function()
+                return DBModule:GetProfile().objectiveTrackerFilter
+            end,
+            set = function(_, value)
+                local profile = DBModule:GetProfile()
+                profile.objectiveTrackerFilter = value
+                
+                local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
+                ObjectiveTrackerModule:OnEvent("CONFIG_CHANGED")
+            end
         }
     },
 }

@@ -52,3 +52,9 @@ local L_Map = LibStub("AceLocale-3.0"):NewLocale(addonName .. "_Map", "zhCN")
 if L_Map then
 --@localization(locale="zhCN", format="lua_additive_table", same-key-is-true=false, namespace="Map", table-name="L_Map")@
 end
+
+local L_ObjectiveTracker = LibStub("AceLocale-3.0"):NewLocale(addonName .. "_ObjectiveTracker", "zhCN")
+
+if L_ObjectiveTracker then
+--@localization(locale="zhCN", format="lua_additive_table", same-key-is-true=false, namespace="ObjectiveTracker", table-name="L_ObjectiveTracker")@
+end
