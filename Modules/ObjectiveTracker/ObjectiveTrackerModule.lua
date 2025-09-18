@@ -34,6 +34,11 @@ local settings = {
     uiOrder = 50
 };
 
+if KT_ObjectiveTrackerManager then
+    settings.blockTemplate = "KT_ObjectiveTrackerAnimBlockTemplate"
+    settings.lineTemplate = "KT_ObjectiveTrackerAnimLineTemplate"
+end
+
 BattlePetCompletionistObjectiveTrackerMixin = CreateFromMixins(ObjectiveTrackerModuleMixin, settings);
 
 function BattlePetCompletionistObjectiveTrackerMixin:InitModule()
@@ -44,6 +49,16 @@ end
 
 function BattlePetCompletionistObjectiveTrackerMixin:OnEvent(event, ...)
     self:MarkDirty()
+end
+
+function BattlePetCompletionistObjectiveTrackerMixin:OnBlockHeaderClick(block, mouseButton)
+    if mouseButton == "LeftButton" then
+        if not CollectionsJournal or not CollectionsJournal:IsShown() then
+            ToggleCollectionsJournal()
+        end
+
+        CollectionsJournal_SetTab(CollectionsJournal, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
+    end
 end
 
 function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
@@ -95,7 +110,7 @@ function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, species
         local line = block:AddObjective(speciesName, speciesName, nil, true)
         line:SetState(ObjectiveTrackerAnimLineState.Present)
     else
-        local line = block:AddObjective(speciesName, speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, OBJECTIVE_TRACKER_COLOR["Complete"])
+        local line = block:AddObjective(speciesName, speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, (KT_OBJECTIVE_TRACKER_COLOR["Complete"] or OBJECTIVE_TRACKER_COLOR["Complete"]))
         if line.state == ObjectiveTrackerAnimLineState.Present then
             line:SetState(ObjectiveTrackerAnimLineState.Completing)
         elseif line.state == ObjectiveTrackerAnimLineState.Completing then
