@@ -68,7 +68,16 @@ function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
     end
 
     local mapID = ZoneModule:ResolveZone()
+
+    if not mapID then
+        return
+    end
+
     local pets = DataModule:GetPetsInMap(mapID) or {}
+
+    if not next(pets) then
+        return
+    end
 
     local anyMissingPets = false
     local filteredPets = {}
@@ -86,8 +95,11 @@ function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
         return
     end
 
+    local mapInfo = C_Map.GetMapInfo(mapID)
+    local zoneName = mapInfo and mapInfo.name or L["current zone"]
+
     local block = self:GetBlock("battlepets")
-    block:SetHeader(string.format(L["Battle Pets in %s"], C_Map.GetMapInfo(mapID) and C_Map.GetMapInfo(mapID).name or L["current zone"]))
+    block:SetHeader(string.format(L["Battle Pets in %s"], zoneName))
 
     for _, petInfo in ipairs(filteredPets) do
         if profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.ALL or (profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.MISSING and petInfo.numCollected == 0) then
