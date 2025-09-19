@@ -1,3 +1,7 @@
+# 11.2.0-20250919-1
+* Better compatibility with Kaliel's Tracker
+* Better error handling in the objective tracker
+
 # 11.2.0-20250918-1
 * Implement objective tracker.
 

@@ -34,6 +34,11 @@ local settings = {
     uiOrder = 50
 };
 
+if KT_ObjectiveTrackerManager then
+    settings.blockTemplate = "KT_ObjectiveTrackerAnimBlockTemplate"
+    settings.lineTemplate = "KT_ObjectiveTrackerAnimLineTemplate"
+end
+
 BattlePetCompletionistObjectiveTrackerMixin = CreateFromMixins(ObjectiveTrackerModuleMixin, settings);
 
 function BattlePetCompletionistObjectiveTrackerMixin:InitModule()
@@ -46,6 +51,16 @@ function BattlePetCompletionistObjectiveTrackerMixin:OnEvent(event, ...)
     self:MarkDirty()
 end
 
+function BattlePetCompletionistObjectiveTrackerMixin:OnBlockHeaderClick(block, mouseButton)
+    if mouseButton == "LeftButton" then
+        if not CollectionsJournal or not CollectionsJournal:IsShown() then
+            ToggleCollectionsJournal()
+        end
+
+        CollectionsJournal_SetTab(CollectionsJournal, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
+    end
+end
+
 function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
     local profile = DBModule:GetProfile()
     if not profile.objectiveTrackerEnabled then
@@ -53,7 +68,16 @@ function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
     end
 
     local mapID = ZoneModule:ResolveZone()
+
+    if not mapID then
+        return
+    end
+
     local pets = DataModule:GetPetsInMap(mapID) or {}
+
+    if not next(pets) then
+        return
+    end
 
     local anyMissingPets = false
     local filteredPets = {}
@@ -71,8 +95,11 @@ function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
         return
     end
 
+    local mapInfo = C_Map.GetMapInfo(mapID)
+    local zoneName = mapInfo and mapInfo.name or L["current zone"]
+
     local block = self:GetBlock("battlepets")
-    block:SetHeader(string.format(L["Battle Pets in %s"], C_Map.GetMapInfo(mapID) and C_Map.GetMapInfo(mapID).name or L["current zone"]))
+    block:SetHeader(string.format(L["Battle Pets in %s"], zoneName))
 
     for _, petInfo in ipairs(filteredPets) do
         if profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.ALL or (profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.MISSING and petInfo.numCollected == 0) then
@@ -95,7 +122,7 @@ function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, species
         local line = block:AddObjective(speciesName, speciesName, nil, true)
         line:SetState(ObjectiveTrackerAnimLineState.Present)
     else
-        local line = block:AddObjective(speciesName, speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, OBJECTIVE_TRACKER_COLOR["Complete"])
+        local line = block:AddObjective(speciesName, speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, (KT_OBJECTIVE_TRACKER_COLOR["Complete"] or OBJECTIVE_TRACKER_COLOR["Complete"]))
         if line.state == ObjectiveTrackerAnimLineState.Present then
             line:SetState(ObjectiveTrackerAnimLineState.Completing)
         elseif line.state == ObjectiveTrackerAnimLineState.Completing then
