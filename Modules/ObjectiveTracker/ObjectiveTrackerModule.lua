@@ -122,7 +122,15 @@ function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, species
         local line = block:AddObjective(speciesName, speciesName, nil, true)
         line:SetState(ObjectiveTrackerAnimLineState.Present)
     else
-        local line = block:AddObjective(speciesName, speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, (KT_OBJECTIVE_TRACKER_COLOR["Complete"] or OBJECTIVE_TRACKER_COLOR["Complete"]))
+        local color
+
+        if KT_ObjectiveTrackerManager then
+            color = KT_OBJECTIVE_TRACKER_COLOR["Complete"]
+        else
+            color = OBJECTIVE_TRACKER_COLOR["Complete"]
+        end
+
+        local line = block:AddObjective(speciesName, speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, color)
         if line.state == ObjectiveTrackerAnimLineState.Present then
             line:SetState(ObjectiveTrackerAnimLineState.Completing)
         elseif line.state == ObjectiveTrackerAnimLineState.Completing then

@@ -1,3 +1,6 @@
+# 11.2.0-20250920-1
+* Fix bug when Kaliel's Tracker is not installed or loaded.
+
 # 11.2.0-20250919-1
 * Better compatibility with Kaliel's Tracker
 * Better error handling in the objective tracker
