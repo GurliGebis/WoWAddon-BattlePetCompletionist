@@ -1,3 +1,6 @@
+# 11.2.0-20250921-1
+* Exclude objective tracker code from Classic until it can be fixed.
+
 # 11.2.0-20250920-1
 * Fix bug when Kaliel's Tracker is not installed or loaded.
 

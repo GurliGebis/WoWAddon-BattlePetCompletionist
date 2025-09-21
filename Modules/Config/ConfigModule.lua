@@ -407,6 +407,7 @@ local options = {
                 profile.notifyForRareUpgrade = not profile.notifyForRareUpgrade
             end
         },
+--@retail@
         objectiveTrackerHeader = {
             order = 31,
             name = L["Header - Objective Tracker"],
@@ -459,6 +460,7 @@ local options = {
                 ObjectiveTrackerModule:OnEvent("CONFIG_CHANGED")
             end
         }
+--@end-retail@
     },
 }
 
