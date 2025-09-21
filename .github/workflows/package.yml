@@ -19,7 +19,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install subversion
 
-      - name: Create Package
+      - name: Create Retail Package
         uses: BigWigsMods/packager@v2
+        with:
+          args: -g retail
+        env:
+          CF_API_KEY: ${{ secrets.CURSEFORGE_API_TOKEN }}
+
+      - name: Create Classic Package
+        uses: BigWigsMods/packager@v2
+        with:
+          args: -g mists
         env:
           CF_API_KEY: ${{ secrets.CURSEFORGE_API_TOKEN }}

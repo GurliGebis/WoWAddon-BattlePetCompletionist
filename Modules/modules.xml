@@ -13,5 +13,7 @@
     <Include file="AddonCompartment\AddonCompartmentModule.xml"/>
     <Include file="Minimap\MinimapModule.xml"/>
     <Include file="Tooltip\TooltipModule.xml"/>
+    <!--@retail@-->
     <Include file="ObjectiveTracker\ObjectiveTrackerModule.xml"/>
+    <!--@end-retail@-->
 </Ui>
