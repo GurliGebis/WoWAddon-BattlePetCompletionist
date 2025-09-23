@@ -1,3 +1,6 @@
+# 11.2.0-20250923-1
+* Updated data files with latest data from 11.2.0 week 2025-39
+
 # 11.2.0-20250921-1
 * Exclude objective tracker code from Classic until it can be fixed.
 * Changed to use separate builds for Retail and Classic.
