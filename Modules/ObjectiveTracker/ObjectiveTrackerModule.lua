@@ -88,8 +88,23 @@ function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
             anyMissingPets = true
         end
 
-        tinsert(filteredPets, { speciesId = speciesId, numCollected = numCollected })
+        local speciesName = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
+
+        tinsert(filteredPets, { speciesId = speciesId, numCollected = numCollected, speciesName = speciesName })
     end
+
+    -- Sort the filtered pets by species name
+    table.sort(filteredPets, function(a, b)
+        if a.speciesName and b.speciesName then
+            return a.speciesName < b.speciesName
+        elseif a.speciesName then
+            return true
+        elseif b.speciesName then
+            return false
+        else
+            return a.speciesId < b.speciesId
+        end
+    end)
 
     if profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.MISSING and anyMissingPets == false then
         return
@@ -103,23 +118,23 @@ function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
 
     for _, petInfo in ipairs(filteredPets) do
         if profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.ALL or (profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.MISSING and petInfo.numCollected == 0) then
-            self:AddBattlePet(block, petInfo.speciesId)
+            self:AddBattlePet(block, petInfo)
         end
     end
 
     self:LayoutBlock(block);
 end
 
-function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, speciesID)
-    local speciesName = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
-    local numCollected = C_PetJournal.GetNumCollectedInfo(speciesID)
-
-    if not speciesName then
+function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, petInfo)
+    if not petInfo.speciesName then
         return
     end
 
-    if numCollected == 0 then
-        local line = block:AddObjective(speciesName, speciesName, nil, true)
+    local objectiveKey = "battlepet-" .. petInfo.speciesId
+
+    if petInfo.numCollected == 0 then
+        local line = block:AddObjective(objectiveKey, petInfo.speciesName, nil, true)
+
         line:SetState(ObjectiveTrackerAnimLineState.Present)
     else
         local color
@@ -130,7 +145,8 @@ function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, species
             color = OBJECTIVE_TRACKER_COLOR["Complete"]
         end
 
-        local line = block:AddObjective(speciesName, speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, color)
+        local line = block:AddObjective(objectiveKey, petInfo.speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, color)
+
         if line.state == ObjectiveTrackerAnimLineState.Present then
             line:SetState(ObjectiveTrackerAnimLineState.Completing)
         elseif line.state == ObjectiveTrackerAnimLineState.Completing then
