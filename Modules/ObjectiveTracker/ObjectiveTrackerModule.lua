@@ -93,6 +93,19 @@ function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
         tinsert(filteredPets, { speciesId = speciesId, numCollected = numCollected, speciesName = speciesName })
     end
 
+    -- Sort the filtered pets by species name
+    table.sort(filteredPets, function(a, b)
+        if a.speciesName and b.speciesName then
+            return a.speciesName < b.speciesName
+        elseif a.speciesName then
+            return true
+        elseif b.speciesName then
+            return false
+        else
+            return a.speciesId < b.speciesId
+        end
+    end)
+
     if profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.MISSING and anyMissingPets == false then
         return
     end
