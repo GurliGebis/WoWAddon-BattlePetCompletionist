@@ -130,8 +130,10 @@ function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, petInfo
         return
     end
 
+    local objectiveKey = "battlepet-" .. petInfo.speciesId
+
     if petInfo.numCollected == 0 then
-        local line = block:AddObjective(petInfo.speciesName, petInfo.speciesName, nil, true)
+        local line = block:AddObjective(objectiveKey, petInfo.speciesName, nil, true)
 
         line:SetState(ObjectiveTrackerAnimLineState.Present)
     else
@@ -143,7 +145,7 @@ function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, petInfo
             color = OBJECTIVE_TRACKER_COLOR["Complete"]
         end
 
-        local line = block:AddObjective(petInfo.speciesName, petInfo.speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, color)
+        local line = block:AddObjective(objectiveKey, petInfo.speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, color)
 
         if line.state == ObjectiveTrackerAnimLineState.Present then
             line:SetState(ObjectiveTrackerAnimLineState.Completing)
