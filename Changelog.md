@@ -1,3 +1,6 @@
+# 11.2.5-20251120-2
+* Adding missing pkgmeta changes.
+
 # 11.2.5-20251120-1
 * Prepare for moving data into separate data addons.
 
