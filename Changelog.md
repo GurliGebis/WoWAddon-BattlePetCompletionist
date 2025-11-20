@@ -1,3 +1,6 @@
+# 11.2.5-20251120-1
+* Prepare for moving data into separate data addons.
+
 # 11.2.5-20251029-1
 * Updated data files with latest data from 11.2.5 week 2025-44
 

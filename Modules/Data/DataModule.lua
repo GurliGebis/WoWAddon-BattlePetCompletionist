@@ -22,6 +22,9 @@ local DataModule = BattlePetCompletionist:NewModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local LibPetJournal = LibStub('LibPetJournal-2.0')
 
+function DataModule:RegisterPetData(petData)
+end
+
 local function DoesPetMatchSourceFilters(speciesId)
     local petSource = DataModule:GetPetSource(speciesId)
 

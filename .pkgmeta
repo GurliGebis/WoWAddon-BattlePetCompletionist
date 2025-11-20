@@ -25,7 +25,6 @@ externals:
   Libs/LibStub: svn://svn.wowace.com/wow/libstub/mainline/tags/1.0
 
 ignore:
-  - Modules/Data/Source
   - images
   - Changelog.md
   - LICENSE

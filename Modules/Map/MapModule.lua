@@ -240,3 +240,12 @@ end
 function MapModule:OnInitialize()
     MapModule:RegisterChatCommand("bpcom-toggle", "BattlePetToggle_OnClick")
 end
+
+_G.StaticPopupDialogs["BATTLEPETCOMPLETIONIST_NO_DATA"] = {
+    text = L["No pet data loaded! Please install Battle Pet Completionist data addons (e.g. BattlePetCompletionist_Vanilla) or disable this addon."],
+    button1 = _G.OKAY,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,
+}
