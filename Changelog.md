@@ -1,3 +1,6 @@
+# 11.2.5-20251125-1
+* Relocated data into the BattlePetCompletionst_PetData addon.
+
 # 11.2.5-20251120-2
 * Adding missing pkgmeta changes.
 

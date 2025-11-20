@@ -22,7 +22,25 @@ local DataModule = BattlePetCompletionist:NewModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local LibPetJournal = LibStub('LibPetJournal-2.0')
 
+DataModule.PetData = {}
+DataModule.HasDataLoaded = false
+
 function DataModule:RegisterPetData(petData)
+    for mapId, mapPets in pairs(petData) do
+        if not self.PetData[mapId] then
+            self.PetData[mapId] = {}
+        end
+
+        for speciesId, coordinates in pairs(mapPets) do
+            self.PetData[mapId][speciesId] = coordinates
+        end
+    end
+
+    self.HasDataLoaded = true
+end
+
+function DataModule:HasAnyDataLoaded()
+    return self.HasDataLoaded
 end
 
 local function DoesPetMatchSourceFilters(speciesId)

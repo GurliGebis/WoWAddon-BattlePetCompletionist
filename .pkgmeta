@@ -25,7 +25,7 @@ externals:
   Libs/LibStub: svn://svn.wowace.com/wow/libstub/mainline/tags/1.0
 
 required-dependencies:
-  - battle-pet-completionist-vanilla-data
+  - battle-pet-completionist-pet-data
 
 ignore:
   - images

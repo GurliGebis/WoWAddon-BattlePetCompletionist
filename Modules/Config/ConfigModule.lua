@@ -25,6 +25,8 @@ local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Config")
 
+local petDataVersionLoaded = "None"
+
 local standardControlWidth = 1.2; -- A little wider to allow for longer option labels
 local options = {
     name = L["Config Section - Battle Pet Completionist"],
@@ -459,8 +461,18 @@ local options = {
                 local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
                 ObjectiveTrackerModule:OnEvent("CONFIG_CHANGED")
             end
-        }
+        },
 --@end-retail@
+        dataVersionHeader = {
+            order = 35,
+            type = "header",
+            name = L["Pet Data version loaded"],
+        },
+        dataVersion = {
+            order = 36,
+            type = "description",
+            name = L["Version"] .. ": " .. petDataVersionLoaded,
+        },
     },
 }
 
@@ -472,4 +484,11 @@ end
 
 function ConfigModule:ChatCommandOptions(msg)
     Settings.OpenToCategory(ConfigModule.OptionsFrame.name)
+end
+
+function ConfigModule:SetPetDataVersion(version)
+    petDataVersionLoaded = version
+    options.args.dataVersion.name = L["Version"]..": "..petDataVersionLoaded
+
+    LibStub("AceConfigRegistry-3.0"):NotifyChange("BattlePetCompletionist")
 end

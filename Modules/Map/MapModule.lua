@@ -40,6 +40,11 @@ function MapModule.WorldMapDataProvider:RefreshAllData()
 
     self:RemoveAllData()
 
+    if not DataModule:HasAnyDataLoaded() then
+        StaticPopup_Show("BATTLEPETCOMPLETIONIST_NO_DATA")
+        return
+    end
+
     self:LoadMapData(self:GetMap():GetMapID())
 end
 
@@ -242,7 +247,7 @@ function MapModule:OnInitialize()
 end
 
 _G.StaticPopupDialogs["BATTLEPETCOMPLETIONIST_NO_DATA"] = {
-    text = L["No pet data loaded! Please install Battle Pet Completionist data addons (e.g. BattlePetCompletionist_Vanilla) or disable this addon."],
+    text = L["No pet data loaded! Please install the Battle Pet Completionist data addon BattlePetCompletionist_PetData or disable this addon."],
     button1 = _G.OKAY,
     timeout = 0,
     whileDead = true,
