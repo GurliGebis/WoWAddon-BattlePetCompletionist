@@ -1,3 +1,6 @@
+# 11.2.7-20251202-1
+* Updated TOC to match WoW 11.2.7
+
 # 11.2.5-20251125-1
 * Relocated data into the BattlePetCompletionst_PetData addon.
 
