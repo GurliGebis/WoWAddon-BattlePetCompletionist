@@ -483,7 +483,7 @@ function ConfigModule:OnInitialize()
 end
 
 function ConfigModule:ChatCommandOptions(msg)
-    Settings.OpenToCategory(ConfigModule.OptionsFrame.name)
+    Settings.OpenToCategory(ConfigModule.CategoryId)
 end
 
 function ConfigModule:SetPetDataVersion(version)
