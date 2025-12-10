@@ -1,3 +1,6 @@
+# 11.2.7-20251210-1
+* Updated TOC for Mop Classic.
+
 # 11.2.7-20251209-1
 * Change logic for opening config dialog to be more forward compatible.
 
