@@ -1,3 +1,6 @@
+# 11.2.7-20260113-1
+* Updated file headers.
+
 # 11.2.7-20251210-1
 * Updated TOC for Mop Classic.
 
