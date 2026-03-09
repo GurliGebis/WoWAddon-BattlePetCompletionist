@@ -1,3 +1,6 @@
+# 12.0.1-20260309-1
+* Fix so new non-combat pet battles pets are shown when Pet Battle filter is enabled.
+
 # 12.0.1-20260211-1
 * Updated TOC to Midnight Pre-Patch.
 

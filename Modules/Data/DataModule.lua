@@ -46,6 +46,12 @@ end
 local function DoesPetMatchSourceFilters(speciesId)
     local petSource = DataModule:GetPetSource(speciesId)
 
+    if petSource == ZONE then
+         -- Workaround for new non-combat battle pets.
+         -- This changes their type to Pet Battle, from a filtering point of view.
+        petSource = BATTLE_PET_SOURCE_5
+    end
+
     local enabledSources = DBModule:GetMapPinSources()
 
     for _, v in ipairs(enabledSources) do
