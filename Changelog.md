@@ -1,3 +1,6 @@
+# 12.0.1-20260310-1
+* Use custom tooltip instead of GameTooltip to prevent taints.
+
 # 12.0.1-20260309-1
 * Fix so new non-combat pet battles pets are shown when Pet Battle filter is enabled.
 

@@ -23,4 +23,5 @@
     </Frame>
 
     <Script file="MapModule.lua"/>
+    <Script file="MapTooltip.lua"/>
 </Ui>

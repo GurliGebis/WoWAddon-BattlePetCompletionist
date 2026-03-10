@@ -21,7 +21,6 @@ local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local MapModule = BattlePetCompletionist:NewModule("MapModule", "AceConsole-3.0")
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
-local AceHook = LibStub("AceHook-3.0")
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Map")
 
@@ -134,11 +133,11 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
 
     local ownedPets = DataModule:GetOwnedPets(self.PetSpeciesID)
 
+    local tooltipLines = {}
+
     local iconDimensions = 20
     local headline = "|T" .. speciesIcon .. ":" .. iconDimensions .. ":" .. iconDimensions .. ":-2:0|t " .. speciesName
-
-    GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
-    GameTooltip:SetText(headline, 1, 1, 1)
+    table.insert(tooltipLines, { text = headline, color = HIGHLIGHT_FONT_COLOR })
 
     if ownedPets ~= nil then
         local ownedPetTexts = {}
@@ -151,15 +150,16 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
             table.insert(ownedPetTexts, color .. v[1] .. "|r")
         end
 
-        GameTooltip:AddLine(string.format(L["Collected"], table.concat(ownedPetTexts, ", ")))
+        table.insert(tooltipLines, { text = string.format(L["Collected"], table.concat(ownedPetTexts, ", ")), color = NORMAL_FONT_COLOR })
     end
 
-    GameTooltip:AddLine(tooltipSource, 1, 1, 1, true)
-    GameTooltip:Show()
+    table.insert(tooltipLines, { text = MapModule.WrapTextWithColor(HIGHLIGHT_FONT_COLOR, tooltipSource) })
+
+    MapModule.Tooltip_Show(self, tooltipLines)
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseLeave()
-    GameTooltip:Hide()
+    MapModule:Tooltip_Hide()
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
