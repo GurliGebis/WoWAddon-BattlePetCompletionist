@@ -1,3 +1,6 @@
+# 12.0.1-20260311-1
+* Rework tooltip to use private tooltip that inherits GameTooltip, to simply code.
+
 # 12.0.1-20260310-1
 * Use custom tooltip instead of GameTooltip to prevent taints.
 
