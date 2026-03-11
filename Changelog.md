@@ -1,3 +1,6 @@
+# 12.0.1-20260311-2
+* Fix xml error for GameTooltip.
+
 # 12.0.1-20260311-1
 * Rework tooltip to use private tooltip that inherits GameTooltip, to simply code.
 
