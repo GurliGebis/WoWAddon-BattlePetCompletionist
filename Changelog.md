@@ -1,3 +1,6 @@
+# 12.0.1-20260323-1
+* Declutter map, to avoid too close pins.
+
 # 12.0.1-20260311-2
 * Fix xml error for GameTooltip.
 
