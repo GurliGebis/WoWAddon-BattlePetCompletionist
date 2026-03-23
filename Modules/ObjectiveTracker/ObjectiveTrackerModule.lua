@@ -25,24 +25,82 @@ local ZoneModule = BattlePetCompletionist:GetModule("ZoneModule")
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_ObjectiveTracker")
 
+-- Detect KalielsTracker and resolve tracker-specific globals.
+-- KT completely disables Blizzard's ObjectiveTrackerManager, so we must use
+-- KT's own mixin, templates, enums, and colors when it is active.
+local isKTLoaded = C_AddOns.IsAddOnLoaded("!KalielsTracker")
+
+local baseMixin      = isKTLoaded and KT_ObjectiveTrackerModuleMixin or ObjectiveTrackerModuleMixin
+local moduleTemplate = isKTLoaded and "KT_ObjectiveTrackerModuleTemplate" or "ObjectiveTrackerModuleTemplate"
+local blockTemplate  = isKTLoaded and "KT_ObjectiveTrackerAnimBlockTemplate" or "ObjectiveTrackerAnimBlockTemplate"
+local lineTemplate   = isKTLoaded and "KT_ObjectiveTrackerAnimLineTemplate" or "ObjectiveTrackerAnimLineTemplate"
+local lineStateEnum  = isKTLoaded and KT_ObjectiveTrackerAnimLineState or ObjectiveTrackerAnimLineState
+local trackerColor   = isKTLoaded and KT_OBJECTIVE_TRACKER_COLOR or OBJECTIVE_TRACKER_COLOR
+local dashStyleHide  = isKTLoaded and KT_OBJECTIVE_DASH_STYLE_HIDE or OBJECTIVE_DASH_STYLE_HIDE
+
 local settings = {
 	headerText = L["Battle Pets"],
 	events = { "PET_JOURNAL_LIST_UPDATE", "ZONE_CHANGED", "ZONE_CHANGED_NEW_AREA", "PLAYER_ENTERING_WORLD" },
-	timedCriteria = { },
-	blockTemplate = "ObjectiveTrackerAnimBlockTemplate",
-	lineTemplate = "ObjectiveTrackerAnimLineTemplate",
+	blockTemplate = blockTemplate,
+	lineTemplate = lineTemplate,
     uiOrder = 50
 };
 
-if KT_ObjectiveTrackerManager then
-    settings.blockTemplate = "KT_ObjectiveTrackerAnimBlockTemplate"
-    settings.lineTemplate = "KT_ObjectiveTrackerAnimLineTemplate"
+BattlePetCompletionistObjectiveTrackerMixin = CreateFromMixins(baseMixin, settings);
+
+-- Replicates KT:SetModuleHeader() which is private to the KT addon.
+-- KT hides the default right-side MinimizeButton and replaces it with a
+-- left-side icon texture, making the entire header clickable for collapse.
+-- Without this, our module header looks like a Blizzard header inside KT.
+local function ApplyKTHeaderStyle(module)
+    local header = module.Header
+    if not header then
+        return
+    end
+
+    -- Lock header text position to LEFT and prevent it from being moved
+    header.Text.ClearAllPoints = function() end
+    header.Text:SetPoint("LEFT", 10, 1)
+    header.Text.SetPoint = function() end
+
+    -- Disable header add animation
+    header.PlayAddAnimation = function() end
+
+    -- Hide the right-side MinimizeButton permanently
+    header.MinimizeButton:SetShown(false)
+    header.MinimizeButton.SetShown = function() end
+
+    -- Collapse icon matching KT's SetModuleHeader() style.
+    -- Expanded/collapsed are horizontally adjacent in KT's sprite sheet.
+    local expandedCoords = { 0.5, 1, 0.75, 1 }
+    local collapsedCoords = { 0, 0.5, 0.75, 1 }
+
+    local icon = header:CreateTexture(nil, "ARTWORK")
+    icon:SetSize(16, 16)
+    icon:SetTexture("Interface\\AddOns\\!KalielsTracker\\Media\\UI-KT-HeaderButtons")
+    icon:SetTexCoord(unpack(expandedCoords))
+    icon:SetPoint("LEFT", -6, 2)
+    icon:SetVertexColor(NORMAL_FONT_COLOR:GetRGB())
+    header.Icon = icon
+
+    -- Make the entire header clickable to toggle collapse
+    header:SetScript("OnMouseUp", function()
+        module:ToggleCollapsed()
+        if module:IsCollapsed() then
+            icon:SetTexCoord(unpack(collapsedCoords))
+        else
+            icon:SetTexCoord(unpack(expandedCoords))
+        end
+    end)
 end
 
-BattlePetCompletionistObjectiveTrackerMixin = CreateFromMixins(ObjectiveTrackerModuleMixin, settings);
-
 function BattlePetCompletionistObjectiveTrackerMixin:InitModule()
-	self:Init();
+    -- KT's mixin does not have Init(), only Blizzard's does
+    if not isKTLoaded then
+	    self:Init();
+    else
+        ApplyKTHeaderStyle(self)
+    end
 
     ObjectiveTrackerModule.Mixin = self
 end
@@ -135,48 +193,45 @@ function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, petInfo
     if petInfo.numCollected == 0 then
         local line = block:AddObjective(objectiveKey, petInfo.speciesName, nil, true)
 
-        line:SetState(ObjectiveTrackerAnimLineState.Present)
+        line:SetState(lineStateEnum.Present)
     else
-        local color
+        local color = trackerColor["Complete"]
 
-        if KT_ObjectiveTrackerManager then
-            color = KT_OBJECTIVE_TRACKER_COLOR["Complete"]
+        local line = block:AddObjective(objectiveKey, petInfo.speciesName, nil, true, dashStyleHide, color)
+
+        if line.state == lineStateEnum.Present then
+            line:SetState(lineStateEnum.Completing)
+        elseif line.state == lineStateEnum.Completing then
+            line:SetState(lineStateEnum.Completed)
         else
-            color = OBJECTIVE_TRACKER_COLOR["Complete"]
-        end
-
-        local line = block:AddObjective(objectiveKey, petInfo.speciesName, nil, true, OBJECTIVE_DASH_STYLE_HIDE, color)
-
-        if line.state == ObjectiveTrackerAnimLineState.Present then
-            line:SetState(ObjectiveTrackerAnimLineState.Completing)
-        elseif line.state == ObjectiveTrackerAnimLineState.Completing then
-            line:SetState(ObjectiveTrackerAnimLineState.Completed)
-        else
-            line:SetState(ObjectiveTrackerAnimLineState.Completed)
+            line:SetState(lineStateEnum.Completed)
         end
     end
 end
 
+-- Create the module frame dynamically since the template depends on which tracker is active.
+-- XML cannot conditionally select a template, so we use CreateFrame here instead.
+local frame = CreateFrame("Frame", "BattlePetCompletionistObjectiveTracker", nil, moduleTemplate)
+Mixin(frame, BattlePetCompletionistObjectiveTrackerMixin)
+frame:OnLoad()
+
 do
     function ObjectiveTrackerModule:OnPlayerEnteringWorld()
-        local ObjectiveTrackerManager = KT_ObjectiveTrackerManager or ObjectiveTrackerManager
-        local ObjectiveTrackerFrame = KT_ObjectiveTrackerFrame or ObjectiveTrackerFrame
-
-        ObjectiveTrackerManager:SetModuleContainer(BattlePetCompletionistObjectiveTracker, ObjectiveTrackerFrame)
-    end
-
-    function ObjectiveTrackerModule:OnInitialize()
-        self:RegisterEventHandlers()
-    end
-
-    -- We need to forward events to the mixin instance
-    function ObjectiveTrackerModule:OnEvent(event, ...)
-        if self.Mixin then
-            self.Mixin:OnEvent(event, ...)
+        if isKTLoaded then
+            KT_ObjectiveTrackerFrame:AddModule(BattlePetCompletionistObjectiveTracker)
+        else
+            ObjectiveTrackerManager:SetModuleContainer(BattlePetCompletionistObjectiveTracker, ObjectiveTrackerFrame)
         end
     end
 
-    function ObjectiveTrackerModule:RegisterEventHandlers()
+    function ObjectiveTrackerModule:OnInitialize()
         self:RegisterEvent("PLAYER_ENTERING_WORLD", "OnPlayerEnteringWorld")
+        self:RegisterEvent("PET_JOURNAL_LIST_UPDATE", "OnPetEvent")
+    end
+
+    function ObjectiveTrackerModule:OnPetEvent(event, ...)
+        if self.Mixin then
+            self.Mixin:OnEvent(event, ...)
+        end
     end
 end

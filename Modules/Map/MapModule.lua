@@ -26,6 +26,17 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Map")
 
 MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
+function MapModule.WorldMapDataProvider:OnCanvasScaleChanged()
+    local map = self:GetMap()
+
+    -- OnCanvasScaleChanged fires on every frame during the zoom animation.
+    -- We only refresh once the animation has settled (both IsZoomingIn and IsZoomingOut
+    -- return false) to avoid rebuilding all pins dozens of times per second.
+    if map and not map:IsZoomingIn() and not map:IsZoomingOut() then
+        self:RefreshAllData()
+    end
+end
+
 function MapModule.WorldMapDataProvider:RemoveAllData()
     if self:GetMap() then
         self:GetMap():RemoveAllPinsByTemplate("BPetCompletionistWorldMapPinTemplate")
@@ -54,6 +65,16 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
 
     if not mapId then
         return
+    end
+
+    local function IsTooCloseToExistingPin(placedPositions, x, y, threshold)
+        for _, pos in ipairs(placedPositions) do
+            if math.abs(pos[1] - x) < threshold and math.abs(pos[2] - y) < threshold then
+                return true
+            end
+        end
+
+        return false
     end
 
     local petData = DataModule:GetPetsInMap(mapId)
@@ -85,13 +106,21 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
                 speciesIcon = typeIcons[petType]
             end
 
+            local placedPositions = {}
+            local zoomPercent = map.ScrollContainer:HasZoomLevels() and map:GetCanvasZoomPercent() or 0
+            local threshold = (0.01 * MapModule:GetMapPinScale()) / (1 + zoomPercent * 3)
+
             for x, y in gmatch(locations, "(%d%d%d)(%d%d%d)") do
                 local realX = (tonumber(x) / 1000)
                 local realY = (tonumber(y) / 1000)
 
-                local pin = map:AcquirePin("BPetCompletionistWorldMapPinTemplate", realX, realY, speciesIcon)
-                pin.PetSpeciesID = pet
-                pin.MapId = mapId
+                if not IsTooCloseToExistingPin(placedPositions, realX, realY, threshold) then
+                    local pin = map:AcquirePin("BPetCompletionistWorldMapPinTemplate", realX, realY, speciesIcon)
+                    pin.PetSpeciesID = pet
+                    pin.MapId = mapId
+
+                    table.insert(placedPositions, { realX, realY })
+                end
             end
         end
     end

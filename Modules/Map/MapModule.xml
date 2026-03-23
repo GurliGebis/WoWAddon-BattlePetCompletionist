@@ -22,8 +22,6 @@
         </Layers>
     </Frame>
 
-    <GameTooltip name="BPCMapTooltip" inherits="GameTooltipTemplate" parent="UIParent" hidden="true" />
-
     <Script file="MapModule.lua"/>
     <Script file="MapTooltip.lua"/>
 </Ui>
