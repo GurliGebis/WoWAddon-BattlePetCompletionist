@@ -1,3 +1,6 @@
+# 12.0.1-20260323-2
+* Fix bug in MapModule in Classic.
+
 # 12.0.1-20260323-1
 * Declutter map, to avoid too close pins.
 * Compatibility with KalielsTracker.

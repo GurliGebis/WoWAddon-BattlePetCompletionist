@@ -84,6 +84,14 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
         return
     end
 
+    local function GetMapZoomPercent(map)
+        if not map or not map.ScrollContainer or not map.ScrollContainer.HasZoomLevels or not map.GetCanvasZoomPercent then
+            return 0
+        end
+
+        return map.ScrollContainer:HasZoomLevels() and map:GetCanvasZoomPercent() or 0
+    end
+
     local petIconType = DBModule:GetProfile().mapPinIconType
     for pet, locations in pairs(petData) do
         if DataModule:ShouldPetBeShown(pet) then
@@ -107,7 +115,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
             end
 
             local placedPositions = {}
-            local zoomPercent = map.ScrollContainer:HasZoomLevels() and map:GetCanvasZoomPercent() or 0
+            local zoomPercent = GetMapZoomPercent(map)
             local threshold = (0.01 * MapModule:GetMapPinScale()) / (1 + zoomPercent * 3)
 
             for x, y in gmatch(locations, "(%d%d%d)(%d%d%d)") do
