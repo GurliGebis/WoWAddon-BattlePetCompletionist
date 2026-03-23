@@ -16,6 +16,8 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
+if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then return end
+
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local ObjectiveTrackerModule = BattlePetCompletionist:NewModule("ObjectiveTrackerModule", "AceEvent-3.0")
