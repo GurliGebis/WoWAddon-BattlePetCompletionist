@@ -221,6 +221,64 @@ function DataModule:CanWeCapturePets()
     return false
 end
 
+function DataModule:GetMapZoneNames(mapId)
+    local info = C_Map.GetMapInfo(mapId)
+    if not info then
+        return nil
+    end
+    if info.mapType == Enum.UIMapType.Dungeon then
+        return nil
+    end
+
+    local names = {}
+    if info.name then
+        names[#names + 1] = info.name:lower()
+    end
+
+    local children = C_Map.GetMapChildrenInfo(mapId)
+    if children then
+        for _, child in ipairs(children) do
+            if child.name then
+                names[#names + 1] = child.name:lower()
+            end
+        end
+    end
+
+    return names
+end
+
+function DataModule:IsPetInMapZone(speciesId, mapZoneNames)
+    local petSource = self:GetPetSource(speciesId)
+
+    -- Only filter by source if the pet source is Zone or Pet Battle.
+    if petSource ~= BATTLE_PET_SOURCE_5 and petSource ~= ZONE then
+        return true
+    end
+
+    -- If we couldn't get any zone names for the map, just show the pet.
+    -- It is better to show potentially unrelated pets than to hide pets that are actually in the zone.
+    if not mapZoneNames then
+        return true
+    end
+
+    local tooltipSource = select(5, C_PetJournal.GetPetInfoBySpeciesID(speciesId))
+
+    -- If no source is defined (which should never happen), just show the pet rather than hiding it by default.
+    if not tooltipSource then
+        return true
+    end
+
+    local lowerSource = tooltipSource:lower()
+
+    for _, zoneName in ipairs(mapZoneNames) do
+        if lowerSource:find(zoneName, 1, true) then
+            return true
+        end
+    end
+
+    return false
+end
+
 function DataModule:GetPetSource(speciesId)
     local function cleanColorTags(text)
         if not text then return nil end
