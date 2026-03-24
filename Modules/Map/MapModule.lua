@@ -98,42 +98,50 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
         return map.ScrollContainer:HasZoomLevels() and map:GetCanvasZoomPercent() or 0
     end
 
+    local mapZoneNames = DataModule:GetMapZoneNames(mapId)
+
+    local zoneCache = {}
     local petIconType = DBModule:GetProfile().mapPinIconType
     for pet, locations in pairs(petData) do
         if DataModule:ShouldPetBeShown(pet) then
-            local _, speciesIcon, petType = C_PetJournal.GetPetInfoBySpeciesID(pet)
-
-            if petIconType == _BattlePetCompletionist.Enums.MapPinIconType.FAMILY then
-                local typeIcons = {
-                    "Interface\\icons\\Icon_PetFamily_Humanoid",
-                    "Interface\\icons\\Icon_PetFamily_Dragon",
-                    "Interface\\icons\\Icon_PetFamily_Flying",
-                    "Interface\\icons\\Icon_PetFamily_Undead",
-                    "Interface\\icons\\Icon_PetFamily_Critter",
-                    "Interface\\icons\\Icon_PetFamily_Magical",
-                    "Interface\\icons\\Icon_PetFamily_Elemental",
-                    "Interface\\icons\\Icon_PetFamily_Beast",
-                    "Interface\\icons\\Icon_PetFamily_Water",
-                    "Interface\\icons\\Icon_PetFamily_Mechanical"
-                }
-
-                speciesIcon = typeIcons[petType]
+            if zoneCache[pet] == nil then
+                zoneCache[pet] = DataModule:IsPetInMapZone(pet, mapZoneNames)
             end
+            if zoneCache[pet] then
+                local _, speciesIcon, petType = C_PetJournal.GetPetInfoBySpeciesID(pet)
 
-            local placedPositions = {}
-            local zoomPercent = GetMapZoomPercent(map)
-            local threshold = (0.01 * MapModule:GetMapPinScale()) / (1 + zoomPercent * 3)
+                if petIconType == _BattlePetCompletionist.Enums.MapPinIconType.FAMILY then
+                    local typeIcons = {
+                        "Interface\\icons\\Icon_PetFamily_Humanoid",
+                        "Interface\\icons\\Icon_PetFamily_Dragon",
+                        "Interface\\icons\\Icon_PetFamily_Flying",
+                        "Interface\\icons\\Icon_PetFamily_Undead",
+                        "Interface\\icons\\Icon_PetFamily_Critter",
+                        "Interface\\icons\\Icon_PetFamily_Magical",
+                        "Interface\\icons\\Icon_PetFamily_Elemental",
+                        "Interface\\icons\\Icon_PetFamily_Beast",
+                        "Interface\\icons\\Icon_PetFamily_Water",
+                        "Interface\\icons\\Icon_PetFamily_Mechanical"
+                    }
 
-            for x, y in gmatch(locations, "(%d%d%d)(%d%d%d)") do
-                local realX = (tonumber(x) / 1000)
-                local realY = (tonumber(y) / 1000)
+                    speciesIcon = typeIcons[petType]
+                end
 
-                if not IsTooCloseToExistingPin(placedPositions, realX, realY, threshold) then
-                    local pin = map:AcquirePin("BPetCompletionistWorldMapPinTemplate", realX, realY, speciesIcon)
-                    pin.PetSpeciesID = pet
-                    pin.MapId = mapId
+                local placedPositions = {}
+                local zoomPercent = GetMapZoomPercent(map)
+                local threshold = (0.01 * MapModule:GetMapPinScale()) / (1 + zoomPercent * 3)
 
-                    table.insert(placedPositions, { realX, realY })
+                for x, y in gmatch(locations, "(%d%d%d)(%d%d%d)") do
+                    local realX = (tonumber(x) / 1000)
+                    local realY = (tonumber(y) / 1000)
+
+                    if not IsTooCloseToExistingPin(placedPositions, realX, realY, threshold) then
+                        local pin = map:AcquirePin("BPetCompletionistWorldMapPinTemplate", realX, realY, speciesIcon)
+                        pin.PetSpeciesID = pet
+                        pin.MapId = mapId
+
+                        table.insert(placedPositions, { realX, realY })
+                    end
                 end
             end
         end

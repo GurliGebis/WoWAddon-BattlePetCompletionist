@@ -1,3 +1,6 @@
+# 12.0.1-20260324-2
+* Make sure pets being shown is actually located on the current map.
+
 # 12.0.1-20260324-1
 * Fix problem with map data refreshing every frame.
 
