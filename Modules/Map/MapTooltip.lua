@@ -49,6 +49,7 @@ do
 
             if not fs then
                 fs = mapTooltip:CreateFontString(nil, "ARTWORK")
+                fs:SetJustifyH("LEFT")
                 mapTooltip.lines[i] = fs
             end
 
