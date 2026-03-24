@@ -20,91 +20,71 @@ local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local MapModule = BattlePetCompletionist:GetModule("MapModule")
 
+BPC_MAP_TOOLTIP_BACKDROP = {
+    bgFile   = "Interface/Tooltips/UI-Tooltip-Background",
+    edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+    edgeSize = 12,
+    insets   = { left = 3, right = 3, top = 3, bottom = 3 },
+}
+
 do
-    local mapTooltip
     local mapTooltipHeaderFont
 
-    function MapModule.Tooltip_Show(anchor, lines)
+    function MapModule.Tooltip_Show(anchor, headerLine, collectedLine, sourceLine)
         if not mapTooltipHeaderFont then
             local fontFile, fontSize, fontFlags = GameFontNormal:GetFont()
             mapTooltipHeaderFont = CreateFont("MapModuleHeaderFont")
             mapTooltipHeaderFont:SetFont(fontFile, fontSize + 2, fontFlags)
         end
 
-        if not mapTooltip then
-            mapTooltip = CreateFrame("Frame", "BPCMapTooltip", UIParent, "BackdropTemplate")
-            mapTooltip:SetBackdrop({
-                bgFile = "Interface/Tooltips/UI-Tooltip-Background",
-                edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
-                edgeSize = 12,
-                insets = { left = 3, right = 3, top = 3, bottom = 3 }
-            })
-            mapTooltip:SetBackdropColor(0, 0, 0, 0.9)
-            mapTooltip:SetFrameStrata("TOOLTIP")
-            mapTooltip.lines = {}
+        BPCMapTooltip.Header:SetFontObject(mapTooltipHeaderFont)
+        BPCMapTooltip.Header:SetText(headerLine.text or "")
+
+        if headerLine.color then
+            BPCMapTooltip.Header:SetTextColor(headerLine.color.r, headerLine.color.g, headerLine.color.b)
         end
 
-        for i, line in ipairs(lines) do
-            local fs = mapTooltip.lines[i]
+        if collectedLine then
+            BPCMapTooltip.Collected:SetText(collectedLine.text or "")
 
-            if not fs then
-                fs = mapTooltip:CreateFontString(nil, "ARTWORK")
-                fs:SetJustifyH("LEFT")
-                mapTooltip.lines[i] = fs
+            if collectedLine.color then
+                BPCMapTooltip.Collected:SetTextColor(collectedLine.color.r, collectedLine.color.g, collectedLine.color.b)
             end
 
-            if line.fontObject then
-                fs:SetFontObject(line.fontObject)
-            elseif i == 1 then
-                fs:SetFontObject(mapTooltipHeaderFont)
-            else
-                fs:SetFontObject(GameFontNormal)
-            end
-
-            fs:SetText(line.text or "")
-
-            if line.color then
-                fs:SetTextColor(line.color.r, line.color.g, line.color.b)
-            end
-
-            fs:Show()
-
-            if i == 1 then
-                fs:SetPoint("TOPLEFT", mapTooltip, "TOPLEFT", 8, -8)
-            else
-                fs:SetPoint("TOPLEFT", mapTooltip.lines[i-1], "BOTTOMLEFT", 0, -2)
-            end
+            BPCMapTooltip.Collected:Show()
+            BPCMapTooltip.Source:ClearAllPoints()
+            BPCMapTooltip.Source:SetPoint("TOPLEFT", BPCMapTooltip.Collected, "BOTTOMLEFT", 0, -2)
+        else
+            BPCMapTooltip.Collected:Hide()
+            BPCMapTooltip.Source:ClearAllPoints()
+            BPCMapTooltip.Source:SetPoint("TOPLEFT", BPCMapTooltip.Header, "BOTTOMLEFT", 0, -2)
         end
 
-        for i = #lines + 1, #mapTooltip.lines do
-            mapTooltip.lines[i]:Hide()
+        BPCMapTooltip.Source:SetText(sourceLine.text or "")
+
+        if sourceLine.color then
+            BPCMapTooltip.Source:SetTextColor(sourceLine.color.r, sourceLine.color.g, sourceLine.color.b)
         end
 
-        local maxWidth = 0
-        local totalHeight = 0
+        local headerWidth    = BPCMapTooltip.Header:GetStringWidth()
+        local collectedWidth = BPCMapTooltip.Collected:IsShown() and BPCMapTooltip.Collected:GetStringWidth() or 0
+        local sourceWidth    = BPCMapTooltip.Source:GetStringWidth()
+        local maxWidth       = math.max(headerWidth, collectedWidth, sourceWidth)
 
-        for i = 1, #lines do
-            local fs = mapTooltip.lines[i]
-            local w = fs:GetStringWidth()
+        local headerHeight    = BPCMapTooltip.Header:GetStringHeight()
+        local collectedHeight = BPCMapTooltip.Collected:IsShown() and (BPCMapTooltip.Collected:GetStringHeight() + 2) or 0
+        local sourceHeight    = BPCMapTooltip.Source:GetStringHeight()
+        local totalHeight     = headerHeight + collectedHeight + sourceHeight + 2  -- +2 for Source top gap
 
-            if w > maxWidth then
-                maxWidth = w
-            end
-
-            totalHeight = totalHeight + fs:GetStringHeight() + 2
-        end
-
-        mapTooltip:SetWidth(math.max(140, maxWidth + 16))
-        mapTooltip:SetHeight(totalHeight + 16)
-        mapTooltip:ClearAllPoints()
-        mapTooltip:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 10, 0)
-        mapTooltip:Show()
+        BPCMapTooltip:SetWidth(math.max(140, maxWidth + 16))
+        BPCMapTooltip:SetHeight(totalHeight + 16)
+        BPCMapTooltip:ClearAllPoints()
+        BPCMapTooltip:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 10, 0)
+        BPCMapTooltip:Show()
     end
 
     function MapModule:Tooltip_Hide()
-        if mapTooltip then
-            mapTooltip:Hide()
-        end
+        BPCMapTooltip:Hide()
     end
 
     function MapModule.WrapTextWithColor(color, text)
