@@ -1,3 +1,6 @@
+# 12.0.1-20260324-3
+* Update the other places pet data is loaded to make sure it only shows correct data.
+
 # 12.0.1-20260324-2
 * Make sure pets being shown is actually located on the current map.
 * Fix tooltip not being left aligned.
