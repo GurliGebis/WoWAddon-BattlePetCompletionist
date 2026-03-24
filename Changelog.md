@@ -1,3 +1,6 @@
+# 12.0.1-20260324-1
+* Fix problem with map data refreshing every frame.
+
 # 12.0.1-20260323-2
 * Fix bug in MapModule in Classic.
 * Implement objective tracker in Classic.

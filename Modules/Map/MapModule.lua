@@ -28,11 +28,17 @@ MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 function MapModule.WorldMapDataProvider:OnCanvasScaleChanged()
     local map = self:GetMap()
+    if not map then
+        return
+    end
 
-    -- OnCanvasScaleChanged fires on every frame during the zoom animation.
-    -- We only refresh once the animation has settled (both IsZoomingIn and IsZoomingOut
-    -- return false) to avoid rebuilding all pins dozens of times per second.
-    if map and not map:IsZoomingIn() and not map:IsZoomingOut() then
+    -- OnCanvasScaleChanged fires on every frame while the map is open. Only
+    -- refresh when the zoom level value actually changes, so we rebuild pins
+    -- at each distinct zoom level without hammering every frame.
+    local currentZoom = map:GetCanvasZoomPercent()
+
+    if currentZoom ~= self._lastZoom then
+        self._lastZoom = currentZoom
         self:RefreshAllData()
     end
 end
