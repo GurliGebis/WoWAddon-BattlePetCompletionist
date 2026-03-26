@@ -1,3 +1,8 @@
+# 12.0.1-20260326-1
+* Cleanup CombatModule.
+* Define MapModule tooltip in XML instead of code.
+* Define CaptureModule dialogs in XML instead of code.
+
 # 12.0.1-20260324-3
 * Update the other places pet data is loaded to make sure it only shows correct data.
 

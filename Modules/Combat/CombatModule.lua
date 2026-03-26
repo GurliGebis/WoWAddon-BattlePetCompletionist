@@ -35,9 +35,10 @@ local messagePrefixes = {
 }
 
 local offerSentTo = ""
-local myName = UnitName("player")
+local myName
 
 function CombatModule:OnEnable()
+    myName = UnitName("player")
     self:RegisterEvent("PET_BATTLE_OPENING_START", "BattleHasStarted")
 
     self:RegisterComm(messagePrefixes.ANNOUNCE_PETS, "HaFOnReceivedAnnounce")
@@ -76,13 +77,13 @@ function CombatModule:HafBattleHasStarted()
         return
     end
 
-    if CanWeFindPlayerPosition() == false then
+    if not CanWeFindPlayerPosition() then
         -- We are inside an instance (or the WoD garrison), so we cannot get our position.
         -- This means that we have nothing to share, so no need to continue.
         return
     end
 
-    if DataModule:CanWeCapturePets() == false then
+    if not DataModule:CanWeCapturePets() then
         -- We cannot capture any pets in this battle, so nothing to share.
         return
     end
@@ -108,7 +109,7 @@ local thresholdValues = {
 }
 
 function CombatModule:ForfeitBattleHasStarted()
-    if DataModule:CanWeCapturePets() == false then
+    if not DataModule:CanWeCapturePets() then
         -- We cannot capture any pets in this battle, so we shouldn't ask for forfeit.
         return
     end
@@ -199,7 +200,7 @@ function CombatModule:HaFOnReceivedAnnounce(_, msg, _, sender)
 
     local success, pets = AceSerializer:Deserialize(msg)
 
-    if success == false then
+    if not success then
         return
     end
 
@@ -232,7 +233,7 @@ function CombatModule:HaFOnReceivedINeedPets(_, msg, _, sender)
 
     local success, pets = AceSerializer:Deserialize(msg)
 
-    if success == false then
+    if not success then
         return
     end
 
@@ -283,7 +284,7 @@ function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
 
     local success, message = AceSerializer:Deserialize(msg)
 
-    if success == false then
+    if not success then
         return
     end
 
@@ -304,14 +305,14 @@ function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
                 worldmap_icon = icon
             }
 
-            TomTom:AddWaypoint(tonumber(message["mapId"]), tonumber(message["mapX"]) / 100, tonumber(message["mapY"] / 100), options)
+            TomTom:AddWaypoint(tonumber(message["mapId"]), tonumber(message["mapX"]) / 100, tonumber(message["mapY"]) / 100, options)
 
             -- And send the accept message.
-            self:SendCommMessage(messagePrefixes.ACCEPT_OFFER, AceSerializer.Serialize(message), "WHISPER", sender)
+            self:SendCommMessage(messagePrefixes.ACCEPT_OFFER, AceSerializer:Serialize(message), "WHISPER", sender)
         end,
         OnCancel = function()
             -- We have declined, so we send the decline message.
-            self:SendCommMessage(messagePrefixes.DECLINE_OFFER, AceSerializer.Serialize(message), "WHISPER", sender)
+            self:SendCommMessage(messagePrefixes.DECLINE_OFFER, AceSerializer:Serialize(message), "WHISPER", sender)
         end,
 
         button1 = _G.ACCEPT,
@@ -329,12 +330,6 @@ function CombatModule:HaFOnReceivedAcceptOffer(_, msg, _, sender)
 
     if sender ~= offerSentTo then
         -- Someone is sending us an accept, but we haven't send them an offer, so we just return.
-        return
-    end
-
-    local success = AceSerializer:Deserialize(msg)
-
-    if success == false then
         return
     end
 
@@ -360,12 +355,6 @@ function CombatModule:HaFOnReceivedDeclineOffer(_, msg, _, sender)
 
     if sender ~= offerSentTo then
         -- Someone is sending us an accept, but we haven't send them an offer, so we just return.
-        return
-    end
-
-    local success = AceSerializer:Deserialize(msg)
-
-    if success == false then
         return
     end
 

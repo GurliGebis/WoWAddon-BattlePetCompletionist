@@ -73,60 +73,45 @@ function CaptureModule:BattleHasStarted()
     end
 end
 
+local _rows = { "Row1", "Row2", "Row3" }
+
 function CaptureModule:CreatePetsDialog(pets, mode)
-    local frameTemplate
+    BPCPetsDialogFrame:SetSize(240, 95 + (#pets * 35))
 
-    if BattlePetCompletionist.GetGameEdition() == _BattlePetCompletionist.Enums.GameEdition.RETAIL then
-        frameTemplate = "SimplePanelTemplate"
-    elseif BattlePetCompletionist.GetGameEdition() == _BattlePetCompletionist.Enums.GameEdition.CLASSIC then
-        frameTemplate = "BPCSimplePanelTemplate"
-    end
-
-    local frame = CreateFrame("Frame", nil, UIParent, frameTemplate)
-    frame:SetPoint("TOP", 0, -100)
-    frame:SetSize(240, 95 + (#pets * 35))
-    frame:SetResizable(false)
-    frame:SetMovable(false)
-    frame:SetClampedToScreen(true)
-
-    local header = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-
-    if (#pets == 1) then
+    if #pets == 1 then
         if mode == "uncollected" then
-            header:SetText(L["Uncollected pet found"])
+            BPCPetsDialogFrame.Header:SetText(L["Uncollected pet found"])
         elseif mode == "upgrade" then
-            header:SetText(L["Rare pet upgrade found"])
+            BPCPetsDialogFrame.Header:SetText(L["Rare pet upgrade found"])
         end
     else
         if mode == "uncollected" then
-            header:SetText(L["Uncollected pets found"])
+            BPCPetsDialogFrame.Header:SetText(L["Uncollected pets found"])
         elseif mode == "upgrade" then
-            header:SetText(L["Rare pet upgrades found"])
+            BPCPetsDialogFrame.Header:SetText(L["Rare pet upgrades found"])
         end
     end
 
-    header:SetPoint("TOPLEFT", frame, 16, -40)
+    for i = 1, #_rows do
+        local icon  = BPCPetsDialogFrame[_rows[i] .. "Icon"]
+        local label = BPCPetsDialogFrame[_rows[i] .. "Label"]
 
-    for i = 1, #pets do
-        local pet = pets[i]
-
-        local speciesName, speciesIcon = C_PetJournal.GetPetInfoBySpeciesID(pet[1])
-        local qualityIndex = pet[2] - 1
-        local color = ITEM_QUALITY_COLORS[qualityIndex].hex
-
-        local icon = frame:CreateTexture(nil, "ARTWORK")
-        icon:SetTexture(speciesIcon)
-        icon:SetSize(32, 32)
-        icon:SetPoint("TOPLEFT", header, -4, 12 -(i * 36))
-
-        local text = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-        text:SetText(color .. speciesName .. "|r")
-        text:SetPoint("LEFT", icon, 40, 0)
+        if i <= #pets then
+            local speciesName, speciesIcon = C_PetJournal.GetPetInfoBySpeciesID(pets[i][1])
+            local color = ITEM_QUALITY_COLORS[pets[i][2] - 1].hex
+            icon:SetTexture(speciesIcon)
+            label:SetText(color .. speciesName .. "|r")
+            icon:Show()
+            label:Show()
+        else
+            icon:Hide()
+            label:Hide()
+        end
     end
 
-    frame:Show()
+    BPCPetsDialogFrame:Show()
 
     C_Timer.After(5, function()
-        frame:Hide()
+        BPCPetsDialogFrame:Hide()
     end)
 end

@@ -176,12 +176,11 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
 
     local ownedPets = DataModule:GetOwnedPets(self.PetSpeciesID)
 
-    local tooltipLines = {}
-
     local iconDimensions = 20
     local headline = "|T" .. speciesIcon .. ":" .. iconDimensions .. ":" .. iconDimensions .. ":-2:0|t " .. speciesName
-    table.insert(tooltipLines, { text = headline, color = HIGHLIGHT_FONT_COLOR })
+    local headerLine = { text = headline, color = HIGHLIGHT_FONT_COLOR }
 
+    local collectedLine = nil
     if ownedPets ~= nil then
         local ownedPetTexts = {}
 
@@ -193,12 +192,12 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
             table.insert(ownedPetTexts, color .. v[1] .. "|r")
         end
 
-        table.insert(tooltipLines, { text = string.format(L["Collected"], table.concat(ownedPetTexts, ", ")), color = NORMAL_FONT_COLOR })
+        collectedLine = { text = string.format(L["Collected"], table.concat(ownedPetTexts, ", ")), color = NORMAL_FONT_COLOR }
     end
 
-    table.insert(tooltipLines, { text = MapModule.WrapTextWithColor(HIGHLIGHT_FONT_COLOR, tooltipSource) })
+    local sourceLine = { text = MapModule.WrapTextWithColor(HIGHLIGHT_FONT_COLOR, tooltipSource) }
 
-    MapModule.Tooltip_Show(self, tooltipLines)
+    MapModule.Tooltip_Show(self, headerLine, collectedLine, sourceLine)
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseLeave()
