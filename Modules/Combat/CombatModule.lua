@@ -50,6 +50,11 @@ end
 
 local function CanWeFindPlayerPosition()
     local mapId = C_Map.GetBestMapForUnit("player")
+
+    if not mapId then
+        return false
+    end
+
     local position = C_Map.GetPlayerMapPosition(mapId, "player")
 
     -- In some cases, we cannot get the player position, so there is no coordinates to share.

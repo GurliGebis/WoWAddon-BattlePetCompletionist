@@ -1,3 +1,6 @@
+# 12.0.1-20260409-1
+* Fix crash in CombatModule when map ID is nil during loading screens.
+
 # 12.0.1-20260408-2
 * Fix tooltip logic, so it works again.
 
