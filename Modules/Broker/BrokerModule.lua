@@ -92,25 +92,10 @@ function BrokerModule:QualityToColorCode(quality)
     end
 end
 
-local sourceIcons = {
-    [BATTLE_PET_SOURCE_1]  = "Interface/WorldMap/TreasureChest_64", -- Drop
-    [BATTLE_PET_SOURCE_2]  = "Interface/GossipFrame/AvailableQuestIcon", -- Quest
-    [BATTLE_PET_SOURCE_3]  = "Interface/Minimap/Tracking/Banker", -- Vendor
-    [BATTLE_PET_SOURCE_4]  = "Interface/Archeology/Arch-Icon-Marker", -- Profession
-    [BATTLE_PET_SOURCE_5]  = "Interface/Icons/Tracking_WildPet", -- Pet Battle
-    -- 6 Achievement; no icon assigned
-    [BATTLE_PET_SOURCE_7]  = "Interface/GossipFrame/DailyQuestIcon", -- World Event
-    [BATTLE_PET_SOURCE_8]  = "Interface/Minimap/Tracking/Banker", -- Promotion
-    [BATTLE_PET_SOURCE_9]  = "Interface/Icons/inv_misc_hearthstonecard_legendary", -- Trading Card Game
-    [BATTLE_PET_SOURCE_10] = "Interface/Icons/item_shop_giftbox01", -- Shop
-    [BATTLE_PET_SOURCE_11] = "Interface/Icons/Garrison_Building_MageTower", -- Discovery
-    [BATTLE_PET_SOURCE_12] = "Interface/Icons/TradingPostCurrency" -- Trading Post
-}
-
 function BrokerModule:TooltipToSourceTypeIcon(speciesId)
     local sourceType = DataModule:GetPetSource(speciesId)
 
-    return sourceIcons[sourceType] or "Interface/Icons/Inv_misc_questionmark" -- In case we encounter an unhandled source type
+    return _BattlePetCompletionist.Constants.PET_SOURCE_ICONS[sourceType] or _BattlePetCompletionist.Constants.PET_SOURCE_ICON_FALLBACK
 end
 
 -- Also used by AddonCompartmentModule

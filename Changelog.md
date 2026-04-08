@@ -6,6 +6,7 @@
 * Move typeIcons into Constants.lua to keep constants together.
 * Cache GetMapPinSources result in DBModule to avoid table creation on every call.
 * Fix dot-call to colon-call for DataModule:GetEnemyPetsInBattle in CombatModule.
+* Deduplicate source-icon mapping into shared constant table in Helpers.lua.
 
 # 12.0.1-20260408-2
 * Fix tooltip logic, so it works again.
