@@ -31,9 +31,12 @@ function TooltipModule:OnEnable()
 end
 
 function TooltipModule.ModifyPetTip(speciesID)
-    BattlePetTooltip:AddLine(" ")
-
     local petInfo = { C_PetJournal.GetPetInfoBySpeciesID(speciesID) }
+    local source = petInfo[5]
 
-    BattlePetTooltip:AddLine(petInfo[5], 1, 1, 1, true)
+    if source and source ~= "" then
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine(source, 1, 1, 1, true)
+        GameTooltip:Show()
+    end
 end
