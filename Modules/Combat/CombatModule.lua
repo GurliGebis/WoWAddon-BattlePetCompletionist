@@ -93,7 +93,7 @@ function CombatModule:HafBattleHasStarted()
         return
     end
 
-    local notOwnedPets, ownedPets = DataModule.GetEnemyPetsInBattle()
+    local notOwnedPets, ownedPets = DataModule:GetEnemyPetsInBattle()
 
     if (#notOwnedPets > 0) then
         -- There are one or more uncollected pets, so we shouldn't do anything.
@@ -118,8 +118,8 @@ function CombatModule:ForfeitBattleHasStarted()
         -- We cannot capture any pets in this battle, so we shouldn't ask for forfeit.
         return
     end
-    
-    local notOwnedPets, ownedPets = DataModule.GetEnemyPetsInBattle()
+
+    local notOwnedPets, ownedPets = DataModule:GetEnemyPetsInBattle()
     local forfeitThreshold = DBModule:GetProfile().forfeitThreshold
     local forfeitPromptUnless = DBModule:GetProfile().forfeitPromptUnless
 
