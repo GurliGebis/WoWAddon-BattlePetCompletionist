@@ -1,3 +1,6 @@
+# 12.0.1-20260408-1
+* Fix ADDON_ACTION_BLOCKED error caused by overriding the protected SetPassThroughButtons function on map pins.
+
 # 12.0.1-20260326-1
 * Cleanup CombatModule.
 * Define MapModule tooltip in XML instead of code.
