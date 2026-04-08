@@ -9,6 +9,7 @@
 * Deduplicate source-icon mapping into shared constant table in Helpers.lua.
 * Replace magic number 4 with PET_QUALITY_RARE constant.
 * Fix unreachable dead code branch in BrokerModule tooltip.
+* Fix taint errors caused by BattlePetTooltip:AddLine() running inside securecallfunction context.
 
 # 12.0.1-20260408-2
 * Fix tooltip logic, so it works again.
