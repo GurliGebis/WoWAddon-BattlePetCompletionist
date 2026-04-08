@@ -142,7 +142,7 @@ function BrokerModule:OnTooltipShow(tooltip, includeDetails)
     for _, entry in ipairs(detailEntries) do
         tooltip:AddLine(table.concat(entry, " "))
     end
-    if not petData then
+    if totalCount == 0 then
         tooltip:AddLine(L["No pets found for current zone"])
     else
         tooltip:AddLine(string.format(L["Met goal"], metGoalCount, totalCount))
