@@ -488,5 +488,5 @@ function ConfigModule:SetPetDataVersion(version)
     petDataVersionLoaded = version
     options.args.dataVersion.name = L["Version"]..": "..petDataVersionLoaded
 
-    LibStub("AceConfigRegistry-3.0"):NotifyChange("BattlePetCompletionist")
+    LibStub("AceConfigRegistry-3.0"):NotifyChange("BattlePetCompletionist_options")
 end
