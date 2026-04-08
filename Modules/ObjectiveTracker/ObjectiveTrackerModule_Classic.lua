@@ -29,10 +29,7 @@ local BPC_DASH_SHOW = 1
 
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
-local ObjectiveTrackerModule = BattlePetCompletionist:NewModule("ObjectiveTrackerModule", "AceEvent-3.0")
-local DataModule = BattlePetCompletionist:GetModule("DataModule")
-local DBModule = BattlePetCompletionist:GetModule("DBModule")
-local ZoneModule = BattlePetCompletionist:GetModule("ZoneModule")
+local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_ObjectiveTracker")
 
@@ -58,55 +55,6 @@ local function ReleaseLines()
     bpcLineCount = 0
 end
 
--- Build the sorted, filtered pet list for the current zone.
--- Returns nil when nothing should be displayed.
-local function GetPetList()
-    local profile = DBModule:GetProfile()
-    if not profile.objectiveTrackerEnabled then
-        return nil
-    end
-
-    local mapID = ZoneModule:ResolveZone()
-    if not mapID then
-        return nil
-    end
-
-    local pets = DataModule:GetPetsInMap(mapID) or {}
-    if not next(pets) then
-        return nil
-    end
-
-    local anyMissing = false
-    local filteredPets = {}
-    for speciesId in pairs(pets) do
-        local numCollected = C_PetJournal.GetNumCollectedInfo(speciesId)
-        if numCollected == 0 then
-            anyMissing = true
-        end
-        local speciesName = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
-        tinsert(filteredPets, { speciesId = speciesId, numCollected = numCollected, speciesName = speciesName })
-    end
-
-    -- Sort by species name, fall back to species ID for unnamed entries.
-    table.sort(filteredPets, function(a, b)
-        if a.speciesName and b.speciesName then
-            return a.speciesName < b.speciesName
-        elseif a.speciesName then
-            return true
-        elseif b.speciesName then
-            return false
-        else
-            return a.speciesId < b.speciesId
-        end
-    end)
-
-    if profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.MISSING and not anyMissing then
-        return nil
-    end
-
-    return filteredPets, mapID, anyMissing
-end
-
 -- Called by WatchFrame_Update for every registered objective handler.
 -- Signature: handler(lineFrame, nextAnchor, maxHeight, frameWidth)
 --   -> nextAnchor, maxWidth, numObjectives, numPopUps
@@ -114,26 +62,8 @@ local function BPC_DisplayBattlePets(lineFrame, nextAnchor, maxHeight, frameWidt
     -- Release lines from the previous draw pass first.
     ReleaseLines()
 
-    local filteredPets, mapID = GetPetList()
+    local filteredPets, mapID = ObjectiveTrackerModule:GetFilteredPetList()
     if not filteredPets then
-        return nextAnchor, 0, 0, 0
-    end
-
-    local profile = DBModule:GetProfile()
-
-    -- Determine which pets to actually render based on the filter setting.
-    local petsToShow = {}
-    for _, petInfo in ipairs(filteredPets) do
-        if profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.ALL
-            or (profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.MISSING and petInfo.numCollected == 0)
-        then
-            if petInfo.speciesName then
-                tinsert(petsToShow, petInfo)
-            end
-        end
-    end
-
-    if not next(petsToShow) then
         return nextAnchor, 0, 0, 0
     end
 
@@ -161,7 +91,7 @@ local function BPC_DisplayBattlePets(lineFrame, nextAnchor, maxHeight, frameWidt
     lastLine = headerLine
 
     -- One objective line per pet.
-    for _, petInfo in ipairs(petsToShow) do
+    for _, petInfo in ipairs(filteredPets) do
         local line = AcquireLine()
 
         -- Collected pets are shown dimmed (grey-ish text already default in
@@ -190,7 +120,7 @@ local function BPC_DisplayBattlePets(lineFrame, nextAnchor, maxHeight, frameWidt
         end
     end
 
-    return lastLine, maxWidth, #petsToShow, 0
+    return lastLine, maxWidth, #filteredPets, 0
 end
 
 do

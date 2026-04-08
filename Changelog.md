@@ -10,6 +10,7 @@
 * Replace magic number 4 with PET_QUALITY_RARE constant.
 * Fix unreachable dead code branch in BrokerModule tooltip.
 * Fix taint errors caused by BattlePetTooltip:AddLine() running inside securecallfunction context.
+* Deduplicate objective tracker logic into shared file.
 
 # 12.0.1-20260408-2
 * Fix tooltip logic, so it works again.

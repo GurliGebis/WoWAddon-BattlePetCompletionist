@@ -20,10 +20,7 @@ if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then return end
 
 local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
-local ObjectiveTrackerModule = BattlePetCompletionist:NewModule("ObjectiveTrackerModule", "AceEvent-3.0")
-local DataModule = BattlePetCompletionist:GetModule("DataModule")
-local DBModule = BattlePetCompletionist:GetModule("DBModule")
-local ZoneModule = BattlePetCompletionist:GetModule("ZoneModule")
+local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_ObjectiveTracker")
 
@@ -122,51 +119,8 @@ function BattlePetCompletionistObjectiveTrackerMixin:OnBlockHeaderClick(block, m
 end
 
 function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
-    local profile = DBModule:GetProfile()
-    if not profile.objectiveTrackerEnabled then
-        return
-    end
-
-    local mapID = ZoneModule:ResolveZone()
-
-    if not mapID then
-        return
-    end
-
-    local pets = DataModule:GetPetsInMap(mapID) or {}
-
-    if not next(pets) then
-        return
-    end
-
-    local anyMissingPets = false
-    local filteredPets = {}
-    for speciesId in pairs(pets) do
-        local numCollected = C_PetJournal.GetNumCollectedInfo(speciesId)
-
-        if numCollected == 0 then
-            anyMissingPets = true
-        end
-
-        local speciesName = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
-
-        tinsert(filteredPets, { speciesId = speciesId, numCollected = numCollected, speciesName = speciesName })
-    end
-
-    -- Sort the filtered pets by species name
-    table.sort(filteredPets, function(a, b)
-        if a.speciesName and b.speciesName then
-            return a.speciesName < b.speciesName
-        elseif a.speciesName then
-            return true
-        elseif b.speciesName then
-            return false
-        else
-            return a.speciesId < b.speciesId
-        end
-    end)
-
-    if profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.MISSING and anyMissingPets == false then
+    local filteredPets, mapID = ObjectiveTrackerModule:GetFilteredPetList()
+    if not filteredPets then
         return
     end
 
@@ -177,9 +131,7 @@ function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
     block:SetHeader(string.format(L["Battle Pets in %s"], zoneName))
 
     for _, petInfo in ipairs(filteredPets) do
-        if profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.ALL or (profile.objectiveTrackerFilter == _BattlePetCompletionist.Enums.MapPinFilter.MISSING and petInfo.numCollected == 0) then
-            self:AddBattlePet(block, petInfo)
-        end
+        self:AddBattlePet(block, petInfo)
     end
 
     self:LayoutBlock(block);
