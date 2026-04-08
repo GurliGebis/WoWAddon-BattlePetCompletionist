@@ -3,6 +3,7 @@
 * Fix global function leak in GoalTrackerModule.
 * Fix ConfigModule NotifyChange using wrong registered options table name.
 * Fix NOT_MAX_RARE forfeit logic skipping quality-upgrade check when not at max collected count.
+* Move typeIcons into Constants.lua to keep constants together.
 
 # 12.0.1-20260408-2
 * Fix tooltip logic, so it works again.

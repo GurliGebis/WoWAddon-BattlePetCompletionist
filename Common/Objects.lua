@@ -19,6 +19,18 @@
 _BattlePetCompletionist = {
     Constants = {
         PET_QUALITY_RARE = 4,
+        PET_TYPE_ICONS = {
+            "Interface\\icons\\Icon_PetFamily_Humanoid",
+            "Interface\\icons\\Icon_PetFamily_Dragon",
+            "Interface\\icons\\Icon_PetFamily_Flying",
+            "Interface\\icons\\Icon_PetFamily_Undead",
+            "Interface\\icons\\Icon_PetFamily_Critter",
+            "Interface\\icons\\Icon_PetFamily_Magical",
+            "Interface\\icons\\Icon_PetFamily_Elemental",
+            "Interface\\icons\\Icon_PetFamily_Beast",
+            "Interface\\icons\\Icon_PetFamily_Water",
+            "Interface\\icons\\Icon_PetFamily_Mechanical",
+        },
         PET_SOURCES = {
             [1] = BATTLE_PET_SOURCE_1,
             [2] = BATTLE_PET_SOURCE_2,
