@@ -20,10 +20,9 @@ local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local TooltipModule = BattlePetCompletionist:NewModule("TooltipModule")
-local AceHook = LibStub("AceHook-3.0")
 
 function TooltipModule:OnEnable()
-    AceHook:SecureHook(_G, "BattlePetToolTip_Show", function(speciesID, ...)
+    hooksecurefunc("BattlePetToolTip_Show", function(speciesID, ...)
         if DBModule:IsPetCageTooltipEnabled() then
             TooltipModule.ModifyPetTip(speciesID)
         end
@@ -31,12 +30,10 @@ function TooltipModule:OnEnable()
 end
 
 function TooltipModule.ModifyPetTip(speciesID)
-    local petInfo = { C_PetJournal.GetPetInfoBySpeciesID(speciesID) }
-    local source = petInfo[5]
+    local _, _, _, _, source = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 
     if source and source ~= "" then
-        GameTooltip:AddLine(" ")
-        GameTooltip:AddLine(source, 1, 1, 1, true)
-        GameTooltip:Show()
+        BattlePetTooltip:AddLine(" ", 1, 1, 1, false)
+        BattlePetTooltip:AddLine(source, 1, 1, 1, true)
     end
 end
