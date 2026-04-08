@@ -7,6 +7,7 @@
 * Cache GetMapPinSources result in DBModule to avoid table creation on every call.
 * Fix dot-call to colon-call for DataModule:GetEnemyPetsInBattle in CombatModule.
 * Deduplicate source-icon mapping into shared constant table in Helpers.lua.
+* Replace magic number 4 with PET_QUALITY_RARE constant.
 
 # 12.0.1-20260408-2
 * Fix tooltip logic, so it works again.

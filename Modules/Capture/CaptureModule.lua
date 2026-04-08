@@ -53,13 +53,13 @@ function CaptureModule:BattleHasStarted()
             local enemyPetQuality = ownedPets[i][2]
 
             -- Is the enemy pet we can capture of Rare quality?
-            if enemyPetQuality == 4 then
+            if enemyPetQuality == _BattlePetCompletionist.Constants.PET_QUALITY_RARE then
                 -- Look up the owned pets we have of that breed
                 local ownedPetsOfBreed = DataModule:GetOwnedPets(enemyPetSpeciesId)
 
                 -- Iterate over them to see if we have a below-rare quality pet
                 for j = 1, #ownedPetsOfBreed do
-                    if ownedPetsOfBreed[j][2] < 4 then
+                    if ownedPetsOfBreed[j][2] < _BattlePetCompletionist.Constants.PET_QUALITY_RARE then
                         -- Add to the list
                         table.insert(rareUpgrades, ownedPets[i])
                     end

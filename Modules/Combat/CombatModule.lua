@@ -173,7 +173,7 @@ function CombatModule:ForfeitBattleHasStarted()
             end
 
             -- At max count, but the enemy pet can replace a lower-quality one.
-            local lowestOwnedQuality = 4
+            local lowestOwnedQuality = _BattlePetCompletionist.Constants.PET_QUALITY_RARE
             for _, myPetInfo in ipairs(myPets) do
                 if myPetInfo[2] < lowestOwnedQuality then
                     lowestOwnedQuality = myPetInfo[2]

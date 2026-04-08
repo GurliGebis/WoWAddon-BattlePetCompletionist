@@ -169,7 +169,7 @@ function DataModule:ShouldPetBeShown(speciesId)
         return string.find(loweredPetName, loweredTextBoxValue)
     end
 
-    local rareQuality = 4 -- Rare / Blue
+    local rareQuality = _BattlePetCompletionist.Constants.PET_QUALITY_RARE
     -- Filter species based on pet journal entries
     local noMatchResult = true
     for _, petId in LibPetJournal:IteratePetIDs() do
