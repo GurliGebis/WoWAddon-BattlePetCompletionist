@@ -281,6 +281,7 @@ local options = {
             end,
             set = function(_, key, value)
                 DBModule:GetProfile().mapPinSources[key] = value
+                DBModule:InvalidateMapPinSourcesCache()
             end
         },
         integrationHeader = {
