@@ -219,10 +219,19 @@ frame:OnLoad()
 
 do
     function ObjectiveTrackerModule:OnPlayerEnteringWorld()
+        -- Avoid calling protected SetSize functions during movies or combat
+        if InCombatLockdown() or (MovieFrame and MovieFrame:IsShown()) then 
+            return 
+        end
+
         if isKTLoaded then
-            KT_ObjectiveTrackerFrame:AddModule(BattlePetCompletionistObjectiveTracker)
+            if KT_ObjectiveTrackerFrame and KT_ObjectiveTrackerFrame.AddModule then
+                KT_ObjectiveTrackerFrame:AddModule(BattlePetCompletionistObjectiveTracker)
+            end
         else
-            ObjectiveTrackerManager:SetModuleContainer(BattlePetCompletionistObjectiveTracker, ObjectiveTrackerFrame)
+            if ObjectiveTrackerManager and ObjectiveTrackerManager.SetModuleContainer then
+                ObjectiveTrackerManager:SetModuleContainer(BattlePetCompletionistObjectiveTracker, ObjectiveTrackerFrame)
+            end
         end
     end
 

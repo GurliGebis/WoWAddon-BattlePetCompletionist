@@ -1,6 +1,7 @@
 # 12.0.1-20260408-1
 * Fix ADDON_ACTION_BLOCKED error caused by overriding the protected SetPassThroughButtons function on map pins.
 * Fix tainted secret number errors caused by appending lines to BattlePetTooltip from addon code.
+* Fix objective tracker error when playing cut scenes, patch provided by allenginter on github.
 
 # 12.0.1-20260326-1
 * Cleanup CombatModule.
