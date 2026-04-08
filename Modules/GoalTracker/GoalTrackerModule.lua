@@ -47,7 +47,7 @@ function GoalTrackerModule:UpdateWindow()
                 end
             end
         end
-        function compare(a, b)
+        local function compare(a, b)
             return a[2] < b[2]
         end
         table.sort(entries, compare)
