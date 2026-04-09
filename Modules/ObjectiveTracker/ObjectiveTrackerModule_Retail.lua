@@ -190,6 +190,7 @@ do
     function ObjectiveTrackerModule:OnInitialize()
         self:RegisterEvent("PLAYER_ENTERING_WORLD", "OnPlayerEnteringWorld")
         self:RegisterEvent("PET_JOURNAL_LIST_UPDATE", "OnPetEvent")
+        self:RegisterMessage(_BattlePetCompletionist.Events.ZONE_CHANGE, "OnPetEvent")
     end
 
     function ObjectiveTrackerModule:OnPetEvent(event, ...)

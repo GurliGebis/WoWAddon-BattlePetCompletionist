@@ -130,6 +130,7 @@ do
         self:RegisterEvent("ZONE_CHANGED",            "OnPetEvent")
         self:RegisterEvent("ZONE_CHANGED_NEW_AREA",   "OnPetEvent")
         self:RegisterEvent("PLAYER_ENTERING_WORLD",   "OnPetEvent")
+        self:RegisterMessage(_BattlePetCompletionist.Events.ZONE_CHANGE, "OnPetEvent")
     end
 
     function ObjectiveTrackerModule:OnEnable()
