@@ -24,7 +24,11 @@ local TooltipModule = BattlePetCompletionist:NewModule("TooltipModule")
 function TooltipModule:OnEnable()
     hooksecurefunc("BattlePetToolTip_Show", function(speciesID, ...)
         if DBModule:IsPetCageTooltipEnabled() then
-            TooltipModule.ModifyPetTip(speciesID)
+            C_Timer.After(0, function()
+                if BattlePetTooltip:IsShown() then
+                    TooltipModule.ModifyPetTip(speciesID)
+                end
+            end)
         end
     end)
 end

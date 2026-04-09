@@ -47,7 +47,7 @@ function GoalTrackerModule:UpdateWindow()
                 end
             end
         end
-        function compare(a, b)
+        local function compare(a, b)
             return a[2] < b[2]
         end
         table.sort(entries, compare)
@@ -180,28 +180,6 @@ end
 
 function GoalTrackerModule:TooltipToSourceTypeIcon(speciesId)
     local sourceType = DataModule:GetPetSource(speciesId)
-    local icon
-    if sourceType == BATTLE_PET_SOURCE_1 then -- Drop
-        icon = "Interface/WorldMap/TreasureChest_64"
-    elseif sourceType == BATTLE_PET_SOURCE_2 then -- Quest
-        icon = "Interface/GossipFrame/AvailableQuestIcon"
-    elseif sourceType == BATTLE_PET_SOURCE_3 then -- Vendor
-        icon = "Interface/Minimap/Tracking/Banker"
-    elseif sourceType == BATTLE_PET_SOURCE_4 then -- Profession
-        icon = "Interface/Archeology/Arch-Icon-Marker"
-    elseif sourceType == BATTLE_PET_SOURCE_5 then -- Pet Battle
-        icon = "Interface/Icons/Tracking_WildPet"
-        -- 6 Achievement; no icon assigned
-    elseif sourceType == BATTLE_PET_SOURCE_7 then -- World Event
-        icon = "Interface/GossipFrame/DailyQuestIcon"
-    elseif sourceType == BATTLE_PET_SOURCE_8 then -- Promotion
-        icon = "Interface/Minimap/Tracking/Banker"
-        -- 9 Trading Card Game; no icon assigned
-        -- 10 Shop; no icon assigned
-        -- 11 Discovery; no icon assigned
-        -- 12 Trading Post; no icon assigned
-    else -- In case we encounter an unhandled source type
-        icon = "Interface/Icons/Inv_misc_questionmark"
-    end
-    return icon
+
+    return _BattlePetCompletionist.Constants.PET_SOURCE_ICONS[sourceType] or _BattlePetCompletionist.Constants.PET_SOURCE_ICON_FALLBACK
 end

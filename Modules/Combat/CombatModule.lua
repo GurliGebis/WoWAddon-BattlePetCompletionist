@@ -50,6 +50,11 @@ end
 
 local function CanWeFindPlayerPosition()
     local mapId = C_Map.GetBestMapForUnit("player")
+
+    if not mapId then
+        return false
+    end
+
     local position = C_Map.GetPlayerMapPosition(mapId, "player")
 
     -- In some cases, we cannot get the player position, so there is no coordinates to share.
@@ -88,7 +93,7 @@ function CombatModule:HafBattleHasStarted()
         return
     end
 
-    local notOwnedPets, ownedPets = DataModule.GetEnemyPetsInBattle()
+    local notOwnedPets, ownedPets = DataModule:GetEnemyPetsInBattle()
 
     if (#notOwnedPets > 0) then
         -- There are one or more uncollected pets, so we shouldn't do anything.
@@ -113,8 +118,8 @@ function CombatModule:ForfeitBattleHasStarted()
         -- We cannot capture any pets in this battle, so we shouldn't ask for forfeit.
         return
     end
-    
-    local notOwnedPets, ownedPets = DataModule.GetEnemyPetsInBattle()
+
+    local notOwnedPets, ownedPets = DataModule:GetEnemyPetsInBattle()
     local forfeitThreshold = DBModule:GetProfile().forfeitThreshold
     local forfeitPromptUnless = DBModule:GetProfile().forfeitPromptUnless
 
@@ -139,7 +144,7 @@ function CombatModule:ForfeitBattleHasStarted()
 
         local meetsForfeitThreshold = breedQuality >= (thresholdValues[forfeitThreshold] or 0)
 
-        if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED or forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE then
+        if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_COLLECTED then
             if numCollected < limit and meetsForfeitThreshold then
                 upgradeFound = true
                 break
@@ -161,13 +166,20 @@ function CombatModule:ForfeitBattleHasStarted()
         end
 
         if forfeitPromptUnless == _BattlePetCompletionist.Enums.ForfeitPromptUnless.NOT_MAX_RARE then
-            -- Find the lowest quality of the pet that we own.
-            local lowestOwnedQuality = 4
+            -- Not at max collected count is an upgrade.
+            if numCollected < limit and meetsForfeitThreshold then
+                upgradeFound = true
+                break
+            end
+
+            -- At max count, but the enemy pet can replace a lower-quality one.
+            local lowestOwnedQuality = _BattlePetCompletionist.Constants.PET_QUALITY_RARE
             for _, myPetInfo in ipairs(myPets) do
                 if myPetInfo[2] < lowestOwnedQuality then
                     lowestOwnedQuality = myPetInfo[2]
                 end
             end
+
             if breedQuality > lowestOwnedQuality and meetsForfeitThreshold then
                 upgradeFound = true
                 break

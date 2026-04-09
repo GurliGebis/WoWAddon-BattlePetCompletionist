@@ -78,6 +78,10 @@ function DBModule:IsPetBattleUnknownNotifyEnabled()
 end
 
 function DBModule:GetMapPinSources()
+    if self._mapPinSourcesCache then
+        return self._mapPinSourcesCache
+    end
+
     local profile = self:GetProfile()
     local sources = {}
 
@@ -87,7 +91,12 @@ function DBModule:GetMapPinSources()
         end
     end
 
+    self._mapPinSourcesCache = sources
     return sources
+end
+
+function DBModule:InvalidateMapPinSourcesCache()
+    self._mapPinSourcesCache = nil
 end
 
 local function dataVersion(profile)

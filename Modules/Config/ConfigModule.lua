@@ -281,6 +281,7 @@ local options = {
             end,
             set = function(_, key, value)
                 DBModule:GetProfile().mapPinSources[key] = value
+                DBModule:InvalidateMapPinSourcesCache()
             end
         },
         integrationHeader = {
@@ -431,7 +432,7 @@ local options = {
             set = function()
                 local profile = DBModule:GetProfile()
                 profile.objectiveTrackerEnabled = not profile.objectiveTrackerEnabled
-                
+
                 local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
                 ObjectiveTrackerModule:OnEvent("CONFIG_CHANGED")
             end
@@ -456,7 +457,7 @@ local options = {
             set = function(_, value)
                 local profile = DBModule:GetProfile()
                 profile.objectiveTrackerFilter = value
-                
+
                 local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
                 ObjectiveTrackerModule:OnEvent("CONFIG_CHANGED")
             end
@@ -488,5 +489,5 @@ function ConfigModule:SetPetDataVersion(version)
     petDataVersionLoaded = version
     options.args.dataVersion.name = L["Version"]..": "..petDataVersionLoaded
 
-    LibStub("AceConfigRegistry-3.0"):NotifyChange("BattlePetCompletionist")
+    LibStub("AceConfigRegistry-3.0"):NotifyChange("BattlePetCompletionist_options")
 end

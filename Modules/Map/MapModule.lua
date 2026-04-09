@@ -104,20 +104,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
             local _, speciesIcon, petType = C_PetJournal.GetPetInfoBySpeciesID(pet)
 
             if petIconType == _BattlePetCompletionist.Enums.MapPinIconType.FAMILY then
-                local typeIcons = {
-                    "Interface\\icons\\Icon_PetFamily_Humanoid",
-                    "Interface\\icons\\Icon_PetFamily_Dragon",
-                    "Interface\\icons\\Icon_PetFamily_Flying",
-                    "Interface\\icons\\Icon_PetFamily_Undead",
-                    "Interface\\icons\\Icon_PetFamily_Critter",
-                    "Interface\\icons\\Icon_PetFamily_Magical",
-                    "Interface\\icons\\Icon_PetFamily_Elemental",
-                    "Interface\\icons\\Icon_PetFamily_Beast",
-                    "Interface\\icons\\Icon_PetFamily_Water",
-                    "Interface\\icons\\Icon_PetFamily_Mechanical"
-                }
-
-                speciesIcon = typeIcons[petType]
+                speciesIcon = _BattlePetCompletionist.Constants.PET_TYPE_ICONS[petType]
             end
 
             local placedPositions = {}
@@ -278,7 +265,7 @@ function MapModule:GetMapPinScale()
         [_BattlePetCompletionist.Enums.MapPinSize.LARGE] = 1.4,
     }
 
-    return scaleMap[DBModule:GetProfile().mapPinSize]
+    return scaleMap[DBModule:GetProfile().mapPinSize] or 1.0
 end
 
 function MapModule:OnInitialize()
