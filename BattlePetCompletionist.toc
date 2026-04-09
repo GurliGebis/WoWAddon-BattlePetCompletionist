@@ -22,7 +22,6 @@
 ## Category-ruRU: Битвы питомцев
 ## Category-zhCN: 宠物对战
 ## Category-zhTW: 寵物對戰
-## OptionalDeps: !KalielsTracker
 ## SavedVariables: BattlePetCompletionistDB
 
 # Libs

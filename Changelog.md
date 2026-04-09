@@ -12,6 +12,7 @@
 * Fix taint errors caused by BattlePetTooltip:AddLine() running inside securecallfunction context.
 * Deduplicate objective tracker logic into shared file.
 * Fix objective tracker not refreshing when changing zones.
+* Remove KalielsTracker compatibility.
 
 # 12.0.1-20260408-2
 * Fix tooltip logic, so it works again.

@@ -2,4 +2,5 @@
     <Script file="ObjectiveTrackerModule.lua"/>
     <Script file="ObjectiveTrackerModule_Classic.lua"/>
     <Script file="ObjectiveTrackerModule_Retail.lua"/>
+    <Frame name="BattlePetCompletionistObjectiveTracker" inherits="ObjectiveTrackerModuleTemplate" mixin="BattlePetCompletionistObjectiveTrackerMixin"/>
 </Ui>

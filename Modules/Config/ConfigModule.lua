@@ -432,7 +432,7 @@ local options = {
             set = function()
                 local profile = DBModule:GetProfile()
                 profile.objectiveTrackerEnabled = not profile.objectiveTrackerEnabled
-                
+
                 local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
                 ObjectiveTrackerModule:OnEvent("CONFIG_CHANGED")
             end
@@ -457,7 +457,7 @@ local options = {
             set = function(_, value)
                 local profile = DBModule:GetProfile()
                 profile.objectiveTrackerFilter = value
-                
+
                 local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
                 ObjectiveTrackerModule:OnEvent("CONFIG_CHANGED")
             end
