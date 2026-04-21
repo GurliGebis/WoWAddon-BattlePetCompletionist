@@ -1,3 +1,6 @@
+# 12.0.5-20260421-1
+* Updated TOC to match WoW 12.0.5
+
 # 12.0.1-20260409-1
 * Fix crash in CombatModule when map ID is nil during loading screens.
 * Fix global function leak in GoalTrackerModule.
