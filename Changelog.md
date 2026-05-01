@@ -1,3 +1,6 @@
+# 12.0.5-20260501-1
+* Move ObjectiveTracker frame creation from XML to Lua to fix Classic compatibility.
+
 # 12.0.5-20260421-1
 * Updated TOC to match WoW 12.0.5
 

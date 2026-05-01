@@ -36,8 +36,6 @@ BattlePetCompletionistObjectiveTrackerMixin = CreateFromMixins(ObjectiveTrackerM
 
 function BattlePetCompletionistObjectiveTrackerMixin:InitModule()
 	self:Init();
-
-    ObjectiveTrackerModule.Mixin = self
 end
 
 function BattlePetCompletionistObjectiveTrackerMixin:OnEvent(event, ...)
@@ -98,6 +96,11 @@ function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, petInfo
         end
     end
 end
+
+
+local frame = CreateFrame("Frame", "BattlePetCompletionistObjectiveTracker", nil, "ObjectiveTrackerModuleTemplate")
+Mixin(frame, BattlePetCompletionistObjectiveTrackerMixin)
+frame:OnLoad()
 
 do
     function ObjectiveTrackerModule:OnPlayerEnteringWorld()
