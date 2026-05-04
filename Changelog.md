@@ -1,5 +1,6 @@
 # 12.0.5-20260504-1
 * Fix taint propagation by implementing a pin pool.
+* Fix tooltip errors be wrapping dimensions in pcall with fallback dimensions.
 
 # 12.0.5-20260501-1
 * Move ObjectiveTracker frame creation from XML to Lua to fix Classic compatibility.
