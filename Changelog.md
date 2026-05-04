@@ -1,3 +1,6 @@
+# 12.0.5-20260504-1
+* Fix taint propagation by implementing a pin pool.
+
 # 12.0.5-20260501-1
 * Move ObjectiveTracker frame creation from XML to Lua to fix Classic compatibility.
 

@@ -28,6 +28,7 @@ MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 function MapModule.WorldMapDataProvider:OnCanvasScaleChanged()
     local map = self:GetMap()
+
     if not map then
         return
     end
@@ -44,9 +45,7 @@ function MapModule.WorldMapDataProvider:OnCanvasScaleChanged()
 end
 
 function MapModule.WorldMapDataProvider:RemoveAllData()
-    if self:GetMap() then
-        self:GetMap():RemoveAllPinsByTemplate("BPetCompletionistWorldMapPinTemplate")
-    end
+    self:HideAllPins()
 end
 
 function MapModule.WorldMapDataProvider:RefreshAllData()
@@ -54,10 +53,22 @@ function MapModule.WorldMapDataProvider:RefreshAllData()
         return
     end
 
-    self:RemoveAllData()
+    -- Defer refresh if GameTooltip is currently shown to avoid running pin
+    -- updates while Blizzard's tooltip code is active, which can cause taint
+    -- to propagate into the tooltip rendering pipeline.
+    if GameTooltip:IsShown() then
+        C_Timer.After(0.1, function()
+            if self:GetMap() then
+                self:RefreshAllData()
+            end
+        end)
+        return
+    end
 
     if not DataModule:HasAnyDataLoaded() then
-        StaticPopup_Show("BATTLEPETCOMPLETIONIST_NO_DATA")
+        C_Timer.After(0, function()
+            StaticPopup_Show("BATTLEPETCOMPLETIONIST_NO_DATA")
+        end)
         return
     end
 
@@ -65,11 +76,15 @@ function MapModule.WorldMapDataProvider:RefreshAllData()
 end
 
 function MapModule.WorldMapDataProvider:LoadMapData(mapId)
+    self:BeginPinAllocation()
+
     if not self:GetMap() then
+        self:FinishPinAllocation()
         return
     end
 
     if not mapId then
+        self:FinishPinAllocation()
         return
     end
 
@@ -87,6 +102,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     local map = self:GetMap()
 
     if petData == nil then
+        self:FinishPinAllocation()
         return
     end
 
@@ -99,6 +115,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     end
 
     local petIconType = DBModule:GetProfile().mapPinIconType
+
     for pet, locations in pairs(petData) do
         if DataModule:ShouldPetBeShown(pet) then
             local _, speciesIcon, petType = C_PetJournal.GetPetInfoBySpeciesID(pet)
@@ -116,7 +133,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
                 local realY = (tonumber(y) / 1000)
 
                 if not IsTooCloseToExistingPin(placedPositions, realX, realY, threshold) then
-                    local pin = map:AcquirePin("BPetCompletionistWorldMapPinTemplate", realX, realY, speciesIcon)
+                    local pin = self:AcquirePoolPin(realX, realY, speciesIcon)
                     pin.PetSpeciesID = pet
                     pin.MapId = mapId
 
@@ -125,6 +142,8 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
             end
         end
     end
+
+    self:FinishPinAllocation()
 end
 
 BattlePetCompletionistWorldMapPinMixin = CreateFromMixins(MapCanvasPinMixin)
@@ -132,27 +151,14 @@ BattlePetCompletionistWorldMapPinMixin = CreateFromMixins(MapCanvasPinMixin)
 function BattlePetCompletionistWorldMapPinMixin:OnLoad()
     self:UseFrameLevelType("PIN_FRAME_LEVEL_MAP_HIGHLIGHT")
     self:SetMovable(true)
-    self:SetScalingLimits(1, 1.0, 1.2);
+    self:SetScalingLimits(1, 1.0, 1.2)
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnAcquired(x, y, iconpath)
     self:SetPosition(x, y)
-
-    local scale = MapModule:GetMapPinScale()
-
-    local iconSize = 12 * scale
-    local borderSize = 24 * scale
-
-    self:SetSize(iconSize, iconSize)
+    MapModule.WorldMapDataProvider:SetupPinAppearance(self, iconpath)
     self:SetAlpha(1)
-
-    local icon = self.Icon
-    icon:SetTexCoord(0, 1, 0, 1)
-    icon:SetVertexColor(1, 1, 1, 1)
-    icon:SetTexture(iconpath)
-
-    local iconBorder = self.IconBorder
-    iconBorder:SetSize(borderSize, borderSize)
+    self:EnableMouse(true)
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
@@ -165,6 +171,7 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
     local headerLine = { text = headline, color = HIGHLIGHT_FONT_COLOR }
 
     local collectedLine = nil
+
     if ownedPets ~= nil then
         local ownedPetTexts = {}
 
@@ -209,8 +216,8 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
             TomTom:AddWaypoint(mapId, x, y, options)
         end
     else
-        SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS);
-        PetJournal_SelectSpecies(PetJournal, self.PetSpeciesID);
+        SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
+        PetJournal_SelectSpecies(PetJournal, self.PetSpeciesID)
     end
 end
 
@@ -224,6 +231,7 @@ end
 
 function MapModule:BattlePetToggle_OnClick()
     local profile = DBModule:GetProfile()
+
     if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.NONE then
         profile.mapPinsToInclude = profile.mapPinsToIncludeOriginal
         MapModule:Print(L["Tracking enabled"])
@@ -253,6 +261,7 @@ end
 
 function MapModule:OnDisable()
     if WorldMapFrame.dataProviders[MapModule.WorldMapDataProvider] then
+        MapModule.WorldMapDataProvider:ReleaseAllPins()
         WorldMapFrame:RemoveDataProvider(MapModule.WorldMapDataProvider)
     end
 end
