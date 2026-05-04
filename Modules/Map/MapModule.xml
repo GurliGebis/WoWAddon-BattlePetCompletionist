@@ -23,6 +23,7 @@
     </Frame>
 
     <Script file="MapModule.lua"/>
+    <Script file="MapPinPool.lua"/>
     <Script file="MapTooltip.lua"/>
 
     <Frame name="BPCMapTooltip" parent="UIParent" frameStrata="TOOLTIP" hidden="true" inherits="BackdropTemplate">
