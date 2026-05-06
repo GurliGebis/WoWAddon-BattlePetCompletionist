@@ -1,3 +1,6 @@
+# 12.0.5-20260506-1
+* Update CallbackHandler library in LibPetJournal-2.0 to a compatible version.
+
 # 12.0.5-20260504-1
 * Fix taint propagation by implementing a pin pool.
 * Fix tooltip errors be wrapping dimensions in pcall with fallback dimensions.
