@@ -1,3 +1,6 @@
+# 12.0.5-20260508-1
+* Fix taint propagation into MoneyFrame by deferring pin tooltip display to the next frame.
+
 # 12.0.5-20260506-1
 * Update CallbackHandler library in LibPetJournal-2.0 to a compatible version.
 

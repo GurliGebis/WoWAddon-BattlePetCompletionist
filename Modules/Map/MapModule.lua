@@ -161,7 +161,11 @@ function BattlePetCompletionistWorldMapPinMixin:OnAcquired(x, y, iconpath)
     self:EnableMouse(true)
 end
 
-function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
+function BattlePetCompletionistWorldMapPinMixin:ShowPinTooltip()
+    if not self:IsMouseOver() then
+        return
+    end
+
     local speciesName, speciesIcon, _, _, tooltipSource = C_PetJournal.GetPetInfoBySpeciesID(self.PetSpeciesID)
 
     local ownedPets = DataModule:GetOwnedPets(self.PetSpeciesID)
@@ -189,6 +193,12 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
     local sourceLine = { text = MapModule.WrapTextWithColor(HIGHLIGHT_FONT_COLOR, tooltipSource) }
 
     MapModule.Tooltip_Show(self, headerLine, collectedLine, sourceLine)
+end
+
+function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
+    -- Defer to the next frame to break the taint chain between addon code
+    -- and Blizzard's tooltip/MoneyFrame rendering (see issue #134).
+    C_Timer.After(0, function() self:ShowPinTooltip() end)
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseLeave()
