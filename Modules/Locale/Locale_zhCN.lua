@@ -16,7 +16,7 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ]]
 
-local addonName = ...
+local addonName, _ = ...
 local L_Broker = LibStub("AceLocale-3.0"):NewLocale(addonName .. "_Broker", "zhCN")
 
 if L_Broker then
