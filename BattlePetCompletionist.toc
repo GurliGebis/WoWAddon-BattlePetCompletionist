@@ -2,6 +2,7 @@
 ## Title: Battle Pet Completionist
 ## Version: @project-version@
 ## Notes: Let's go catch them all!
+## Notes-zhCN: 我们去把它们都抓起来！宠物收集辅助插件。
 ## IconTexture: Interface\Icons\Inv_Pet_Achievement_CaptureAWildPet
 ## Author: GurliGebis
 ## AddonCompartmentFunc: BattlePetCompletionist_OnAddonCompartmentClick
