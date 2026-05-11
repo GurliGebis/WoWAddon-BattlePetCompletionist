@@ -1,3 +1,6 @@
+# 12.0.5-20260511-1
+* Updated zhCN translation.
+
 # 12.0.5-20260508-1
 * Fix taint propagation into MoneyFrame by deferring pin tooltip display to the next frame.
 
