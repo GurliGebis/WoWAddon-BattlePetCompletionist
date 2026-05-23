@@ -100,11 +100,13 @@ function DBModule:InvalidateMapPinSourcesCache()
 end
 
 local function dataVersion(profile)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(profile) then return end end -- #135 & taint fix
     return profile.dataVersion or 0
 end
 
 -- Update MapPinFilter values to use enum (eliminate prefix, separate words)
 local function migrateV1(profile)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(profile) then return end end -- #135 & taint fix
     local function convertValue(value)
         if value == "T1ALL" then
             return _BattlePetCompletionist.Enums.MapPinFilter.ALL
@@ -133,6 +135,7 @@ end
 
 -- Update Goal values to use enum (eliminate prefix, separate words)
 local function migrateV2(profile)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(profile) then return end end -- #135 & taint fix
     local function convertValue(value)
         if value == "COLLECTRARE" then
             return _BattlePetCompletionist.Enums.Goal.COLLECT_RARE
@@ -152,6 +155,7 @@ end
 
 -- Update MapPinSize to use enum
 local function migrateV3(profile)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(profile) then return end end -- #135 & taint fix
     local function convertValue(value)
         if value == "S1" then
             return _BattlePetCompletionist.Enums.MapPinSize.SMALL
@@ -171,6 +175,7 @@ end
 
 -- Update MapPinIconType to use enum
 local function migrateV4(profile)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(profile) then return end end -- #135 & taint fix
     local function convertValue(value)
         if value == "T1PET" then
             return _BattlePetCompletionist.Enums.MapPinIconType.PET
@@ -188,6 +193,7 @@ end
 
 -- Update CombatMode to use enum
 local function migrateV5(profile)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(profile) then return end end -- #135 & taint fix
     local function convertValue(value)
         if value == "V1HAF" then
             return _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND
@@ -207,6 +213,7 @@ end
 
 -- Update ForfeitThreshold to use enum
 local function migrateV6(profile)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(profile) then return end end -- #135 & taint fix
     local function convertValue(value)
         if value == "C1BLUE" then
             return _BattlePetCompletionist.Enums.ForfeitThreshold.RARE
@@ -228,6 +235,7 @@ end
 
 -- Update ForfeitPromptUnless to use enum
 local function migrateV7(profile)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(profile) then return end end -- #135 & taint fix
     local function convertValue(value)
         if value == "T2MISSING" then
             return _BattlePetCompletionist.Enums.ForfeitPromptUnless.MISSING

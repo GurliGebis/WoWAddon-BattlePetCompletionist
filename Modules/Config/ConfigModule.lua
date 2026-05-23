@@ -482,10 +482,12 @@ function ConfigModule:OnInitialize()
 end
 
 function ConfigModule:ChatCommandOptions(msg)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(msg) then return end end -- #135 & taint fix
     Settings.OpenToCategory(ConfigModule.CategoryId)
 end
 
 function ConfigModule:SetPetDataVersion(version)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(version) then return end end -- #135 & taint fix
     petDataVersionLoaded = version
     options.args.dataVersion.name = L["Version"]..": "..petDataVersionLoaded
 

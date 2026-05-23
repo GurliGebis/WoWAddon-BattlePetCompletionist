@@ -28,132 +28,137 @@ BPC_MAP_TOOLTIP_BACKDROP = {
 }
 
 do
-    local mapTooltipHeaderFont
-    local cachedFontFile, cachedFontSize, cachedFontFlags
-    local TOOLTIP_MAX_WIDTH = 350
-    local TOOLTIP_PADDING = 16
+    if not InCombatLockdown() then  -- verify not in combat (issue #135 fix)
+        local mapTooltipHeaderFont
+        local cachedFontFile, cachedFontSize, cachedFontFlags
+        local TOOLTIP_MAX_WIDTH = 350
+        local TOOLTIP_PADDING = 16
 
-    -- Cache font properties at load time to avoid calling GetFont() during
-    -- tainted execution (which can return SECRET values in WoW 11.x).
-    local function EnsureFontCached()
-        if not cachedFontFile then
-            cachedFontFile, cachedFontSize, cachedFontFlags = GameFontNormal:GetFont()
-            cachedFontSize = cachedFontSize or 12
-        end
-    end
-
-    function MapModule.Tooltip_Show(anchor, headerLine, collectedLine, sourceLine)
-        EnsureFontCached()
-
-        if not mapTooltipHeaderFont then
-            mapTooltipHeaderFont = CreateFont("MapModuleHeaderFont")
-            mapTooltipHeaderFont:SetFont(cachedFontFile, cachedFontSize + 2, cachedFontFlags)
+        -- Cache font properties at load time to avoid calling GetFont() during
+        -- tainted execution (which can return SECRET values in WoW 11.x).
+        local function EnsureFontCached()
+            if not cachedFontFile then
+                cachedFontFile, cachedFontSize, cachedFontFlags = GameFontNormal:GetFont()
+                cachedFontSize = cachedFontSize or 12
+            end
         end
 
-        -- Remove width constraints initially so we can measure natural widths
-        BPCMapTooltip.Header:SetWidth(0)
-        BPCMapTooltip.Source:SetWidth(0)
-        BPCMapTooltip.Source:SetWordWrap(false)
-        BPCMapTooltip.Collected:SetWidth(0)
+        function MapModule.Tooltip_Show(anchor, headerLine, collectedLine, sourceLine)
+            if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(anchor) or issecretvalue(headerLine) or issecretvalue(collectedLine) or issecretvalue(sourceLine) then return end end -- #135 & taint fix
+            EnsureFontCached()
 
-        BPCMapTooltip.Header:SetFontObject(mapTooltipHeaderFont)
-        BPCMapTooltip.Header:SetText(headerLine.text or "")
-
-        if headerLine.color then
-            BPCMapTooltip.Header:SetTextColor(headerLine.color.r, headerLine.color.g, headerLine.color.b)
-        end
-
-        if collectedLine then
-            BPCMapTooltip.Collected:SetText(collectedLine.text or "")
-
-            if collectedLine.color then
-                BPCMapTooltip.Collected:SetTextColor(collectedLine.color.r, collectedLine.color.g, collectedLine.color.b)
+            if not mapTooltipHeaderFont then
+                mapTooltipHeaderFont = CreateFont("MapModuleHeaderFont")
+                mapTooltipHeaderFont:SetFont(cachedFontFile, cachedFontSize + 2, cachedFontFlags)
             end
 
-            BPCMapTooltip.Collected:Show()
-            BPCMapTooltip.Source:ClearAllPoints()
-            BPCMapTooltip.Source:SetPoint("TOPLEFT", BPCMapTooltip.Collected, "BOTTOMLEFT", 0, -2)
-        else
-            BPCMapTooltip.Collected:Hide()
-            BPCMapTooltip.Source:ClearAllPoints()
-            BPCMapTooltip.Source:SetPoint("TOPLEFT", BPCMapTooltip.Header, "BOTTOMLEFT", 0, -2)
-        end
+            -- Remove width constraints initially so we can measure natural widths
+            BPCMapTooltip.Header:SetWidth(0)
+            BPCMapTooltip.Source:SetWidth(0)
+            BPCMapTooltip.Source:SetWordWrap(false)
+            BPCMapTooltip.Collected:SetWidth(0)
 
-        BPCMapTooltip.Source:SetText(sourceLine.text or "")
+            BPCMapTooltip.Header:SetFontObject(mapTooltipHeaderFont)
+            BPCMapTooltip.Header:SetText(headerLine.text or "")
 
-        if sourceLine.color then
-            BPCMapTooltip.Source:SetTextColor(sourceLine.color.r, sourceLine.color.g, sourceLine.color.b)
-        end
+            if headerLine.color then
+                BPCMapTooltip.Header:SetTextColor(headerLine.color.r, headerLine.color.g, headerLine.color.b)
+            end
 
-        -- Measure dimensions dynamically. Determine natural content width, then
-        -- clamp to TOOLTIP_MAX_WIDTH. If clamped, enable word wrap on Source so
-        -- long zone text wraps instead of overflowing. Use pcall to safely handle
-        -- SECRET values from tainted execution contexts.
-        local ok, tooltipWidth, totalHeight = pcall(function()
-            local headerWidth    = BPCMapTooltip.Header:GetStringWidth()
-            local collectedWidth = BPCMapTooltip.Collected:IsShown() and BPCMapTooltip.Collected:GetStringWidth() or 0
-            local sourceWidth    = BPCMapTooltip.Source:GetStringWidth()
-            local naturalWidth   = math.max(headerWidth, collectedWidth, sourceWidth) + TOOLTIP_PADDING
-            local width          = math.min(math.max(140, naturalWidth), TOOLTIP_MAX_WIDTH)
+            if collectedLine then
+                BPCMapTooltip.Collected:SetText(collectedLine.text or "")
 
-            -- If content exceeds max width, constrain FontStrings and enable wrap
-            if naturalWidth > TOOLTIP_MAX_WIDTH then
-                local textWidth = width - TOOLTIP_PADDING
+                if collectedLine.color then
+                    BPCMapTooltip.Collected:SetTextColor(collectedLine.color.r, collectedLine.color.g, collectedLine.color.b)
+                end
+
+                BPCMapTooltip.Collected:Show()
+                BPCMapTooltip.Source:ClearAllPoints()
+                BPCMapTooltip.Source:SetPoint("TOPLEFT", BPCMapTooltip.Collected, "BOTTOMLEFT", 0, -2)
+            else
+                BPCMapTooltip.Collected:Hide()
+                BPCMapTooltip.Source:ClearAllPoints()
+                BPCMapTooltip.Source:SetPoint("TOPLEFT", BPCMapTooltip.Header, "BOTTOMLEFT", 0, -2)
+            end
+
+            BPCMapTooltip.Source:SetText(sourceLine.text or "")
+
+            if sourceLine.color then
+                BPCMapTooltip.Source:SetTextColor(sourceLine.color.r, sourceLine.color.g, sourceLine.color.b)
+            end
+
+            -- Measure dimensions dynamically. Determine natural content width, then
+            -- clamp to TOOLTIP_MAX_WIDTH. If clamped, enable word wrap on Source so
+            -- long zone text wraps instead of overflowing. Use pcall to safely handle
+            -- SECRET values from tainted execution contexts.
+            local ok, tooltipWidth, totalHeight = pcall(function()
+                if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(ok) or issecretvalue(tooltipWidth) or issecretvalue(totalHeight) then return end end -- #135 & taint fix
+                local headerWidth    = BPCMapTooltip.Header:GetStringWidth()
+                local collectedWidth = BPCMapTooltip.Collected:IsShown() and BPCMapTooltip.Collected:GetStringWidth() or 0
+                local sourceWidth    = BPCMapTooltip.Source:GetStringWidth()
+                local naturalWidth   = math.max(headerWidth, collectedWidth, sourceWidth) + TOOLTIP_PADDING
+                local width          = math.min(math.max(140, naturalWidth), TOOLTIP_MAX_WIDTH)
+
+                -- If content exceeds max width, constrain FontStrings and enable wrap
+                if naturalWidth > TOOLTIP_MAX_WIDTH then
+                    local textWidth = width - TOOLTIP_PADDING
+                    BPCMapTooltip.Header:SetWidth(textWidth)
+                    BPCMapTooltip.Source:SetWidth(textWidth)
+                    BPCMapTooltip.Source:SetWordWrap(true)
+                    BPCMapTooltip.Collected:SetWidth(textWidth)
+                end
+
+                local headerHeight    = BPCMapTooltip.Header:GetStringHeight()
+                local collectedHeight = BPCMapTooltip.Collected:IsShown() and (BPCMapTooltip.Collected:GetStringHeight() + 2) or 0
+                local sourceHeight    = BPCMapTooltip.Source:GetStringHeight()
+                local height          = headerHeight + collectedHeight + sourceHeight + 2 + TOOLTIP_PADDING -- +2 for Source top gap
+
+                return width, height
+            end)
+
+            if not ok then
+                -- Fallback: use max width with wrap and estimated height
+                local textWidth = TOOLTIP_MAX_WIDTH - TOOLTIP_PADDING
                 BPCMapTooltip.Header:SetWidth(textWidth)
                 BPCMapTooltip.Source:SetWidth(textWidth)
                 BPCMapTooltip.Source:SetWordWrap(true)
                 BPCMapTooltip.Collected:SetWidth(textWidth)
-            end
 
-            local headerHeight    = BPCMapTooltip.Header:GetStringHeight()
-            local collectedHeight = BPCMapTooltip.Collected:IsShown() and (BPCMapTooltip.Collected:GetStringHeight() + 2) or 0
-            local sourceHeight    = BPCMapTooltip.Source:GetStringHeight()
-            local height          = headerHeight + collectedHeight + sourceHeight + 2 + TOOLTIP_PADDING -- +2 for Source top gap
+                tooltipWidth = TOOLTIP_MAX_WIDTH
+                local headerLineHeight = cachedFontSize + 2 + 4
+                local normalLineHeight = cachedFontSize + 4
+                local lineCount = 1
 
-            return width, height
-        end)
+                if collectedLine then
+                    lineCount = lineCount + 1
+                end
 
-        if not ok then
-            -- Fallback: use max width with wrap and estimated height
-            local textWidth = TOOLTIP_MAX_WIDTH - TOOLTIP_PADDING
-            BPCMapTooltip.Header:SetWidth(textWidth)
-            BPCMapTooltip.Source:SetWidth(textWidth)
-            BPCMapTooltip.Source:SetWordWrap(true)
-            BPCMapTooltip.Collected:SetWidth(textWidth)
-
-            tooltipWidth = TOOLTIP_MAX_WIDTH
-            local headerLineHeight = cachedFontSize + 2 + 4
-            local normalLineHeight = cachedFontSize + 4
-            local lineCount = 1
-
-            if collectedLine then
                 lineCount = lineCount + 1
+                totalHeight = headerLineHeight + (lineCount - 1) * normalLineHeight + 2 + TOOLTIP_PADDING
             end
 
-            lineCount = lineCount + 1
-            totalHeight = headerLineHeight + (lineCount - 1) * normalLineHeight + 2 + TOOLTIP_PADDING
+            BPCMapTooltip:SetWidth(tooltipWidth)
+            BPCMapTooltip:SetHeight(totalHeight)
+            BPCMapTooltip:ClearAllPoints()
+            BPCMapTooltip:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 10, 0)
+            BPCMapTooltip:Show()
         end
 
-        BPCMapTooltip:SetWidth(tooltipWidth)
-        BPCMapTooltip:SetHeight(totalHeight)
-        BPCMapTooltip:ClearAllPoints()
-        BPCMapTooltip:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 10, 0)
-        BPCMapTooltip:Show()
-    end
-
-    function MapModule:Tooltip_Hide()
-        BPCMapTooltip:Hide()
-    end
-
-    function MapModule.WrapTextWithColor(color, text)
-        if not color or text == nil then
-            return text
+        function MapModule:Tooltip_Hide()
+            BPCMapTooltip:Hide()
         end
 
-        local r = math.floor((color.r or 1) * 255 + 0.5)
-        local g = math.floor((color.g or 1) * 255 + 0.5)
-        local b = math.floor((color.b or 1) * 255 + 0.5)
+        function MapModule.WrapTextWithColor(color, text)
+            if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(color) or issecretvalue(text) then return end end -- #135 & taint fix
+            if not color or text == nil then
+                return text
+            end
 
-        return string.format("|cff%02x%02x%02x%s|r", r, g, b, text)
+            local r = math.floor((color.r or 1) * 255 + 0.5)
+            local g = math.floor((color.g or 1) * 255 + 0.5)
+            local b = math.floor((color.b or 1) * 255 + 0.5)
+
+            return string.format("|cff%02x%02x%02x%s|r", r, g, b, text)
+        end
     end
 end

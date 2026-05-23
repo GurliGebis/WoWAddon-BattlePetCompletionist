@@ -39,6 +39,7 @@ local myName
 
 function CombatModule:OnEnable()
     myName = UnitName("player")
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(myName) then return end end -- #135 & taint fix
     self:RegisterEvent("PET_BATTLE_OPENING_START", "BattleHasStarted")
 
     self:RegisterComm(messagePrefixes.ANNOUNCE_PETS, "HaFOnReceivedAnnounce")
@@ -50,6 +51,7 @@ end
 
 local function CanWeFindPlayerPosition()
     local mapId = C_Map.GetBestMapForUnit("player")
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return end end -- #135 & taint fix
 
     if not mapId then
         return false
@@ -206,6 +208,7 @@ function CombatModule:ForfeitBattleHasStarted()
 end
 
 function CombatModule:HaFOnReceivedAnnounce(_, msg, _, sender)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(msg) or issecretvalue(sender) then return end end -- #135 & taint fix
     if sender == myName then
         return
     end
@@ -238,6 +241,7 @@ function CombatModule:HaFOnReceivedAnnounce(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedINeedPets(_, msg, _, sender)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(msg) or issecretvalue(sender) then return end end -- #135 & taint fix
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return
@@ -289,6 +293,7 @@ function CombatModule:HaFOnReceivedINeedPets(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(msg) or issecretvalue(sender) then return end end -- #135 & taint fix
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return
@@ -335,6 +340,7 @@ function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedAcceptOffer(_, msg, _, sender)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(msg) or issecretvalue(sender) then return end end -- #135 & taint fix
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return
@@ -360,6 +366,7 @@ function CombatModule:HaFOnReceivedAcceptOffer(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedDeclineOffer(_, msg, _, sender)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(msg) or issecretvalue(sender) then return end end -- #135 & taint fix
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return

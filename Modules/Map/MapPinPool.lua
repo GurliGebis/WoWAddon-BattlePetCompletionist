@@ -28,6 +28,7 @@ local activeCount = 0
 local allocIndex = 0
 
 local function HidePin(pin)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(pin) then return end end -- #135 & taint fix
     pin:SetAlpha(0)
     pin:EnableMouse(false)
 end
@@ -64,6 +65,7 @@ function MapModule.WorldMapDataProvider:BeginPinAllocation()
 end
 
 function MapModule.WorldMapDataProvider:AcquirePoolPin(x, y, iconpath)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(x) or issecretvalue(v) or issecretvalue(iconpath) then return end end -- #135 & taint fix
     allocIndex = allocIndex + 1
     local map = self:GetMap()
     local pin = pinPool[allocIndex]
@@ -97,6 +99,7 @@ function MapModule.WorldMapDataProvider:FinishPinAllocation()
 end
 
 function MapModule.WorldMapDataProvider:SetupPinAppearance(pin, iconpath)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(pin) or issecretvalue(iconpath) then return end end -- #135 & taint fix
     local scale = MapModule:GetMapPinScale()
     local iconSize = 12 * scale
     local borderSize = 24 * scale

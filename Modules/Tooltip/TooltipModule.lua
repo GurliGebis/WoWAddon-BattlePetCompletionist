@@ -22,6 +22,7 @@ local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local TooltipModule = BattlePetCompletionist:NewModule("TooltipModule")
 
 function TooltipModule:OnEnable()
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesID) then return end end -- #135 & taint fix
     hooksecurefunc("BattlePetToolTip_Show", function(speciesID, ...)
         if DBModule:IsPetCageTooltipEnabled() then
             C_Timer.After(0, function()
@@ -34,7 +35,9 @@ function TooltipModule:OnEnable()
 end
 
 function TooltipModule.ModifyPetTip(speciesID)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesID) then return end end -- #135 & taint fix
     local _, _, _, _, source = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(source) then return end end -- #135 & taint fix
 
     if source and source ~= "" then
         BattlePetTooltip:AddLine(" ", 1, 1, 1, false)
