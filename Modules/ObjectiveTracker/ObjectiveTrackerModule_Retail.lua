@@ -39,12 +39,12 @@ function BattlePetCompletionistObjectiveTrackerMixin:InitModule()
 end
 
 function BattlePetCompletionistObjectiveTrackerMixin:OnEvent(event, ...)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(event) then return end end -- #135 & taint fix
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(event) then return end end
     self:MarkDirty()
 end
 
 function BattlePetCompletionistObjectiveTrackerMixin:OnBlockHeaderClick(block, mouseButton)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(block) or issecretvalue(mouseButton) then return end end -- #135 & taint fix
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(block) or issecretvalue(mouseButton) then return end end
     if mouseButton == "LeftButton" then
         if not CollectionsJournal or not CollectionsJournal:IsShown() then
             ToggleCollectionsJournal()
@@ -56,7 +56,7 @@ end
 
 function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
     local filteredPets, mapID = ObjectiveTrackerModule:GetFilteredPetList()
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(filteredPets) or issecretvalue(mapID) then return end end -- #135 & taint fix
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(filteredPets) or issecretvalue(mapID) then return end end
     if not filteredPets then
         return
     end
@@ -75,7 +75,7 @@ function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
 end
 
 function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, petInfo)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(petInfo) or issecretvalue(block) then return end end -- #135 & taint fix
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(petInfo) or issecretvalue(block) then return end end
     if not petInfo.speciesName then
         return
     end
@@ -125,7 +125,7 @@ do
     end
 
     function ObjectiveTrackerModule:OnPetEvent(event, ...)
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(event) then return end end -- #135 & taint fix
+        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(event) then return end end
         if self.Mixin then
             self.Mixin:OnEvent(event, ...)
         end

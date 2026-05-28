@@ -77,7 +77,7 @@ function MapModule.WorldMapDataProvider:RefreshAllData()
 end
 
 function MapModule.WorldMapDataProvider:LoadMapData(mapId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return end end -- #135 & taint fix
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return end end
     self:BeginPinAllocation()
 
     if not self:GetMap() then
@@ -91,7 +91,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     end
 
     local function IsTooCloseToExistingPin(placedPositions, x, y, threshold)
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(x) or issecretvalue(y) or issecretvalue(threshold) then return false end end -- #135 & taint fix
+        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(x) or issecretvalue(y) or issecretvalue(threshold) then return false end end
         for _, pos in ipairs(placedPositions) do
             if math.abs(pos[1] - x) < threshold and math.abs(pos[2] - y) < threshold then
                 return true
@@ -110,7 +110,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     end
 
     local function GetMapZoomPercent(map)
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return 0 end end -- #135 & taint fix
+        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return 0 end end
         if not map or not map.ScrollContainer or not map.ScrollContainer.HasZoomLevels or not map.GetCanvasZoomPercent then
             return 0
         end
@@ -171,7 +171,7 @@ function BattlePetCompletionistWorldMapPinMixin:ShowPinTooltip()
     end
 
     local speciesName, speciesIcon, _, _, tooltipSource = C_PetJournal.GetPetInfoBySpeciesID(self.PetSpeciesID)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesName) or issecretvalue(speciesIcon) or issecretvalue(tooltipSource) then return end end -- #135 & taint fix
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesName) or issecretvalue(speciesIcon) or issecretvalue(tooltipSource) then return end end
 
     local ownedPets = DataModule:GetOwnedPets(self.PetSpeciesID)
 
@@ -211,7 +211,7 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseLeave()
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(button) then return end end -- #135 & taint fix
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(button) then return end end
     if button ~= "LeftButton" then
         return
     end
