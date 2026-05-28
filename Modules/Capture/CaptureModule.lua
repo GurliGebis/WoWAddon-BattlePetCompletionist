@@ -76,7 +76,6 @@ end
 local _rows = { "Row1", "Row2", "Row3" }
 
 function CaptureModule:CreatePetsDialog(pets, mode)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(pets) or issecretvalue(mode) then return end end -- #135 & taint fix
     BPCPetsDialogFrame:SetSize(240, 95 + (#pets * 35))
 
     if #pets == 1 then
