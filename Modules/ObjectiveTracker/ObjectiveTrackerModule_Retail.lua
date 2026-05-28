@@ -107,29 +107,27 @@ Mixin(frame, BattlePetCompletionistObjectiveTrackerMixin)
 frame:OnLoad()
 
 do
-    if not InCombatLockdown() then  -- verify not in combat (issue #135 fix)
-        function ObjectiveTrackerModule:OnPlayerEnteringWorld()
-            -- Avoid calling protected SetSize functions during movies
-            if (MovieFrame and MovieFrame:IsShown()) then
-                return
-            end
-
-            if ObjectiveTrackerManager and ObjectiveTrackerManager.SetModuleContainer then
-                ObjectiveTrackerManager:SetModuleContainer(BattlePetCompletionistObjectiveTracker, ObjectiveTrackerFrame)
-            end
+    function ObjectiveTrackerModule:OnPlayerEnteringWorld()
+        -- Avoid calling protected SetSize functions during movies or combat
+        if InCombatLockdown() or (MovieFrame and MovieFrame:IsShown()) then
+            return
         end
 
-        function ObjectiveTrackerModule:OnInitialize()
-            self:RegisterEvent("PLAYER_ENTERING_WORLD", "OnPlayerEnteringWorld")
-            self:RegisterEvent("PET_JOURNAL_LIST_UPDATE", "OnPetEvent")
-            self:RegisterMessage(_BattlePetCompletionist.Events.ZONE_CHANGE, "OnPetEvent")
+        if ObjectiveTrackerManager and ObjectiveTrackerManager.SetModuleContainer then
+            ObjectiveTrackerManager:SetModuleContainer(BattlePetCompletionistObjectiveTracker, ObjectiveTrackerFrame)
         end
+    end
 
-        function ObjectiveTrackerModule:OnPetEvent(event, ...)
-            if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(event) then return end end -- #135 & taint fix
-            if self.Mixin then
-                self.Mixin:OnEvent(event, ...)
-            end
+    function ObjectiveTrackerModule:OnInitialize()
+        self:RegisterEvent("PLAYER_ENTERING_WORLD", "OnPlayerEnteringWorld")
+        self:RegisterEvent("PET_JOURNAL_LIST_UPDATE", "OnPetEvent")
+        self:RegisterMessage(_BattlePetCompletionist.Events.ZONE_CHANGE, "OnPetEvent")
+    end
+
+    function ObjectiveTrackerModule:OnPetEvent(event, ...)
+        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(event) then return end end -- #135 & taint fix
+        if self.Mixin then
+            self.Mixin:OnEvent(event, ...)
         end
     end
 end
