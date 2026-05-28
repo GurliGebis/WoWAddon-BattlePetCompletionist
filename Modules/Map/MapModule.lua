@@ -159,7 +159,6 @@ function BattlePetCompletionistWorldMapPinMixin:OnLoad()
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnAcquired(x, y, iconpath)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(x) or issecretvalue(y) or issecretvalue(iconpath) then return end end -- #135 & taint fix
     self:SetPosition(x, y)
     MapModule.WorldMapDataProvider:SetupPinAppearance(self, iconpath)
     self:SetAlpha(1)
