@@ -28,7 +28,7 @@ MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 function MapModule.WorldMapDataProvider:OnCanvasScaleChanged()
     local map = self:GetMap()
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return end end -- #135 & taint fix
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return end end
 
     if not map then
         return
