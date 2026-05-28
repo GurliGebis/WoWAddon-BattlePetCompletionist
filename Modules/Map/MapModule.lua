@@ -91,7 +91,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     end
 
     local function IsTooCloseToExistingPin(placedPositions, x, y, threshold)
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(x) or issecretvalue(y) or issecretvalue(threshold) then return end end -- #135 & taint fix
+        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(x) or issecretvalue(y) or issecretvalue(threshold) then return false end end -- #135 & taint fix
         for _, pos in ipairs(placedPositions) do
             if math.abs(pos[1] - x) < threshold and math.abs(pos[2] - y) < threshold then
                 return true
@@ -110,7 +110,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     end
 
     local function GetMapZoomPercent(map)
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return end end -- #135 & taint fix
+        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return 0 end end -- #135 & taint fix
         if not map or not map.ScrollContainer or not map.ScrollContainer.HasZoomLevels or not map.GetCanvasZoomPercent then
             return 0
         end

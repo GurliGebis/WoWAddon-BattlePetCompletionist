@@ -180,7 +180,7 @@ function GoalTrackerModule:GetZonePetData()
 end
 
 function GoalTrackerModule:TooltipToSourceTypeIcon(speciesId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return end end -- #135 & taint fix
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return "" end end -- #135 & taint fix
     local sourceType = DataModule:GetPetSource(speciesId)
 
     return _BattlePetCompletionist.Constants.PET_SOURCE_ICONS[sourceType] or _BattlePetCompletionist.Constants.PET_SOURCE_ICON_FALLBACK

@@ -25,7 +25,7 @@ local ZoneModule = BattlePetCompletionist:GetModule("ZoneModule")
 
 -- Sorts by speciesName alphabetically, falling back to speciesId for unnamed entries.
 local function ComparePetsByName(a, b)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(a) or issecretvalue(b) then return end end -- #135 & taint fix
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(a) or issecretvalue(b) then return false end end -- #135 & taint fix
     if a.speciesName and b.speciesName then
         return a.speciesName < b.speciesName
     elseif a.speciesName then

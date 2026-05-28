@@ -92,7 +92,6 @@ do
             -- long zone text wraps instead of overflowing. Use pcall to safely handle
             -- SECRET values from tainted execution contexts.
             local ok, tooltipWidth, totalHeight = pcall(function()
-                if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(ok) or issecretvalue(tooltipWidth) or issecretvalue(totalHeight) then return end end -- #135 & taint fix
                 local headerWidth    = BPCMapTooltip.Header:GetStringWidth()
                 local collectedWidth = BPCMapTooltip.Collected:IsShown() and BPCMapTooltip.Collected:GetStringWidth() or 0
                 local sourceWidth    = BPCMapTooltip.Source:GetStringWidth()
@@ -149,7 +148,7 @@ do
         end
 
         function MapModule.WrapTextWithColor(color, text)
-            if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(color) or issecretvalue(text) then return end end -- #135 & taint fix
+            if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(color) or issecretvalue(text) then return "" end end -- #135 & taint fix
             if not color or text == nil then
                 return text
             end
