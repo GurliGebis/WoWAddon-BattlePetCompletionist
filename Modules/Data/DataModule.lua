@@ -26,7 +26,6 @@ DataModule.PetData = {}
 DataModule.HasDataLoaded = false
 
 function DataModule:RegisterPetData(petData)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(petData) then return end end -- #135 & taint fix
     for mapId, mapPets in pairs(petData) do
         if not self.PetData[mapId] then
             self.PetData[mapId] = {}
