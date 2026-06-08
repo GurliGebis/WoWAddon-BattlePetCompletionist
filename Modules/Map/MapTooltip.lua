@@ -136,11 +136,13 @@ do
             totalHeight = headerLineHeight + (lineCount - 1) * normalLineHeight + 2 + TOOLTIP_PADDING
         end
 
-        BPCMapTooltip:SetWidth(tooltipWidth)
-        BPCMapTooltip:SetHeight(totalHeight)
-        BPCMapTooltip:ClearAllPoints()
-        BPCMapTooltip:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 10, 0)
-        BPCMapTooltip:Show()
+        local finalOk, _ = pcall(function()
+            BPCMapTooltip:SetWidth(tooltipWidth)
+            BPCMapTooltip:SetHeight(totalHeight)
+            BPCMapTooltip:ClearAllPoints()
+            BPCMapTooltip:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 10, 0)
+            BPCMapTooltip:Show()
+        end)
     end
 
     function MapModule:Tooltip_Hide()

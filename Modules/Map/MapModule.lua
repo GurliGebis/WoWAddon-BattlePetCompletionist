@@ -27,6 +27,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Map")
 MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 function MapModule.WorldMapDataProvider:OnCanvasScaleChanged()
+    if InCombatLockdown() then return end  -- added 2026 06 07 to further prevent tainting
     local map = self:GetMap()
     if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return end end
 
@@ -50,6 +51,7 @@ function MapModule.WorldMapDataProvider:RemoveAllData()
 end
 
 function MapModule.WorldMapDataProvider:RefreshAllData()
+    if InCombatLockdown() then return end  -- added 2026 06 07 to further prevent tainting
     if not self:GetMap() then
         return
     end
@@ -77,6 +79,7 @@ function MapModule.WorldMapDataProvider:RefreshAllData()
 end
 
 function MapModule.WorldMapDataProvider:LoadMapData(mapId)
+    if InCombatLockdown() then return end  -- added 2026 06 07 to further prevent tainting
     if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return end end
     self:BeginPinAllocation()
 
@@ -166,6 +169,7 @@ function BattlePetCompletionistWorldMapPinMixin:OnAcquired(x, y, iconpath)
 end
 
 function BattlePetCompletionistWorldMapPinMixin:ShowPinTooltip()
+    if InCombatLockdown() then return end  -- added 2026 06 07 to further prevent tainting
     if not self:IsMouseOver() then
         return
     end
@@ -211,6 +215,7 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseLeave()
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
+    if InCombatLockdown() then return end  -- added 2026 06 07 to further prevent tainting
     if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(button) then return end end
     if button ~= "LeftButton" then
         return
