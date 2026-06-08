@@ -1,3 +1,6 @@
+# 12.0.5-20260608-1
+* Updated TOC for Mop Classic.
+
 # 12.0.5-20260511-1
 * Updated zhCN translation.
 
