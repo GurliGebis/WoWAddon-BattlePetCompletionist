@@ -1,3 +1,6 @@
+# 12.0.5-20260608-2
+* Fix crash when toggling objective tracker settings on Retail.
+
 # 12.0.5-20260608-1
 * Updated TOC for Mop Classic.
 

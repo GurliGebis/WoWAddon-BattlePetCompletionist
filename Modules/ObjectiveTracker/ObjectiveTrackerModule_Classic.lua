@@ -146,9 +146,4 @@ do
     function ObjectiveTrackerModule:OnPetEvent(event, ...)
         WatchFrame_Update()
     end
-
-    -- Called by ConfigModule when the user changes tracker settings.
-    function ObjectiveTrackerModule:OnEvent(event, ...)
-        WatchFrame_Update()
-    end
 end

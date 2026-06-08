@@ -434,7 +434,7 @@ local options = {
                 profile.objectiveTrackerEnabled = not profile.objectiveTrackerEnabled
 
                 local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
-                ObjectiveTrackerModule:OnEvent("CONFIG_CHANGED")
+                ObjectiveTrackerModule:OnPetEvent("CONFIG_CHANGED")
             end
         },
         objectiveTrackerFilter = {
@@ -459,7 +459,7 @@ local options = {
                 profile.objectiveTrackerFilter = value
 
                 local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTrackerModule")
-                ObjectiveTrackerModule:OnEvent("CONFIG_CHANGED")
+                ObjectiveTrackerModule:OnPetEvent("CONFIG_CHANGED")
             end
         },
         dataVersionHeader = {
