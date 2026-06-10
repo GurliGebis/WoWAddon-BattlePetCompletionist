@@ -39,6 +39,7 @@ local myName
 
 function CombatModule:OnEnable()
     myName = UnitName("player")
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(myName) then return end end
     self:RegisterEvent("PET_BATTLE_OPENING_START", "BattleHasStarted")
 
     self:RegisterComm(messagePrefixes.ANNOUNCE_PETS, "HaFOnReceivedAnnounce")
@@ -50,6 +51,7 @@ end
 
 local function CanWeFindPlayerPosition()
     local mapId = C_Map.GetBestMapForUnit("player")
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return false end end
 
     if not mapId then
         return false

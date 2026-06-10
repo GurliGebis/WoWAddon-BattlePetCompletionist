@@ -43,6 +43,8 @@ do
     end
 
     function MapModule.Tooltip_Show(anchor, headerLine, collectedLine, sourceLine)
+        if InCombatLockdown() then return end
+        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(anchor) or issecretvalue(headerLine) or issecretvalue(collectedLine) or issecretvalue(sourceLine) then return end end
         EnsureFontCached()
 
         if not mapTooltipHeaderFont then
@@ -134,11 +136,13 @@ do
             totalHeight = headerLineHeight + (lineCount - 1) * normalLineHeight + 2 + TOOLTIP_PADDING
         end
 
-        BPCMapTooltip:SetWidth(tooltipWidth)
-        BPCMapTooltip:SetHeight(totalHeight)
-        BPCMapTooltip:ClearAllPoints()
-        BPCMapTooltip:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 10, 0)
-        BPCMapTooltip:Show()
+        local finalOk, _ = pcall(function()
+            BPCMapTooltip:SetWidth(tooltipWidth)
+            BPCMapTooltip:SetHeight(totalHeight)
+            BPCMapTooltip:ClearAllPoints()
+            BPCMapTooltip:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 10, 0)
+            BPCMapTooltip:Show()
+        end)
     end
 
     function MapModule:Tooltip_Hide()
@@ -146,6 +150,7 @@ do
     end
 
     function MapModule.WrapTextWithColor(color, text)
+        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(color) or issecretvalue(text) then return "" end end
         if not color or text == nil then
             return text
         end
