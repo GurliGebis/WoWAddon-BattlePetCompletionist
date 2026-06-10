@@ -207,6 +207,7 @@ end
 function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
     -- Defer to the next frame to break the taint chain between addon code
     -- and Blizzard's tooltip/MoneyFrame rendering (see issue #134).
+    if InCombatLockdown() then return end  -- added 2026 06 10 to further prevent tainting
     C_Timer.After(0, function() self:ShowPinTooltip() end)
 end
 
