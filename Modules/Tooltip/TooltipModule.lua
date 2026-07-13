@@ -22,7 +22,6 @@ local DBModule = BattlePetCompletionist:GetModule("DBModule")
 local TooltipModule = BattlePetCompletionist:NewModule("TooltipModule")
 
 function TooltipModule:OnEnable()
-    if InCombatLockdown() then return end
     hooksecurefunc("BattlePetToolTip_Show", function(speciesID, ...)
         if DBModule:IsPetCageTooltipEnabled() then
             C_Timer.After(0, function()
