@@ -27,7 +27,9 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Map")
 MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 function MapModule.WorldMapDataProvider:OnCanvasScaleChanged()
+    if InCombatLockdown() then return end
     local map = self:GetMap()
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return end end
 
     if not map then
         return
@@ -49,6 +51,7 @@ function MapModule.WorldMapDataProvider:RemoveAllData()
 end
 
 function MapModule.WorldMapDataProvider:RefreshAllData()
+    if InCombatLockdown() then return end
     if not self:GetMap() then
         return
     end
@@ -76,6 +79,7 @@ function MapModule.WorldMapDataProvider:RefreshAllData()
 end
 
 function MapModule.WorldMapDataProvider:LoadMapData(mapId)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return end end
     self:BeginPinAllocation()
 
     if not self:GetMap() then
@@ -89,6 +93,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     end
 
     local function IsTooCloseToExistingPin(placedPositions, x, y, threshold)
+        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(x) or issecretvalue(y) or issecretvalue(threshold) then return false end end
         for _, pos in ipairs(placedPositions) do
             if math.abs(pos[1] - x) < threshold and math.abs(pos[2] - y) < threshold then
                 return true
@@ -107,6 +112,7 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     end
 
     local function GetMapZoomPercent(map)
+        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return 0 end end
         if not map or not map.ScrollContainer or not map.ScrollContainer.HasZoomLevels or not map.GetCanvasZoomPercent then
             return 0
         end
@@ -162,11 +168,13 @@ function BattlePetCompletionistWorldMapPinMixin:OnAcquired(x, y, iconpath)
 end
 
 function BattlePetCompletionistWorldMapPinMixin:ShowPinTooltip()
+    if InCombatLockdown() then return end
     if not self:IsMouseOver() then
         return
     end
 
     local speciesName, speciesIcon, _, _, tooltipSource = C_PetJournal.GetPetInfoBySpeciesID(self.PetSpeciesID)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesName) or issecretvalue(speciesIcon) or issecretvalue(tooltipSource) then return end end
 
     local ownedPets = DataModule:GetOwnedPets(self.PetSpeciesID)
 
@@ -198,6 +206,7 @@ end
 function BattlePetCompletionistWorldMapPinMixin:OnMouseEnter()
     -- Defer to the next frame to break the taint chain between addon code
     -- and Blizzard's tooltip/MoneyFrame rendering (see issue #134).
+    if InCombatLockdown() then return end
     C_Timer.After(0, function() self:ShowPinTooltip() end)
 end
 
@@ -206,6 +215,8 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseLeave()
 end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
+    if InCombatLockdown() then return end
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(button) then return end end
     if button ~= "LeftButton" then
         return
     end

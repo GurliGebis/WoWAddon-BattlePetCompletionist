@@ -1,3 +1,6 @@
+# 12.0.7-20260713-1
+* Multiple fixes for taint issues, patches provided by JPEscher on github.
+
 # 12.0.7-20260617-1
 * Updated TOC to match 12.0.7
 

@@ -44,6 +44,7 @@ function DataModule:HasAnyDataLoaded()
 end
 
 local function DoesPetMatchSourceFilters(speciesId)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return false end end
     local petSource = DataModule:GetPetSource(speciesId)
 
     if petSource == ZONE then
@@ -64,6 +65,7 @@ local function DoesPetMatchSourceFilters(speciesId)
 end
 
 local function GetMapZoneNames(mapId)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return {} end end
     local info = C_Map.GetMapInfo(mapId)
 
     if not info or info.mapType == Enum.UIMapType.Dungeon then
@@ -88,6 +90,7 @@ local function GetMapZoneNames(mapId)
 end
 
 local function IsPetInMapZone(speciesId, mapZoneNames)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) or issecretvalue(mapZoneNames) then return false end end
     local petSource = DataModule:GetPetSource(speciesId)
 
     -- Only filter by source if the pet source is Zone or Pet Battle.
@@ -120,6 +123,7 @@ local function IsPetInMapZone(speciesId, mapZoneNames)
 end
 
 function DataModule:GetPetsInMap(mapId)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return end end
     local allPets = DataModule.PetData[mapId]
     if not allPets then
         return nil
@@ -138,6 +142,7 @@ function DataModule:GetPetsInMap(mapId)
 end
 
 function DataModule:ShouldPetBeShown(speciesId)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return false end end
     -- Apply source filters first so that later settings can't forget to take them into account
     if not DoesPetMatchSourceFilters(speciesId) then
         return false
@@ -211,6 +216,7 @@ function DataModule:ShouldPetBeShown(speciesId)
 end
 
 function DataModule:GetOwnedPets(speciesId)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return end end
     local ownedPets = {}
     local anyPetsFound = false
 
@@ -234,6 +240,7 @@ end
 
 function DataModule:GetEnemyPetsInBattle()
     local numberOfEnemyPets = C_PetBattles.GetNumPets(Enum.BattlePetOwner.Enemy)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(numberOfEnemyPets) then return {}, {} end end
     local foundNotOwnedPets = {}
     local foundOwnedPets = {}
 
@@ -263,6 +270,7 @@ end
 
 function DataModule:CanWeCapturePets()
     local isNpcControlled = C_PetBattles.IsPlayerNPC(Enum.BattlePetOwner.Enemy)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(isNpcControlled) then return false end end
 
     if isNpcControlled == false then
         -- It is a PvP pet battle, you cannot capture pets here.
@@ -292,6 +300,7 @@ function DataModule:CanWeCapturePets()
 end
 
 function DataModule:GetPetSource(speciesId)
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return end end
     local function cleanColorTags(text)
         if not text then return nil end
         return text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
