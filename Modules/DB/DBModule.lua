@@ -53,6 +53,8 @@ local defaultOptions = {
         },
         objectiveTrackerEnabled = true,
         objectiveTrackerFilter = _BattlePetCompletionist.Enums.MapPinFilter.ALL,
+        activitiesEnabled = true,
+        availableActivityAlerts = _BattlePetCompletionist.Enums.MapPinFilter.MISSING,
     }
 }
 

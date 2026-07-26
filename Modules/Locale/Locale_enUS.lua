@@ -17,6 +17,10 @@
 ]]
 
 local addonName, _ = ...
+local L_AvailableActivity = LibStub("AceLocale-3.0"):NewLocale(addonName .. "_AvailableActivity", "enUS", true, true)
+
+--@localization(locale="enUS", format="lua_additive_table", same-key-is-true=false, namespace="AvailableActivity", table-name="L_AvailableActivity")@
+
 local L_Broker = LibStub("AceLocale-3.0"):NewLocale(addonName .. "_Broker", "enUS", true, true)
 
 --@localization(locale="enUS", format="lua_additive_table", same-key-is-true=false, namespace="Broker", table-name="L_Broker")@
