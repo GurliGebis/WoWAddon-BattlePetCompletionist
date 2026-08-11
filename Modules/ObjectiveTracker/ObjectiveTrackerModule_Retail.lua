@@ -23,17 +23,17 @@ local ObjectiveTrackerModule = BattlePetCompletionist:GetModule("ObjectiveTracke
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_ObjectiveTracker")
 
 local settings = {
-	headerText = L["Battle Pets"],
-	events = { "PET_JOURNAL_LIST_UPDATE", "ZONE_CHANGED", "ZONE_CHANGED_NEW_AREA", "PLAYER_ENTERING_WORLD" },
-	blockTemplate = "ObjectiveTrackerAnimBlockTemplate",
-	lineTemplate = "ObjectiveTrackerAnimLineTemplate",
+    headerText = L["Battle Pets"],
+    events = { "PET_JOURNAL_LIST_UPDATE", "ZONE_CHANGED", "ZONE_CHANGED_NEW_AREA", "PLAYER_ENTERING_WORLD" },
+    blockTemplate = "ObjectiveTrackerAnimBlockTemplate",
+    lineTemplate = "ObjectiveTrackerAnimLineTemplate",
     uiOrder = 50
 };
 
 BattlePetCompletionistObjectiveTrackerMixin = CreateFromMixins(ObjectiveTrackerModuleMixin, settings);
 
 function BattlePetCompletionistObjectiveTrackerMixin:InitModule()
-	self:Init();
+    self:Init();
 end
 
 function BattlePetCompletionistObjectiveTrackerMixin:OnEvent(event, ...)

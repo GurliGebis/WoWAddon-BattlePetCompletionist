@@ -267,9 +267,9 @@ end
 
 function MapModule:InitializeDropDown()
     Menu.ModifyMenu("MENU_WORLD_MAP_TRACKING", function(_, rootDescription)
-		rootDescription:CreateDivider()
-		rootDescription:CreateTitle(L["Dropdown Headline"])
-		rootDescription:CreateCheckbox(L["Show Battle Pets"], MapModule.BattlePetToggle_GetStatus, MapModule.BattlePetToggle_OnClick)
+        rootDescription:CreateDivider()
+        rootDescription:CreateTitle(L["Dropdown Headline"])
+        rootDescription:CreateCheckbox(L["Show Battle Pets"], MapModule.BattlePetToggle_GetStatus, MapModule.BattlePetToggle_OnClick)
     end)
 end
 
