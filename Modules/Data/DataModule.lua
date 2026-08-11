@@ -44,7 +44,10 @@ function DataModule:HasAnyDataLoaded()
 end
 
 local function DoesPetMatchSourceFilters(speciesId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return false end end
+    if issecretvalue and issecretvalue(speciesId) then
+        return false
+    end
+
     local petSource = DataModule:GetPetSource(speciesId)
 
     if petSource == ZONE then
@@ -65,8 +68,15 @@ local function DoesPetMatchSourceFilters(speciesId)
 end
 
 local function GetMapZoneNames(mapId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return {} end end
+    if issecretvalue and issecretvalue(mapId) then
+        return {}
+    end
+
     local info = C_Map.GetMapInfo(mapId)
+
+    if issecretvalue and issecretvalue(info) then
+        return
+    end
 
     if not info or info.mapType == Enum.UIMapType.Dungeon then
         return nil
@@ -78,6 +88,11 @@ local function GetMapZoneNames(mapId)
     end
 
     local children = C_Map.GetMapChildrenInfo(mapId)
+
+    if issecretvalue and issecretvalue(children) then
+        return
+    end
+
     if children then
         for _, child in ipairs(children) do
             if child.name then
@@ -90,7 +105,10 @@ local function GetMapZoneNames(mapId)
 end
 
 local function IsPetInMapZone(speciesId, mapZoneNames)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) or issecretvalue(mapZoneNames) then return false end end
+    if issecretvalue and (issecretvalue(speciesId) or issecretvalue(mapZoneNames)) then
+        return false
+    end
+
     local petSource = DataModule:GetPetSource(speciesId)
 
     -- Only filter by source if the pet source is Zone or Pet Battle.
@@ -105,6 +123,10 @@ local function IsPetInMapZone(speciesId, mapZoneNames)
     end
 
     local tooltipSource = select(5, C_PetJournal.GetPetInfoBySpeciesID(speciesId))
+
+    if issecretvalue and issecretvalue(tooltipSource) then
+        return true
+    end
 
     -- If no source is defined (which should never happen), just show the pet rather than hiding it by default.
     if not tooltipSource then
@@ -123,13 +145,21 @@ local function IsPetInMapZone(speciesId, mapZoneNames)
 end
 
 function DataModule:GetPetsInMap(mapId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return end end
+    if issecretvalue and issecretvalue(mapId) then
+        return
+    end
+
     local allPets = DataModule.PetData[mapId]
     if not allPets then
         return nil
     end
 
     local mapZoneNames = GetMapZoneNames(mapId)
+
+    if issecretvalue and issecretvalue(mapZoneNames) then
+        return
+    end
+
     local pets = {}
 
     for speciesId, locations in pairs(allPets) do
@@ -142,7 +172,10 @@ function DataModule:GetPetsInMap(mapId)
 end
 
 function DataModule:ShouldPetBeShown(speciesId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return false end end
+    if issecretvalue and issecretvalue(speciesId) then
+        return false
+    end
+
     -- Apply source filters first so that later settings can't forget to take them into account
     if not DoesPetMatchSourceFilters(speciesId) then
         return false
@@ -167,6 +200,10 @@ function DataModule:ShouldPetBeShown(speciesId)
 
         local petName = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
 
+        if issecretvalue and issecretvalue(petName) then
+            return false
+        end
+
         -- Since string.find is case sensitive, we convert everything to lowercase first.
         local loweredTextBoxValue = string.lower(profile.mapPinsFilter)
         local loweredPetName = string.lower(petName)
@@ -180,9 +217,22 @@ function DataModule:ShouldPetBeShown(speciesId)
     for _, petId in LibPetJournal:IteratePetIDs() do
         local speciesIdFromJournal = C_PetJournal.GetPetInfoByPetID(petId)
 
+        if issecretvalue and issecretvalue(speciesIdFromJournal) then
+            return false
+        end
+
         if speciesIdFromJournal == speciesId then
             local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
+
+            if issecretvalue and (issecretvalue(numCollected) or issecretvalue(limit)) then
+                return false
+            end
+
             local quality = select(5, C_PetJournal.GetPetStats(petId))
+
+            if issecretvalue and issecretvalue(quality) then
+                return false
+            end
 
             if profile.mapPinsToInclude == _BattlePetCompletionist.Enums.MapPinFilter.MISSING then
                 return numCollected < 1
@@ -216,15 +266,26 @@ function DataModule:ShouldPetBeShown(speciesId)
 end
 
 function DataModule:GetOwnedPets(speciesId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return end end
+    if issecretvalue and issecretvalue(speciesId) then
+        return
+    end
+
     local ownedPets = {}
     local anyPetsFound = false
 
     for _, petId in LibPetJournal:IteratePetIDs() do
         local speciesIdFromJournal, _, petLevel = C_PetJournal.GetPetInfoByPetID(petId)
 
+        if issecretvalue and issecretvalue(petId) then
+            return nil
+        end
+
         if speciesIdFromJournal == speciesId then
             local quality = select(5, C_PetJournal.GetPetStats(petId))
+
+            if issecretvalue and issecretvalue(speciesIdFromJournal) then
+                return nil
+            end
 
             table.insert(ownedPets, { petLevel, quality })
             anyPetsFound = true
@@ -240,14 +301,32 @@ end
 
 function DataModule:GetEnemyPetsInBattle()
     local numberOfEnemyPets = C_PetBattles.GetNumPets(Enum.BattlePetOwner.Enemy)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(numberOfEnemyPets) then return {}, {} end end
+
+    if issecretvalue and issecretvalue(numberOfEnemyPets) then
+        return {}, {}
+    end
+
     local foundNotOwnedPets = {}
     local foundOwnedPets = {}
 
     for i = 1, numberOfEnemyPets do
         local speciesId = C_PetBattles.GetPetSpeciesID(Enum.BattlePetOwner.Enemy, i)
+
+        if issecretvalue and issecretvalue(speciesId) then
+            return 0, 0
+        end
+
         local breedQuality = C_PetBattles.GetBreedQuality(Enum.BattlePetOwner.Enemy, i)
+
+        if issecretvalue and issecretvalue(breedQuality) then
+            return 0, 0
+        end
+
         local obtainable = select(11, C_PetJournal.GetPetInfoBySpeciesID(speciesId));
+
+        if issecretvalue and issecretvalue(obtainable) then
+            return 0, 0
+        end
 
         -- In 11.0.0, Blizzard changed the C_PetBattles.GetBreedQuality to be indexed from 0.
         -- However, all other functions related to pet quality is still indexed from 1.
@@ -270,7 +349,10 @@ end
 
 function DataModule:CanWeCapturePets()
     local isNpcControlled = C_PetBattles.IsPlayerNPC(Enum.BattlePetOwner.Enemy)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(isNpcControlled) then return false end end
+
+    if issecretvalue and issecretvalue(isNpcControlled) then
+        return false
+    end
 
     if isNpcControlled == false then
         -- It is a PvP pet battle, you cannot capture pets here.
@@ -279,6 +361,10 @@ function DataModule:CanWeCapturePets()
 
     local isWildBattle = C_PetBattles.IsWildBattle()
 
+    if issecretvalue and issecretvalue(isWildBattle) then
+        return false
+    end
+
     if isWildBattle == false then
         -- It is a quest or something else like that - you cannot capture pets here.
         return false
@@ -286,9 +372,22 @@ function DataModule:CanWeCapturePets()
 
     local numberOfEnemyPets = C_PetBattles.GetNumPets(Enum.BattlePetOwner.Enemy)
 
+    if issecretvalue and issecretvalue(numberOfEnemyPets) then
+        return false
+    end
+
     for i = 1, numberOfEnemyPets do
         local speciesId = C_PetBattles.GetPetSpeciesID(Enum.BattlePetOwner.Enemy, i)
+
+        if issecretvalue and issecretvalue(speciesId) then
+            return false
+        end
+
         local obtainable = select(11, C_PetJournal.GetPetInfoBySpeciesID(speciesId))
+
+        if issecretvalue and issecretvalue(obtainable) then
+            return false
+        end
 
         -- We can end here, but without any captureable pets, so if we see at least one that can be captured, we return true.
         if (obtainable == true) then
@@ -300,7 +399,10 @@ function DataModule:CanWeCapturePets()
 end
 
 function DataModule:GetPetSource(speciesId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return end end
+    if issecretvalue and issecretvalue(speciesId) then
+        return
+    end
+
     local function cleanColorTags(text)
         if not text then return nil end
         return text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
@@ -330,6 +432,11 @@ function DataModule:GetPetSource(speciesId)
     end
 
     local tooltipSource = select(5, C_PetJournal.GetPetInfoBySpeciesID(speciesId))
+
+    if issecretvalue and issecretvalue(tooltipSource) then
+        return nil
+    end
+
     if not tooltipSource then return nil end
 
     local cleaned = cleanColorTags(tooltipSource)
