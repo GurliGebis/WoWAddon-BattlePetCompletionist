@@ -20,8 +20,6 @@
 -- Uses the WatchFrame / WATCHFRAME_OBJECTIVEHANDLERS system instead of the
 -- Retail ObjectiveTrackerModuleMixin block-based API.
 
-if WOW_PROJECT_ID ~= WOW_PROJECT_MISTS_CLASSIC then return end
-
 -- WatchFrame dash constants are locals in WatchFrame.lua, so we redeclare
 -- the values we need here.
 local BPC_DASH_NONE = 0

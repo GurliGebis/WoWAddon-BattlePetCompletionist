@@ -1,3 +1,6 @@
+# 12.0.7-20260811-1
+* Changed ObjectiveTracker to only load for the correct client version, instead of filtering in code.
+
 # 12.0.7-20260713-1
 * Multiple fixes for taint issues, patches provided by JPEscher on github.
 
