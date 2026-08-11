@@ -117,7 +117,14 @@ do
     end
 
     function ObjectiveTrackerModule:OnInitialize()
-        self:RegisterEvent("PLAYER_ENTERING_WORLD", "OnPlayerEnteringWorld")
+        EventUtil.ContinueAfterAllEvents(
+            function()
+                self:OnPlayerEnteringWorld()
+            end,
+            "PLAYER_ENTERING_WORLD",
+            "VARIABLES_LOADED"
+        )
+
         self:RegisterEvent("PET_JOURNAL_LIST_UPDATE", "OnPetEvent")
         self:RegisterMessage(_BattlePetCompletionist.Events.ZONE_CHANGE, "OnPetEvent")
     end

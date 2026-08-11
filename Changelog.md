@@ -1,3 +1,6 @@
+# 12.0.7-20260811-2
+* Fix for problem with objective tracker in edit mode.
+
 # 12.0.7-20260811-1
 * Changed ObjectiveTracker to only load for the correct client version, instead of filtering in code.
 
