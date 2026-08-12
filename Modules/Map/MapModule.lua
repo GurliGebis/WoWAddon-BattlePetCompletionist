@@ -29,7 +29,10 @@ MapModule.WorldMapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 function MapModule.WorldMapDataProvider:OnCanvasScaleChanged()
     if InCombatLockdown() then return end
     local map = self:GetMap()
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return end end
+
+    if issecretvalue and issecretvalue(map) then
+        return
+    end
 
     if not map then
         return
@@ -79,7 +82,10 @@ function MapModule.WorldMapDataProvider:RefreshAllData()
 end
 
 function MapModule.WorldMapDataProvider:LoadMapData(mapId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return end end
+    if issecretvalue and issecretvalue(mapId) then
+        return
+    end
+
     self:BeginPinAllocation()
 
     if not self:GetMap() then
@@ -93,7 +99,10 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     end
 
     local function IsTooCloseToExistingPin(placedPositions, x, y, threshold)
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(x) or issecretvalue(y) or issecretvalue(threshold) then return false end end
+        if issecretvalue and (issecretvalue(x) or issecretvalue(y) or issecretvalue(threshold)) then
+            return false
+        end
+
         for _, pos in ipairs(placedPositions) do
             if math.abs(pos[1] - x) < threshold and math.abs(pos[2] - y) < threshold then
                 return true
@@ -112,7 +121,10 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     end
 
     local function GetMapZoomPercent(map)
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(map) then return 0 end end
+        if issecretvalue and issecretvalue(map) then
+            return 0
+        end
+
         if not map or not map.ScrollContainer or not map.ScrollContainer.HasZoomLevels or not map.GetCanvasZoomPercent then
             return 0
         end
@@ -125,6 +137,10 @@ function MapModule.WorldMapDataProvider:LoadMapData(mapId)
     for pet, locations in pairs(petData) do
         if DataModule:ShouldPetBeShown(pet) then
             local _, speciesIcon, petType = C_PetJournal.GetPetInfoBySpeciesID(pet)
+
+            if issecretvalue and issecretvalue() then
+                return
+            end
 
             if petIconType == _BattlePetCompletionist.Enums.MapPinIconType.FAMILY then
                 speciesIcon = _BattlePetCompletionist.Constants.PET_TYPE_ICONS[petType]
@@ -174,7 +190,10 @@ function BattlePetCompletionistWorldMapPinMixin:ShowPinTooltip()
     end
 
     local speciesName, speciesIcon, _, _, tooltipSource = C_PetJournal.GetPetInfoBySpeciesID(self.PetSpeciesID)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesName) or issecretvalue(speciesIcon) or issecretvalue(tooltipSource) then return end end
+
+    if issecretvalue and (issecretvalue(speciesName) or issecretvalue(speciesIcon) or issecretvalue(tooltipSource)) then
+        return
+    end
 
     local ownedPets = DataModule:GetOwnedPets(self.PetSpeciesID)
 
@@ -216,7 +235,11 @@ end
 
 function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
     if InCombatLockdown() then return end
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(button) then return end end
+
+    if issecretvalue and issecretvalue(button) then
+        return
+    end
+
     if button ~= "LeftButton" then
         return
     end
@@ -224,8 +247,23 @@ function BattlePetCompletionistWorldMapPinMixin:OnMouseClickAction(button)
     if IsShiftKeyDown() then
         if TomTom and DBModule:GetProfile().tomtomIntegration then
             local x, y = self:GetPosition()
+
+            if issecretvalue and (issecretvalue(x) or issecretvalue(y)) then
+                return
+            end
+
             local mapId = self.MapId
+
+            if issecretvalue and issecretvalue(mapId) then
+                return
+            end
+
             local speciesName = C_PetJournal.GetPetInfoBySpeciesID(self.PetSpeciesID)
+
+            if issecretvalue and issecretvalue(speciesName) then
+                return
+            end
+
             local icon = "Interface\\icons\\inv_pet_achievement_captureawildpet"
 
             local options = {

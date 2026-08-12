@@ -39,7 +39,11 @@ local myName
 
 function CombatModule:OnEnable()
     myName = UnitName("player")
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(myName) then return end end
+
+    if issecretvalue and issecretvalue(myName) then
+        return
+    end
+
     self:RegisterEvent("PET_BATTLE_OPENING_START", "BattleHasStarted")
 
     self:RegisterComm(messagePrefixes.ANNOUNCE_PETS, "HaFOnReceivedAnnounce")
@@ -51,13 +55,20 @@ end
 
 local function CanWeFindPlayerPosition()
     local mapId = C_Map.GetBestMapForUnit("player")
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapId) then return false end end
+
+    if issecretvalue and issecretvalue(mapId) then
+        return false
+    end
 
     if not mapId then
         return false
     end
 
     local position = C_Map.GetPlayerMapPosition(mapId, "player")
+
+    if issecretvalue and issecretvalue(position) then
+        return false
+    end
 
     -- In some cases, we cannot get the player position, so there is no coordinates to share.
     return position ~= nil
@@ -261,8 +272,22 @@ function CombatModule:HaFOnReceivedINeedPets(_, msg, _, sender)
 
     -- Now we find our own position.
     local mapId = C_Map.GetBestMapForUnit("player")
+
+    if issecretvalue and issecretvalue(mapId) then
+        return
+    end
+
     local position = C_Map.GetPlayerMapPosition(mapId, "player")
+
+    if issecretvalue and issecretvalue(position) then
+        return
+    end
+
     local x, y = position:GetXY()
+
+    if issecretvalue and (issecretvalue(x) or issecretvalue(y)) then
+        return
+    end
 
     local message = {
         ["mapId"] = mapId,
@@ -305,6 +330,11 @@ function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
     -- We have received an offer for some pets from a party member.
     -- First we find out which map the user is on and ask the player if they want the pets.
     local mapInfo = C_Map.GetMapInfo(tonumber(message["mapId"]))
+
+    if issecretvalue and issecretvalue(mapInfo) then
+        return
+    end
+
     local dialogMessage = string.format(L["Friend has pets"], sender, mapInfo["name"], table.concat(message["petNames"], ", "))
 
     _G.StaticPopupDialogs[messagePrefixes.OFFER_PETS] = {

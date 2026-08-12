@@ -1,5 +1,6 @@
 # 12.1.0-20260812-1
 * Updated TOC to match 12.1.0
+* Rework issecretvalue guards into combined existence checks.
 
 # 12.0.7-20260811-2
 * Fix for problem with objective tracker in edit mode.

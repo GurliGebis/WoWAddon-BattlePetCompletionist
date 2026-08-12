@@ -40,7 +40,11 @@ function ZoneModule:ResolveZone()
     -- If we wanted to exclude certain sub-zones from being eligible for selection, we could do so using data from
     -- C_Map.GetMapInfo, such as parentMapID.  However, this appears sufficient for now.
     local mapID = C_Map.GetBestMapForUnit("player")
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(mapID) then return end end
+
+    if issecretvalue and issecretvalue(mapID) then
+        return
+    end
+
     -- self.mapID will be nil on first check
     if mapID ~= self.mapID then
         self.mapID = mapID

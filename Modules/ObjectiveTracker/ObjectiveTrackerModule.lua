@@ -25,7 +25,10 @@ local ZoneModule = BattlePetCompletionist:GetModule("ZoneModule")
 
 -- Sorts by speciesName alphabetically, falling back to speciesId for unnamed entries.
 local function ComparePetsByName(a, b)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(a) or issecretvalue(b) then return false end end
+    if issecretvalue and (issecretvalue(a) or issecretvalue(b)) then
+        return false
+    end
+
     if a.speciesName and b.speciesName then
         return a.speciesName < b.speciesName
     elseif a.speciesName then
@@ -58,12 +61,25 @@ function ObjectiveTrackerModule:GetFilteredPetList()
     local anyMissing = false
     local allPets = {}
     for speciesId in pairs(pets) do
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return end end
+        if issecretvalue and issecretvalue(speciesId) then
+            return
+        end
+
         local numCollected = C_PetJournal.GetNumCollectedInfo(speciesId)
+
+        if issecretvalue and issecretvalue(numCollected) then
+            return nil
+        end
+
         if numCollected == 0 then
             anyMissing = true
         end
         local speciesName = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
+
+        if issecretvalue and issecretvalue(speciesName) then
+            return nil
+        end
+
         tinsert(allPets, { speciesId = speciesId, numCollected = numCollected, speciesName = speciesName })
     end
 

@@ -98,6 +98,11 @@ function CaptureModule:CreatePetsDialog(pets, mode)
 
         if i <= #pets then
             local speciesName, speciesIcon = C_PetJournal.GetPetInfoBySpeciesID(pets[i][1])
+
+            if issecretvalue and (issecretvalue(speciesName) or issecretvalue(speciesIcon)) then
+                return
+            end
+
             local color = ITEM_QUALITY_COLORS[pets[i][2] - 1].hex
             icon:SetTexture(speciesIcon)
             label:SetText(color .. speciesName .. "|r")

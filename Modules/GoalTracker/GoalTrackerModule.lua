@@ -35,8 +35,16 @@ function GoalTrackerModule:UpdateWindow()
     local entries = {}
     if petData then
         for speciesId, _ in pairs(petData) do
-            if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return end end
+            if issecretvalue and issecretvalue(speciesId) then
+                return
+            end
+
             local numCollected = C_PetJournal.GetNumCollectedInfo(speciesId)
+
+            if issecretvalue and issecretvalue(numCollected) then
+                return
+            end
+
             totalSpeciesCount = totalSpeciesCount + 1
 
             if numCollected ~= nil then
@@ -44,6 +52,11 @@ function GoalTrackerModule:UpdateWindow()
                     collectedSpeciesCount = collectedSpeciesCount + 1
                 else
                     local speciesName, speciesIconPath = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
+
+                    if issecretvalue and (issecretvalue(speciesName) or issecretvalue(speciesIconPath)) then
+                        return
+                    end
+
                     table.insert(entries, {speciesId, speciesName, speciesIconPath})
                 end
             end
@@ -180,7 +193,10 @@ function GoalTrackerModule:GetZonePetData()
 end
 
 function GoalTrackerModule:TooltipToSourceTypeIcon(speciesId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return "" end end
+    if issecretvalue and issecretvalue(speciesId) then
+        return ""
+    end
+
     local sourceType = DataModule:GetPetSource(speciesId)
 
     return _BattlePetCompletionist.Constants.PET_SOURCE_ICONS[sourceType] or _BattlePetCompletionist.Constants.PET_SOURCE_ICON_FALLBACK

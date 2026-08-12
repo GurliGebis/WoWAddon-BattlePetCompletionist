@@ -37,12 +37,18 @@ function BattlePetCompletionistObjectiveTrackerMixin:InitModule()
 end
 
 function BattlePetCompletionistObjectiveTrackerMixin:OnEvent(event, ...)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(event) then return end end
+    if issecretvalue and issecretvalue(event) then
+        return
+    end
+
     self:MarkDirty()
 end
 
 function BattlePetCompletionistObjectiveTrackerMixin:OnBlockHeaderClick(block, mouseButton)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(block) or issecretvalue(mouseButton) then return end end
+    if issecretvalue and (issecretvalue(block) or issecretvalue(mouseButton)) then
+        return
+    end
+
     if mouseButton == "LeftButton" then
         if not CollectionsJournal or not CollectionsJournal:IsShown() then
             ToggleCollectionsJournal()
@@ -54,12 +60,21 @@ end
 
 function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
     local filteredPets, mapID = ObjectiveTrackerModule:GetFilteredPetList()
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(filteredPets) or issecretvalue(mapID) then return end end
+
+    if issecretvalue and (issecretvalue(filteredPets) or issecretvalue(mapID)) then
+        return
+    end
+
     if not filteredPets then
         return
     end
 
     local mapInfo = C_Map.GetMapInfo(mapID)
+
+    if issecretvalue and issecretvalue(mapInfo) then
+        return
+    end
+
     local zoneName = mapInfo and mapInfo.name or L["current zone"]
 
     local block = self:GetBlock("battlepets")
@@ -73,7 +88,10 @@ function BattlePetCompletionistObjectiveTrackerMixin:LayoutContents()
 end
 
 function BattlePetCompletionistObjectiveTrackerMixin:AddBattlePet(block, petInfo)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(petInfo) or issecretvalue(block) then return end end
+    if issecretvalue and (issecretvalue(petInfo) or issecretvalue(block)) then
+        return
+    end
+
     if not petInfo.speciesName then
         return
     end
@@ -130,7 +148,10 @@ do
     end
 
     function ObjectiveTrackerModule:OnPetEvent(event, ...)
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(event) then return end end
+        if issecretvalue and issecretvalue(event) then
+            return
+        end
+
         if self.Mixin then
             self.Mixin:OnEvent(event, ...)
         end
