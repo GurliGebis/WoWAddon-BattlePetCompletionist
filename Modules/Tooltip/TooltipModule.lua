@@ -35,9 +35,16 @@ end
 
 function TooltipModule.ModifyPetTip(speciesID)
     if InCombatLockdown() then return end
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesID) then return end end
+
+    if issecretvalue and issecretvalue(speciesID) then
+        return
+    end
+
     local _, _, _, _, source = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(source) then return end end
+
+    if issecretvalue and issecretvalue(source) then
+        return
+    end
 
     if source and source ~= "" then
         BattlePetTooltip:AddLine(" ", 1, 1, 1, false)

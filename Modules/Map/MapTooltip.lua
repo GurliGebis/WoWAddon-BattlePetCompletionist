@@ -44,7 +44,11 @@ do
 
     function MapModule.Tooltip_Show(anchor, headerLine, collectedLine, sourceLine)
         if InCombatLockdown() then return end
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(anchor) or issecretvalue(headerLine) or issecretvalue(collectedLine) or issecretvalue(sourceLine) then return end end
+
+        if issecretvalue and (issecretvalue(anchor) or issecretvalue(headerLine) or issecretvalue(collectedLine) or issecretvalue(sourceLine)) then
+            return
+        end
+
         EnsureFontCached()
 
         if not mapTooltipHeaderFont then
@@ -150,7 +154,10 @@ do
     end
 
     function MapModule.WrapTextWithColor(color, text)
-        if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(color) or issecretvalue(text) then return "" end end
+        if issecretvalue and (issecretvalue(color) or issecretvalue(text)) then
+            return ""
+        end
+
         if not color or text == nil then
             return text
         end

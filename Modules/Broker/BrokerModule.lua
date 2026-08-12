@@ -85,7 +85,10 @@ function BrokerModule:OnInitialize()
 end
 
 function BrokerModule:QualityToColorCode(quality)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(quality) then return "" end end
+    if issecretvalue and issecretvalue(quality) then
+        return ""
+    end
+
     if quality and quality >= 1 then
         return ITEM_QUALITY_COLORS[quality - 1].hex
     else
@@ -94,7 +97,10 @@ function BrokerModule:QualityToColorCode(quality)
 end
 
 function BrokerModule:TooltipToSourceTypeIcon(speciesId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return "" end end
+    if issecretvalue and issecretvalue(speciesId) then
+        return ""
+    end
+
     local sourceType = DataModule:GetPetSource(speciesId)
 
     return _BattlePetCompletionist.Constants.PET_SOURCE_ICONS[sourceType] or _BattlePetCompletionist.Constants.PET_SOURCE_ICON_FALLBACK
@@ -102,7 +108,10 @@ end
 
 -- Also used by AddonCompartmentModule
 function BrokerModule:OnTooltipShow(tooltip, includeDetails)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(tooltip) or issecretvalue(includeDetails) then return end end
+    if issecretvalue and (issecretvalue(tooltip) or issecretvalue(includeDetails)) then
+        return
+    end
+
     tooltip:AddLine(L["Battle Pet Completionist"])
     tooltip:AddLine(L["Left Click to toggle goal tracker"])
     tooltip:AddLine(L["Right Click for options"])
@@ -125,6 +134,11 @@ function BrokerModule:OnTooltipShow(tooltip, includeDetails)
             metGoalCount = metGoalCount + 1
         else
             local speciesName, speciesIcon = C_PetJournal.GetPetInfoBySpeciesID(speciesId)
+
+            if issecretvalue and (issecretvalue(speciesName) or issecretvalue(speciesIcon)) then
+                return
+            end
+
             local myPets = DataModule:GetOwnedPets(speciesId) or {}
             local petStrings = {}
             for _, myPetInfo in ipairs(myPets) do
@@ -154,7 +168,10 @@ end
 
 -- Also used by AddonCompartmentModule
 function BrokerModule:OnClick(button)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(button) then return end end
+    if issecretvalue and issecretvalue(button) then
+        return
+    end
+
     if button == "LeftButton" then
         GoalTrackerModule:ToggleWindow()
     elseif button == "RightButton" then
@@ -182,12 +199,18 @@ local goalSuffixes = {
 }
 
 function BrokerModule:GetSuffixForGoal(goal)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(goal) then return "" end end
+    if issecretvalue and issecretvalue(goal) then
+        return ""
+    end
+
     return goalSuffixes[goal] or ""
 end
 
 function BrokerModule:MetGoal(goal, numCollected, numRareCollected, limit)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(goal) or issecretvalue(numCollected) or issecretvalue(numRareCollected) or issecretvalue(limit) then return false end end
+    if issecretvalue and (issecretvalue(goal) or issecretvalue(numCollected) or issecretvalue(numRareCollected) or issecretvalue(limit)) then
+        return false
+    end
+
     if goal == _BattlePetCompletionist.Enums.Goal.COLLECT then
         return numCollected > 0
     elseif goal == _BattlePetCompletionist.Enums.Goal.COLLECT_RARE then
@@ -202,8 +225,16 @@ function BrokerModule:MetGoal(goal, numCollected, numRareCollected, limit)
 end
 
 function BrokerModule:GetNumCollectedInfo(speciesId)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(speciesId) then return 0, 0, 0 end end
+    if issecretvalue and issecretvalue(speciesId) then
+        return 0, 0, 0
+    end
+
     local numCollected, limit = C_PetJournal.GetNumCollectedInfo(speciesId)
+
+    if issecretvalue and (issecretvalue(numCollected) or issecretvalue(limit)) then
+        return 0, 0, 0
+    end
+
     local myPets = DataModule:GetOwnedPets(speciesId) or {}
     local numRareCollected = 0
     for _, myPetInfo in ipairs(myPets) do

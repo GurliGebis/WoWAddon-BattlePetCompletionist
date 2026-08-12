@@ -100,7 +100,10 @@ function DBModule:InvalidateMapPinSourcesCache()
 end
 
 local function dataVersion(profile)
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then if issecretvalue(profile) then return 0 end end
+    if issecretvalue and issecretvalue(profile) then
+        return 0
+    end
+
     return profile.dataVersion or 0
 end
 
