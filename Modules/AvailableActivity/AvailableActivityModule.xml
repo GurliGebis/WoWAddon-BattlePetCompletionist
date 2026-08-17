@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+    <Script file="Data\AchievementCriteriaToQuests.lua"/>
+    <Script file="Data\CalendarEventData.lua"/>
+    <Script file="Data\DailyQuestData.lua"/>
+    <Script file="Data\DailyQuestAchievementData.lua"/>
+    <Script file="Data\WorldQuestData.lua"/>
+    <Script file="Data\WorldQuestAchievementData.lua"/>
+    <Script file="AvailableActivityModule.lua"/>
+</Ui>

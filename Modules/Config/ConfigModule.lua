@@ -27,7 +27,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Config")
 
 local petDataVersionLoaded = "None"
 
-local standardControlWidth = 1.2; -- A little wider to allow for longer option labels
+local standardControlWidth = 1.4 -- A little wider to allow for longer option labels
 local options = {
     name = L["Config Section - Battle Pet Completionist"],
     handler = ConfigModule,
@@ -462,15 +462,81 @@ local options = {
                 ObjectiveTrackerModule:OnPetEvent("CONFIG_CHANGED")
             end
         },
-        dataVersionHeader = {
+        AvailableActivityHeader = {
             order = 35,
+            name = L["Header - Available Activity Alerts"],
+            type = "header"
+        },
+        AvailableActivityDescription = {
+            order = 36,
+            name = L["Description - Available Activity Alert Settings"] .. "\n",
+            type = "description"
+        },
+        AvailableActivityEnabled = {
+            order = 37,
+            name = L["Enable Available Activity Notices"],
+            type = "toggle",
+            desc = L["Show the Available Activity Notices window when logging in"],
+            width = standardControlWidth,
+            get = function()
+                return DBModule:GetProfile().activitiesEnabled
+            end,
+            set = function()
+                local profile = DBModule:GetProfile()
+                profile.activitiesEnabled = not profile.activitiesEnabled
+            end
+        },
+        AvailableActivityFilter = {
+            order = 38,
+            name = L["Available Activity Alerts"],
+            type = "select",
+            desc = L["Which alert conditions should we use?"],
+            width = standardControlWidth,
+            values = {
+                [_BattlePetCompletionist.Enums.MapPinFilter.MISSING] = L["Show only missing pet"],
+                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED] = L["Show until maximum allowed"],
+            },
+            sorting = {
+                _BattlePetCompletionist.Enums.MapPinFilter.MISSING,
+                _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED,
+            },
+            get = function()
+                return DBModule:GetProfile().availableActivityAlerts
+            end,
+            set = function(_, value)
+                local profile = DBModule:GetProfile()
+                profile.availableActivityAlerts = value
+            end
+        },
+        dataVersionHeader = {
+            order = 39,
             type = "header",
             name = L["Pet Data version loaded"],
         },
         dataVersion = {
-            order = 36,
+            order = 40,
             type = "description",
             name = L["Version"] .. ": " .. petDataVersionLoaded,
+        },
+        chatCommandHeader = {
+            order = 41,
+            type = "header",
+            name = L["BattlePetCompletionist Chat Commands"],
+        },
+        optionsCommand = {
+            order = 42,
+            type = "description",
+            name = L["Open Settings"] .. ": " .. "/bpcom",
+        },
+        toggleMapCommand = {
+            order = 43,
+            type = "description",
+            name = L["Toggle Map Settings"] .. ": " .. "/bpcom-toggle",
+        },
+        activityWindowCommand = {
+            order = 44,
+            type = "description",
+            name = L["Open Activity Window"] .. ": " .. "/bpcom-activities",
         },
     },
 }

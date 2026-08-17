@@ -24,6 +24,7 @@ local LibPetJournal = LibStub('LibPetJournal-2.0')
 
 DataModule.PetData = {}
 DataModule.HasDataLoaded = false
+DataModule.ActivitiesData = {}
 
 function DataModule:RegisterPetData(petData)
     for mapId, mapPets in pairs(petData) do
@@ -41,6 +42,10 @@ end
 
 function DataModule:HasAnyDataLoaded()
     return self.HasDataLoaded
+end
+
+function DataModule:GetActivitiesData()
+    return self.ActivitiesData
 end
 
 local function DoesPetMatchSourceFilters(speciesId)
