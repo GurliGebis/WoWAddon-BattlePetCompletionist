@@ -1,3 +1,6 @@
+# 12.1.0-20260817-1
+* Implemented activity tracker, provided by JPEscher on github.
+
 # 12.1.0-20260812-1
 * Updated TOC to match 12.1.0
 * Rework issecretvalue guards into combined existence checks.
