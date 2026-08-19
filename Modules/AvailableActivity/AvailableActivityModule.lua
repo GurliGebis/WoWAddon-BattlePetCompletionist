@@ -44,7 +44,9 @@ function AvailableActivityModule:OnInitialize()
     self.EventFrame = CreateFrame("Frame")
     self.EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
     self.EventFrame:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST")
-    self.EventFrame:RegisterEvent("QUEST_DATA_LOAD_RESULT")
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+        self.EventFrame:RegisterEvent("QUEST_DATA_LOAD_RESULT")
+    end
     self.EventFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE")
 
     self.EventFrame:SetScript("OnEvent", function(selfFrame, event, ...)
@@ -121,6 +123,12 @@ function AvailableActivityModule:GetQuestTitle(questID)
         return
     end
 
+    -- guard against a bad quest id being passed
+    -- (if there's an update we didnt fully implement, etc)
+    if not questID then
+        return
+    end
+
     local title = C_QuestLog.GetTitleForQuestID(questID)
 
     if title then
@@ -153,6 +161,12 @@ function AvailableActivityModule:IsQuestAvailable(questID, questType)
         return
     end
 
+    -- guard against a bad quest id being passed
+    -- (if there's an update we didnt fully implement, etc)
+    if not questID then
+        return
+    end
+
     local available = false
 
     -- note: this uses if/elseif on the chance there are other types,
@@ -161,8 +175,8 @@ function AvailableActivityModule:IsQuestAvailable(questID, questType)
         -- this only returns on world quests.
         available = C_TaskQuest.IsActive(questID)
     elseif questType == "daily" then
-        -- this is only non world quests;
-        if C_TaskQuest.GetQuestTimeLeftMinutes(questID) then
+        -- this is for daily quests
+        if not C_QuestLog.IsQuestFlaggedCompleted(questID) then
             available = true
         end
     end
@@ -189,6 +203,10 @@ function AvailableActivityModule:IsPetSought(petNpcID)
 
     if self.warnCondition == "NOT_MAX_COLLECTED" then
         threshhold = maxAllowed
+    elseif self.warnCondition == "MAX_TWO" then
+        if 1 < maxAllowed then
+            threshhold = 2
+        end
     end
 
     return numPets < threshhold
@@ -293,16 +311,13 @@ function AvailableActivityModule:BuildDailyQuestList(dataSource)
     local results = {}
 
     for questID, sourceEntry in pairs(dataSource) do
-        local timeLeft = C_TaskQuest.GetQuestTimeLeftMinutes(questID)
+        if AvailableActivityModule:IsQuestAvailable(questID, "daily") then
+            local title = AvailableActivityModule:GetQuestTitle(questID)
+            local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
+            local entry = AvailableActivityModule:BuildActivityEntry("Daily Quests", title, links)
 
-        if not issecretvalue(timeLeft) then
-            if timeLeft and timeLeft > 0 then
-                local title = AvailableActivityModule:GetQuestTitle(questID)
-                local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
-                local entry = AvailableActivityModule:BuildActivityEntry("Daily Quests", title, links)
-                if entry then
-                    table.insert(results, entry)
-                end
+            if entry then
+                table.insert(results, entry)
             end
         end
     end
@@ -318,7 +333,7 @@ function AvailableActivityModule:BuildWorldQuestList(dataSource)
     local results = {}
 
     for questID, sourceEntry in pairs(dataSource) do
-        if C_TaskQuest.IsActive(questID) then
+        if AvailableActivityModule:IsQuestAvailable(questID, "world") then
             local title = AvailableActivityModule:GetQuestTitle(questID)
             local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
             local entry = AvailableActivityModule:BuildActivityEntry("World Quests", title, links)
@@ -339,11 +354,9 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
 
     local criteriaTitle, criteriaType, criteriaComplete, assetID, criteriaID, numCriteria
     local necessaryCriteria = {}
-
-    seenQuestIDs = seenQuestIDs or {}
-    criteriaToQuestMap = criteriaToQuestMap or {}
-
-    numCriteria = GetAchievementNumCriteria(achievementID)
+    local criteriaToQuestMap = criteriaToQuestMap or {}
+    local seenQuestIDs = seenQuestIDs or {}
+    local numCriteria = GetAchievementNumCriteria(achievementID)
 
     if issecretvalue(numCriteria) then
         return
@@ -355,7 +368,7 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
         if not (issecretvalue(criteriaTitle) or issecretvalue(criteriaType) or issecretvalue(criteriaComplete) or issecretvalue(assetID) or issecretvalue(criteriaID)) then
             if not criteriaComplete then
                 if criteriaType == 8 then  -- subcriteria is an achievement
-                    local subCriteria = AvailableActivityModule:AchievementCriteriaCheck(assetID, questType, seenQuestIDs)
+                    local subCriteria = AvailableActivityModule:AchievementCriteriaCheck(assetID, questType, seenQuestIDs, criteriaToQuestMap)
 
                     for _, data in ipairs(subCriteria) do
                         table.insert(necessaryCriteria, data)
@@ -366,7 +379,7 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
                         table.insert(necessaryCriteria, { questTitle = criteriaTitle, questID = assetID })
                     end
                 elseif criteriaType == 158 then -- this is an npc we need to move to a quest
-                    local qID = criteriaToQuestMap[criteriaID] or DataModule.ActivitiesData.criteriaToQuest[criteriaID]
+                    local qID = criteriaToQuestMap[criteriaID]
                     local title = AvailableActivityModule:GetQuestTitle(qID)
 
                     if AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
@@ -381,7 +394,7 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
     return necessaryCriteria
 end
 
-function AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, questType, subcategory, category)
+function AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, questType, subcategory, category, criteriaToQuestMap)
     if InCombatLockdown() then
         return
     end
@@ -390,7 +403,7 @@ function AvailableActivityModule:ProcessAchievementEntry(achievementID, achievem
         return nil
     end
 
-    local necessaryQuests = AvailableActivityModule:AchievementCriteriaCheck(achievementID, questType, {}, achievementData.ctqm )
+    local necessaryQuests = AvailableActivityModule:AchievementCriteriaCheck(achievementID, questType, {}, criteriaToQuestMap)
     local petLinks = AvailableActivityModule:GetPetData(achievementData.petReward)
     local achievementList = {}
 
@@ -405,7 +418,7 @@ function AvailableActivityModule:ProcessAchievementEntry(achievementID, achievem
     return achievementList
 end
 
-function AvailableActivityModule:BuildDailyQuestAchievementList(dataSource)
+function AvailableActivityModule:BuildDailyQuestAchievementList(dataSource, criteriaToQuestMap)
     if InCombatLockdown() then
         return
     end
@@ -414,7 +427,7 @@ function AvailableActivityModule:BuildDailyQuestAchievementList(dataSource)
 
     for achievementID, achievementData in pairs(dataSource) do
         local achievementTitle = select(2, GetAchievementInfo(achievementID))
-        local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "daily", achievementTitle, "Achievements From Daily Quests")
+        local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "daily", achievementTitle, "Achievements From Daily Quests", criteriaToQuestMap)
         if entries then
             for _, entry in ipairs(entries) do
                 table.insert(results, entry)
@@ -425,7 +438,7 @@ function AvailableActivityModule:BuildDailyQuestAchievementList(dataSource)
     return results
 end
 
-function AvailableActivityModule:BuildWorldQuestAchievementList(dataSource)
+function AvailableActivityModule:BuildWorldQuestAchievementList(dataSource, criteriaToQuestMap)
     if InCombatLockdown() then
         return
     end
@@ -434,7 +447,7 @@ function AvailableActivityModule:BuildWorldQuestAchievementList(dataSource)
 
     for achievementID, achievementData in pairs(dataSource) do
         local achievementTitle = select(2, GetAchievementInfo(achievementID))
-        local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "world", achievementTitle, "Achievements From World Quests")
+        local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "world", achievementTitle, "Achievements From World Quests", criteriaToQuestMap)
         if entries then
             for _, entry in ipairs(entries) do
                 table.insert(results, entry)
@@ -489,6 +502,11 @@ function AvailableActivityModule:CreateDataObject()
     local dataObject = {}
     local activitiesData = DataModule:GetActivitiesData()
 
+    -- protect against data module not loading
+    if activitiesData == nil then
+        return {}
+    end
+
     if not AvailableActivityModule:VerifyDataIsReady() then
         return {}
     end
@@ -497,8 +515,8 @@ function AvailableActivityModule:CreateDataObject()
         calendarPetEvents              = AvailableActivityModule:BuildCalendarEventList(activitiesData.calendarEventPetData),
         dailyQuestPetEvents            = AvailableActivityModule:BuildDailyQuestList(activitiesData.dailyQuestPetData),
         worldQuestPetEvents            = AvailableActivityModule:BuildWorldQuestList(activitiesData.worldQuestPetData),
-        dailyQuestPetAchievementEvents = AvailableActivityModule:BuildDailyQuestAchievementList(activitiesData.dailyQuestAchievementPetData),
-        worldQuestPetAchievementEvents = AvailableActivityModule:BuildWorldQuestAchievementList(activitiesData.worldQuestAchievementPetData),
+        dailyQuestPetAchievementEvents = AvailableActivityModule:BuildDailyQuestAchievementList(activitiesData.dailyQuestAchievementPetData, activitiesData.criteriaToQuestMap),
+        worldQuestPetAchievementEvents = AvailableActivityModule:BuildWorldQuestAchievementList(activitiesData.worldQuestAchievementPetData, activitiesData.criteriaToQuestMap),
     }
 
     return dataObject

@@ -57,6 +57,11 @@ _BattlePetCompletionist = {
         PET_SOURCE_ICON_FALLBACK = "Interface/Icons/Inv_misc_questionmark",
     },
     Enums = {
+        ActivityAlertThreshold = {
+            MAX_TWO = "MAX_TWO",
+            MISSING = "MISSING",
+            NOT_MAX_COLLECTED = "NOT_MAX_COLLECTED",
+        },
         CombatMode = {
             HELP_A_FRIEND = "HELP_A_FRIEND",
             FORFEIT = "FORFEIT",
