@@ -32,7 +32,7 @@
     Note: while most of these quests are daily trainer quests,
         some are weekly, such as the Celestial Tournement.
 
-    Format: [criteriaID] -> Quest, -- Trainer | Quest Name
+    Format: [criteriaID] -> QuestID, -- Trainer | Quest Name
 
 --]]
 
@@ -40,7 +40,7 @@ local addonName, _ = ...
 local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 
-DataModule.ActivitiesData.criteriaToQuest = {
+DataModule.ActivitiesData.criteriaToQuestMap = {
     [25118] = 31958, -- Aki the Chosen | Grand Master Aki
     [26969] = 37203, -- Ashlei | Ashlei
     [26970] = 31931, -- Beegle Blastfuse | Beegle Blastfuse

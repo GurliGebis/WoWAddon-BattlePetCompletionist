@@ -34,6 +34,9 @@
     Related API Calls [Return Details We Use]
         C_QuestLog.GetTitleForQuestID(questID) [title]
         C_TaskQuest.GetQuestTimeLeftMinutes(questID) [non-zero number, when available] -- daily quests
+        C_QuestLog.IsQuestFlaggedCompletedOnAccount(questID) -- for account wide quests. note https://us.forums.blizzard.com/en/wow/t/warband-quest-api-returning-faulty-data/1916987
+        C_QuestLog.IsQuestFlaggedCompleted(questID) -- for character only (testing shows it returns correctly for account...)
+        C_QuestLog.IsAccountQuest(questID) -- determines if account wide quest
         C_PetJournal.GetNumPetsInJournal(petNpcID) [MaxAllowed, NumCollected]
         C_PetJournal.GetPetInfoBySpeciesID(petSpeciesID) [LocalizedName]
 

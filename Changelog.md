@@ -1,3 +1,6 @@
+# 12.1.0-20260819-1
+* Minor tweaks to the activity tracker.
+
 # 12.1.0-20260817-1
 * Implemented activity tracker, provided by JPEscher on github.
 

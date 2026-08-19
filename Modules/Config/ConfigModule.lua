@@ -493,12 +493,14 @@ local options = {
             desc = L["Which alert conditions should we use?"],
             width = standardControlWidth,
             values = {
-                [_BattlePetCompletionist.Enums.MapPinFilter.MISSING] = L["Show only missing pet"],
-                [_BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED] = L["Show until maximum allowed"],
+                [_BattlePetCompletionist.Enums.ActivityAlertThreshold.MISSING] = L["Show only missing pets"],
+                [_BattlePetCompletionist.Enums.ActivityAlertThreshold.MAX_TWO] = L["Show until maximum of two"],
+                [_BattlePetCompletionist.Enums.ActivityAlertThreshold.NOT_MAX_COLLECTED] = L["Show until maximum allowed"],
             },
             sorting = {
-                _BattlePetCompletionist.Enums.MapPinFilter.MISSING,
-                _BattlePetCompletionist.Enums.MapPinFilter.NOT_MAX_COLLECTED,
+                _BattlePetCompletionist.Enums.ActivityAlertThreshold.MISSING,
+                _BattlePetCompletionist.Enums.ActivityAlertThreshold.MAX_TWO,
+                _BattlePetCompletionist.Enums.ActivityAlertThreshold.NOT_MAX_COLLECTED,
             },
             get = function()
                 return DBModule:GetProfile().availableActivityAlerts
