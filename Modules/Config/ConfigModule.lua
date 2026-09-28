@@ -510,7 +510,7 @@ local options = {
                 profile.availableActivityAlerts = value
             end
         },
-        AvailableActivityDescription = {
+        AvailableActivityCaveat = {
             order = 39,
             name = L["Note: Unchecking the box turns off the notice on login from the loading screen.\nThe module will still be available on demand via the command: "] .. "/bpcom-activities",
             type = "description"
