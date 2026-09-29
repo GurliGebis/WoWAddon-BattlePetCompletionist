@@ -469,14 +469,14 @@ local options = {
         },
         AvailableActivityDescription = {
             order = 36,
-            name = L["Description - Available Activity Alert Settings"] .. "\n",
+            name = L["Description - Available Activity Alerts Module Settings"] .. "\n",
             type = "description"
         },
         AvailableActivityEnabled = {
             order = 37,
-            name = L["Enable Available Activity Notices"],
+            name = L["Enable Available Activity Alerts Module"],
             type = "toggle",
-            desc = L["Show the Available Activity Notices window when logging in"],
+            desc = L["Show the Available Activity alerts window when logging in from the character select screen."],
             width = standardControlWidth,
             get = function()
                 return DBModule:GetProfile().activitiesEnabled
@@ -488,7 +488,7 @@ local options = {
         },
         AvailableActivityFilter = {
             order = 38,
-            name = L["Available Activity Alerts"],
+            name = L["Available Activity Alerts Module"],
             type = "select",
             desc = L["Which alert conditions should we use?"],
             width = standardControlWidth,
@@ -512,7 +512,7 @@ local options = {
         },
         AvailableActivityCaveat = {
             order = 39,
-            name = L["Note: Unchecking the box turns off the notice on login from the loading screen.\nThe module will still be available on demand via the command: "] .. "/bpcom-activities",
+            name = L["Note: Unchecking the box turns off the notice on login from the character loading screen.\nThe module will still be available on demand via the command: "] .. "/bpcom-activities",
             type = "description"
         },
         dataVersionHeader = {
