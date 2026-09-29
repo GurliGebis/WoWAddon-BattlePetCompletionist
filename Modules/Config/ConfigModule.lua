@@ -474,7 +474,7 @@ local options = {
         },
         AvailableActivityEnabled = {
             order = 37,
-            name = L["Enable Available Activity Alerts Module"],
+            name = L["Enable Available Activity Alerts"],
             type = "toggle",
             desc = L["Show the Available Activity alerts window when logging in from the character select screen."],
             width = standardControlWidth,
@@ -488,7 +488,7 @@ local options = {
         },
         AvailableActivityFilter = {
             order = 38,
-            name = L["Available Activity Alerts Module"],
+            name = L["Available Activity Alerts at Character Login"],
             type = "select",
             desc = L["Which alert conditions should we use?"],
             width = standardControlWidth,
