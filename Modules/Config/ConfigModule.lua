@@ -469,14 +469,14 @@ local options = {
         },
         AvailableActivityDescription = {
             order = 36,
-            name = L["Description - Available Activity Alerts Module Settings"] .. "\n",
+            name = L["Description - Available Activity Alert Settings"] .. "\n",
             type = "description"
         },
         AvailableActivityEnabled = {
             order = 37,
-            name = L["Enable Available Activity Alerts"],
+            name = L["Enable Available Activity Notices"],
             type = "toggle",
-            desc = L["Show the Available Activity alerts window when logging in from the character select screen."],
+            desc = L["Show the Available Activity Notices window when logging in"],
             width = standardControlWidth,
             get = function()
                 return DBModule:GetProfile().activitiesEnabled
@@ -488,7 +488,7 @@ local options = {
         },
         AvailableActivityFilter = {
             order = 38,
-            name = L["Available Activity Alerts at Character Login"],
+            name = L["Available Activity Alerts"],
             type = "select",
             desc = L["Which alert conditions should we use?"],
             width = standardControlWidth,
