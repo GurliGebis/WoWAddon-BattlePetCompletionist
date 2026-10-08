@@ -512,7 +512,7 @@ local options = {
         },
         AvailableActivityCaveat = {
             order = 39,
-            name = L["Note: Unchecking the box turns off the notice on login from the character loading screen.\nThe module will still be available on demand via the command: "] .. "/bpcom-activities",
+            name = L["Available Activity Caveat"] .. "/bpcom-activities",
             type = "description"
         },
         dataVersionHeader = {
