@@ -71,6 +71,10 @@ function AvailableActivityModule:ShowActivityWindow_OnChatCommand()
 end
 
 function AvailableActivityModule:StartProcess(command)
+    if InCombatLockdown() then
+        return
+    end
+
     local profile = DBModule:GetProfile()
 
     self.warnCondition = profile.availableActivityAlerts
@@ -110,6 +114,10 @@ function AvailableActivityModule:StartProcess(command)
 end
 
 function AvailableActivityModule:BeginCalendarWait()
+    if InCombatLockdown() then
+        return
+    end
+
     if self.calendarWaitStarted then
         return
     end
@@ -489,6 +497,10 @@ function AvailableActivityModule:VerifyDataIsReady()
 end
 
 function AvailableActivityModule:tableSize(myTable)
+    if InCombatLockdown() then
+        return 0
+    end
+
     local count = 0
     for _ in pairs(myTable) do count = count + 1 end
     return count

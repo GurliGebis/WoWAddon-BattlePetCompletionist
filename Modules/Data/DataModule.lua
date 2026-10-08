@@ -27,6 +27,10 @@ DataModule.HasDataLoaded = false
 DataModule.ActivitiesData = {}
 
 function DataModule:RegisterPetData(petData)
+    if InCombatLockdown() then
+        return
+    end
+
     for mapId, mapPets in pairs(petData) do
         if not self.PetData[mapId] then
             self.PetData[mapId] = {}
@@ -41,6 +45,10 @@ function DataModule:RegisterPetData(petData)
 end
 
 function DataModule:HasAnyDataLoaded()
+    if InCombatLockdown() then
+        return false
+    end
+
     return self.HasDataLoaded
 end
 
@@ -381,6 +389,10 @@ function DataModule:GetEnemyPetsInBattle()
 end
 
 function DataModule:CanWeCapturePets()
+    if InCombatLockdown() then
+        return false
+    end
+
     local isNpcControlled = C_PetBattles.IsPlayerNPC(Enum.BattlePetOwner.Enemy)
 
     if issecretvalue and issecretvalue(isNpcControlled) then
@@ -432,6 +444,10 @@ function DataModule:CanWeCapturePets()
 end
 
 function DataModule:GetPetSource(speciesId)
+    if InCombatLockdown() then
+        return
+    end
+
     if issecretvalue and issecretvalue(speciesId) then
         return
     end

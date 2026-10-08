@@ -28,6 +28,10 @@ local LibPetJournal = LibStub("LibPetJournal-2.0")
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_GoalTracker")
 
 function GoalTrackerModule:UpdateWindow()
+    if InCombatLockdown() then
+        return
+    end
+
     local petData = self:GetZonePetData()
 
     local collectedSpeciesCount = 0
@@ -136,6 +140,10 @@ function GoalTrackerModule:OnInitialize()
 end
 
 function GoalTrackerModule:InitializeWindow()
+    if InCombatLockdown() then
+        return
+    end
+
     local profile = DBModule:GetProfile()
     if profile.goalTrackerOpen then
         self:CreateWindow()
@@ -144,6 +152,10 @@ function GoalTrackerModule:InitializeWindow()
 end
 
 function GoalTrackerModule:ToggleWindow()
+    if InCombatLockdown() then
+        return
+    end
+
     local profile = DBModule:GetProfile()
     local window = self.window
     if not window then
@@ -161,6 +173,10 @@ function GoalTrackerModule:ToggleWindow()
 end
 
 function GoalTrackerModule:CreateWindow()
+    if InCombatLockdown() then
+        return
+    end
+
     local profile = DBModule:GetProfile()
     if not self.window then
         local window = AceGUI:Create("Window")
@@ -188,6 +204,10 @@ end
 -- Get the pets in the current zone.
 -- The map determination logic may skip some changes to improve CPU usage.
 function GoalTrackerModule:GetZonePetData()
+    if InCombatLockdown() then
+        return {}
+    end
+
     local mapID = ZoneModule:ResolveZone()
     return DataModule:GetPetsInMap(mapID) or {}
 end

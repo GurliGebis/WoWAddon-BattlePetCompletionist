@@ -29,6 +29,10 @@ function CaptureModule:OnEnable()
 end
 
 function CaptureModule:BattleHasStarted()
+    if InCombatLockdown() then
+        return
+    end
+
     if not DBModule:IsPetBattleUnknownNotifyEnabled() then
         return
     end
@@ -76,6 +80,10 @@ end
 local _rows = { "Row1", "Row2", "Row3" }
 
 function CaptureModule:CreatePetsDialog(pets, mode)
+    if InCombatLockdown() then
+        return
+    end
+
     BPCPetsDialogFrame:SetSize(240, 95 + (#pets * 35))
 
     if #pets == 1 then

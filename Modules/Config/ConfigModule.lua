@@ -510,33 +510,38 @@ local options = {
                 profile.availableActivityAlerts = value
             end
         },
-        dataVersionHeader = {
+        AvailableActivityCaveat = {
             order = 39,
+            name = L["Available Activity Caveat"] .. "/bpcom-activities",
+            type = "description"
+        },
+        dataVersionHeader = {
+            order = 40,
             type = "header",
             name = L["Pet Data version loaded"],
         },
         dataVersion = {
-            order = 40,
+            order = 41,
             type = "description",
             name = L["Version"] .. ": " .. petDataVersionLoaded,
         },
         chatCommandHeader = {
-            order = 41,
+            order = 42,
             type = "header",
             name = L["BattlePetCompletionist Chat Commands"],
         },
         optionsCommand = {
-            order = 42,
+            order = 43,
             type = "description",
             name = L["Open Settings"] .. ": " .. "/bpcom",
         },
         toggleMapCommand = {
-            order = 43,
+            order = 44,
             type = "description",
             name = L["Toggle Map Settings"] .. ": " .. "/bpcom-toggle",
         },
         activityWindowCommand = {
-            order = 44,
+            order = 45,
             type = "description",
             name = L["Open Activity Window"] .. ": " .. "/bpcom-activities",
         },
@@ -550,10 +555,20 @@ function ConfigModule:OnInitialize()
 end
 
 function ConfigModule:ChatCommandOptions(msg)
+    if InCombatLockdown() then
+        self:Print(L["This cannot be used while in combat."])
+        return
+    end
+
     Settings.OpenToCategory(ConfigModule.CategoryId)
 end
 
 function ConfigModule:SetPetDataVersion(version)
+    if InCombatLockdown() then
+        options.args.dataVersion.name = L["Version not available in combat."]
+        return
+    end
+
     petDataVersionLoaded = version
     options.args.dataVersion.name = L["Version"]..": "..petDataVersionLoaded
 
