@@ -31,10 +31,18 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_Broker")
 
 -- Also used by MinimapModule
 function BrokerModule:GetDataObject()
+    if InCombatLockdown() then
+        return
+    end
+
     return self.dataSource
 end
 
 function BrokerModule:RefreshData()
+    if InCombatLockdown() then
+        return
+    end
+
     local count = 0
     local totalCount = 0
     local petData = self:GetZonePetData()
@@ -64,6 +72,10 @@ end
 -- Get the pets in the current zone.
 -- The map determination logic may skip some changes to improve CPU usage.
 function BrokerModule:GetZonePetData()
+    if InCombatLockdown() then
+        return {}
+    end
+
     local mapID = ZoneModule:ResolveZone()
     return DataModule:GetPetsInMap(mapID) or {}
 end
@@ -196,6 +208,11 @@ function BrokerModule:OnClick(button)
 end
 
 function BrokerModule:ToggleConfig()
+    if InCombatLockdown() then
+        self:Print(L["This cannot be used while in combat."])
+        return 
+    end
+
     local optionsFrame = ConfigModule.OptionsFrame
     local categoryId = ConfigModule.CategoryId
     if optionsFrame then

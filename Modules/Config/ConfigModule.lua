@@ -550,10 +550,20 @@ function ConfigModule:OnInitialize()
 end
 
 function ConfigModule:ChatCommandOptions(msg)
+    if InCombatLockdown() then
+        self:Print(L["This cannot be used while in combat."])
+        return
+    end
+
     Settings.OpenToCategory(ConfigModule.CategoryId)
 end
 
 function ConfigModule:SetPetDataVersion(version)
+    if InCombatLockdown() then
+        options.args.dataVersion.name = L["Version not available in combat."]
+        return
+    end
+
     petDataVersionLoaded = version
     options.args.dataVersion.name = L["Version"]..": "..petDataVersionLoaded
 

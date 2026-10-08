@@ -346,6 +346,10 @@ function MapModule:BattlePetToggle_OnClick()
 end
 
 function MapModule:InitializeDropDown()
+    if InCombatLockdown() then
+        return
+    end
+
     Menu.ModifyMenu("MENU_WORLD_MAP_TRACKING", function(_, rootDescription)
         rootDescription:CreateDivider()
         rootDescription:CreateTitle(L["Dropdown Headline"])

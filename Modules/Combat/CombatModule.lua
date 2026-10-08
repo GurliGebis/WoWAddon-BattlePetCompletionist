@@ -54,6 +54,10 @@ function CombatModule:OnEnable()
 end
 
 local function CanWeFindPlayerPosition()
+    if InCombatLockdown() then
+        return false
+    end
+
     local mapId = C_Map.GetBestMapForUnit("player")
 
     if issecretvalue and issecretvalue(mapId) then
@@ -75,6 +79,10 @@ local function CanWeFindPlayerPosition()
 end
 
 function CombatModule:BattleHasStarted()
+    if InCombatLockdown() then
+        return
+    end
+
     local combatMode = DBModule:GetProfile().combatMode
 
     if combatMode == _BattlePetCompletionist.Enums.CombatMode.HELP_A_FRIEND then
@@ -90,6 +98,10 @@ function CombatModule:BattleHasStarted()
 end
 
 function CombatModule:HafBattleHasStarted()
+    if InCombatLockdown() then
+        return
+    end
+
     if TomTom == nil then
         -- TomTom is required for this functionality to work.
         return
@@ -127,6 +139,10 @@ local thresholdValues = {
 }
 
 function CombatModule:ForfeitBattleHasStarted()
+    if InCombatLockdown() then
+        return
+    end
+
     if not DataModule:CanWeCapturePets() then
         -- We cannot capture any pets in this battle, so we shouldn't ask for forfeit.
         return
@@ -219,6 +235,10 @@ function CombatModule:ForfeitBattleHasStarted()
 end
 
 function CombatModule:HaFOnReceivedAnnounce(_, msg, _, sender)
+    if InCombatLockdown() then
+        return
+    end
+
     if sender == myName then
         return
     end
@@ -251,6 +271,10 @@ function CombatModule:HaFOnReceivedAnnounce(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedINeedPets(_, msg, _, sender)
+    if InCombatLockdown() then
+        return
+    end
+
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return
@@ -316,6 +340,10 @@ function CombatModule:HaFOnReceivedINeedPets(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
+    if InCombatLockdown() then
+        return
+    end
+
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return
@@ -367,6 +395,10 @@ function CombatModule:HaFOnReceivedOfferPets(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedAcceptOffer(_, msg, _, sender)
+    if InCombatLockdown() then
+        return
+    end
+
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return
@@ -392,6 +424,10 @@ function CombatModule:HaFOnReceivedAcceptOffer(_, msg, _, sender)
 end
 
 function CombatModule:HaFOnReceivedDeclineOffer(_, msg, _, sender)
+    if InCombatLockdown() then
+        return
+    end
+
     if sender == myName then
         -- We should never get this from ourselves, but just in case it might happen, we handle it.
         return

@@ -145,6 +145,11 @@ do
             return
         end
 
+        -- Avoid calling when going to challenge mode (m+) to prevent maw buffs issue
+        if C_ChallengeMode and C_ChallengeMode.IsChallengeModeActive and C_ChallengeMode.IsChallengeModeActive() then
+            return
+        end
+
         if ObjectiveTrackerManager and ObjectiveTrackerManager.SetModuleContainer then
             ObjectiveTrackerManager:SetModuleContainer(BattlePetCompletionistObjectiveTracker, ObjectiveTrackerFrame)
         end
