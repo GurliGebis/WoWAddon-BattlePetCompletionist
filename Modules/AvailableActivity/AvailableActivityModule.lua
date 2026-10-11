@@ -246,6 +246,38 @@ function AvailableActivityModule:GetPetData(pets)
     return results
 end
 
+function AvailableActivityModule:SeasonalPets()
+    if InCombatLockdown() then
+        return
+    end
+
+    --[[
+        This function checks for and returns seasonal pets that are based
+        on set calendar dates, and not calendar events. Currently known Pets:
+
+        Starts | Ends   | NPCID | PetID | Pet Name
+        Jun 21 | Sep 23 | 62256 | 513   | Qiraji Guardling
+        Dec 22 | Mar 19 | 7554  | 69    | Snowy Owl
+    --]]
+
+    local seasonal = nil
+    local links = nil
+    local pets = nil
+    local md = self.today.month * 100 + self.today.monthDay -- make today look like 1011
+
+    if 620 < md and md < 924 then -- if it's after june 20 (620) and before sep 24 (924) aka WoW Summer
+		pets = {{ petNpcID = 62256, petSpeciesID = 513 }}
+		links = AvailableActivityModule:GetPetData(pets)
+		seasonal = AvailableActivityModule:BuildActivityEntry("Calendar Events", "Summer Season", links)
+    elseif md < 320 or 1221 < md then -- if it's after dec 21 (1221) and before mar 20 (320) aka WoW Winter
+		pets = {{ petNpcID = 7554, petSpeciesID = 69 }}
+		links = AvailableActivityModule:GetPetData(pets)
+		seasonal = AvailableActivityModule:BuildActivityEntry("Calendar Events", "Winter Season", links)
+    end
+
+    return seasonal
+end
+
 function AvailableActivityModule:BuildActivityEntry(category, title, petLinks, subCategory)
     if InCombatLockdown() then
         return
@@ -306,6 +338,11 @@ function AvailableActivityModule:BuildCalendarEventList(dataSource)
                 end
             end
         end
+    end
+
+    local seasonal = AvailableActivityModule:SeasonalPets()
+	if seasonal then
+        table.insert(results, seasonal)
     end
 
     return results
