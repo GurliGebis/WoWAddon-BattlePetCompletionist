@@ -46,6 +46,11 @@ local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 
 DataModule.ActivitiesData.worldQuestPetData = {
+    [51212] = { -- Quest: Waycrest Manor: Witchy Kitchen
+        pets = {
+            { petNpcID = 139372, petSpeciesID = 2192 }, -- Vengeful Chicken
+        },
+    },
     [59808] = { -- Quest: Muck It Up; Spawns Rare: Bog Beast; Pet Drop Chance: Primordial Bogling
         pets = {
             { petNpcID = 171121, petSpeciesID = 2896 }, -- Primordial Bogling
