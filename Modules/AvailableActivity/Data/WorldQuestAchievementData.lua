@@ -52,6 +52,12 @@ DataModule.ActivitiesData.worldQuestAchievementPetData = {
     [9069] = { -- An Awfully Big Adventure
         petReward = { { petNpcID = 88830, petSpeciesID = 1605, } }, -- Trunks
     },
+    [18384] = { -- Whelp, There It Is
+        petReward = { { petNpcID = 204369, petSpeciesID = 3555, } } -- Axel
+    },
+    [19293] = { -- Friends In Feathers
+        petReward = { { petNpcID = 212206, petSpeciesID = 4288, } } -- Blueloo
+    },
     [40088] = { -- A Champion's Tour: The War Within
         petReward = { { petNpcID = 223859, petSpeciesID = 4581, } }, -- Ruby-Eyed Stagshell
     },
