@@ -51,6 +51,16 @@ DataModule.ActivitiesData.worldQuestPetData = {
             { petNpcID = 139372, petSpeciesID = 2192 }, -- Vengeful Chicken
         },
     },
+    [54272] = { -- Quest: Battle Bots (Alliance)
+        pets = {
+            { petNpcID = 149348, petSpeciesID = 2564 }, -- Rebuilt Gorilla Bot
+        },
+    },
+    [54273] = { -- Quest: Battle Bots (Horde)
+        pets = {
+            { petNpcID = 149361, petSpeciesID = 2565 }, -- Rebuilt Mechanical Spider
+        },
+    },
     [59808] = { -- Quest: Muck It Up; Spawns Rare: Bog Beast; Pet Drop Chance: Primordial Bogling
         pets = {
             { petNpcID = 171121, petSpeciesID = 2896 }, -- Primordial Bogling
