@@ -88,4 +88,24 @@ DataModule.ActivitiesData.worldQuestPetData = {
             { petNpcID = 192350, petSpeciesID = 3360 }, -- Bugbiter Tortoise, Bought from the NPC Available during this WQ for "Eroded Fossil" & "Petrified Dragon Egg"
         },
     },
+    [73146] = { -- Quest: Cutting Wind
+        pets = {
+            { petNpcID = 200769, petSpeciesID = 3446 }, -- VorteX
+        },
+    },
+    [73147] = { -- Quest: Shifting Ground
+        pets = {
+            { petNpcID = 200770, petSpeciesID = 3447 }, -- Tremblor
+        },
+    },
+    [73148] = { -- Quest: Combustible Vegetation
+        pets = {
+            { petNpcID = 200771, petSpeciesID = 3488 }, -- Wildfire
+        },
+    },
+    [73149] = { -- Quest: Flood Warning
+        pets = {
+            { petNpcID = 200772, petSpeciesID = 3449 }, -- Flow
+        },
+    },
 }
