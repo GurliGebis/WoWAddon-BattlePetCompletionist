@@ -98,4 +98,9 @@ DataModule.ActivitiesData.dailyQuestPetData = {
             { petNpcID = 26056, petSpeciesID = 174 }, -- Chuck
         },
     },
+    [62256] = { -- Cluck, Cluck, Boom
+        pets = {
+            { petNpcID = 184189, petSpeciesID = 3225 }, -- Violent Poultrid
+        },
+    },
 }
