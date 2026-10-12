@@ -103,4 +103,24 @@ DataModule.ActivitiesData.dailyQuestPetData = {
             { petNpcID = 184189, petSpeciesID = 3225 }, -- Violent Poultrid
         },
     },
+    [63989] = { -- Oozing with Character
+        pets = {
+            { petNpcID = 179230, petSpeciesID = 3127 }, -- Chompy (Q 1 of 2)
+        },
+    },
+    [64016] = { -- Oozing with Character
+        pets = {
+            { petNpcID = 179230, petSpeciesID = 3127 }, -- Chompy (Q 1 of 2)
+        },
+    },
+    [64017] = { -- Oozing with Character
+        pets = {
+            { petNpcID = 179230, petSpeciesID = 3127 }, -- Chompy (Q 1 of 2)
+        },
+    },
+    [64065] = { -- Local Reagents
+        pets = {
+            { petNpcID = 179230, petSpeciesID = 3127 }, -- Chompy (Q 2 of 2)
+        },
+    },
 }
