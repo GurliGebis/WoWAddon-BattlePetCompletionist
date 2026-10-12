@@ -46,6 +46,26 @@ local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 
 DataModule.ActivitiesData.worldQuestPetData = {
+    [44892] = { -- Quest: Snowfeather Swarm!
+        pets = {
+            { petNpcID = 115784, petSpeciesID = 1974 }, -- Snowfeather Hatchling
+        },
+    },
+    [44893] = { -- Quest: Direbeak Swarm!
+        pets = {
+            { petNpcID = 115785, petSpeciesID = 1975 }, -- Direbeak Hatchling
+        },
+    },
+    [44894] = { -- Quest: Bloodgazer Swarm!
+        pets = {
+            { petNpcID = 115787, petSpeciesID = 1977 }, -- Bloodgazer Hatchling
+        },
+    },
+    [44895] = { -- Quest: Sharptalon Swarm!
+        pets = {
+            { petNpcID = 115786, petSpeciesID = 1976 }, -- Sharptalon Hatchling
+        },
+    },
     [51212] = { -- Quest: Waycrest Manor: Witchy Kitchen
         pets = {
             { petNpcID = 139372, petSpeciesID = 2192 }, -- Vengeful Chicken
