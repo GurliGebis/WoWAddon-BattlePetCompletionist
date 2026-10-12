@@ -103,14 +103,29 @@ DataModule.ActivitiesData.dailyQuestPetData = {
             { petNpcID = 184189, petSpeciesID = 3225 }, -- Violent Poultrid
         },
     },
-    [63989] = { -- Oozing with Character
+    [63786] = { -- Sweep the Windswept Aerie
         pets = {
-            { petNpcID = 179230, petSpeciesID = 3127 }, -- Chompy (Q 1 of 2)
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 1 of 5)
         },
     },
-    [64016] = { -- Oozing with Character
+    [63936] = { -- Devoured Anima
         pets = {
-            { petNpcID = 179230, petSpeciesID = 3127 }, -- Chompy (Q 1 of 2)
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 2 of 5)
+        },
+    },
+    [63950] = { -- Razorwing Talons
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 3 of 5)
+        },
+    },
+    [63956] = { -- Sealed Secrets
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 5 of 5)
+        },
+    },
+    [63964] = { -- Broker's Bounty: Grimtalon
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 4 of 5)
         },
     },
     [64017] = { -- Oozing with Character
