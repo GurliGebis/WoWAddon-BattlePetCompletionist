@@ -83,6 +83,13 @@ DataModule.ActivitiesData.worldQuestPetData = {
             { petNpcID = 179132, petSpeciesID = 3103 }, -- Copperback Etherwyrm, Random Reward from Kyrian Cache/Chest
         },
     },
+    [65102] = { -- Quest: Fish Eyes
+        pets = {
+            { petNpcID = 184186, petSpeciesID = 3229 }, -- Archetype of Renewal
+            { petNpcID = 184192, petSpeciesID = 3230 }, -- Terror Jelly
+            { petNpcID = 184193, petSpeciesID = 3231 }, -- Prototickles
+        },
+    },
     [66070] = { -- Brightblade's Bones
         pets = {
             { petNpcID = 192350, petSpeciesID = 3360 }, -- Bugbiter Tortoise, Bought from the NPC Available during this WQ for "Eroded Fossil" & "Petrified Dragon Egg"
