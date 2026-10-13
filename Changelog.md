@@ -1,3 +1,6 @@
+# 12.1.5-2026101?-1
+* Added a large number of previousely missed activities. Thank you to WCP Discord Name Remte for the details. Additions by JPEscher (Noctusmirus, Proudmoore, US). Full List of additions here: https://github.com/GurliGebis/WoWAddon-BattlePetCompletionist/pull/165
+
 # 12.1.5-20261014-1
 * Updated Retail TOC to match 12.1.5
 
