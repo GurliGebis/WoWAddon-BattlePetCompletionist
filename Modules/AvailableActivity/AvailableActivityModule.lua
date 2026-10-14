@@ -657,7 +657,7 @@ function AvailableActivityModule:DisplayActivityWindow(dataObject)
     end
 
     frame:SetLayout("Fill")
-    frame:SetStatusText("Good BattlePet Resources: WarCraftPets.com & WoWHead.com")
+    frame:SetStatusText(L["Good BattlePet Resources: WarCraftPets.com & WoWHead.com"])
     local treeGroup = AceGUI:Create("TreeGroup")
     treeGroup:SetLayout("Fill")
     treeGroup:SetFullWidth(true)
