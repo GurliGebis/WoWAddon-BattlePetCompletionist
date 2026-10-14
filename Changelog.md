@@ -1,3 +1,6 @@
+# 12.1.5-20261014-1
+* Updated Retail TOC to match 12.1.5
+
 # 12.1.0-20261008-1
 * More InCombatLockdown checks to prevent Maw Buff corruption issue, provided by JPEscher on github.
 * Added more descriptions to config for the activity module, provided by JPEscher on github.
