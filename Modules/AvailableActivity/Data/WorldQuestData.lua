@@ -22,9 +22,6 @@
     Reminders" ... FR Link:
     https://github.com/GurliGebis/WoWAddon-BattlePetCompletionist/issues/86
 
-    This has two arrays incase of variance later on by Blizzard.
-    One is for World Quests and one is for Daily Quests
-
     The data is in a Multi-Layered Hash Table with format:
         EventID -- English name in comment for ease of maintaining
             PetHash of Pet NPC ID & Pet Species ID
@@ -46,6 +43,51 @@ local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 
 DataModule.ActivitiesData.worldQuestPetData = {
+    [41163] = { -- Quest: Snowfeather Swarm!
+        pets = {
+            { petNpcID = 106232, petSpeciesID = 1887 }, -- Wyrmr Tunkins
+        },
+    },
+    [44892] = { -- Quest: Snowfeather Swarm!
+        pets = {
+            { petNpcID = 115784, petSpeciesID = 1974 }, -- Snowfeather Hatchling
+        },
+    },
+    [44893] = { -- Quest: Direbeak Swarm!
+        pets = {
+            { petNpcID = 115785, petSpeciesID = 1975 }, -- Direbeak Hatchling
+        },
+    },
+    [44894] = { -- Quest: Bloodgazer Swarm!
+        pets = {
+            { petNpcID = 115787, petSpeciesID = 1977 }, -- Bloodgazer Hatchling
+        },
+    },
+    [44895] = { -- Quest: Sharptalon Swarm!
+        pets = {
+            { petNpcID = 115786, petSpeciesID = 1976 }, -- Sharptalon Hatchling
+        },
+    },
+    [51212] = { -- Quest: Waycrest Manor: Witchy Kitchen
+        pets = {
+            { petNpcID = 139372, petSpeciesID = 2192 }, -- Vengeful Chicken
+        },
+    },
+    [54272] = { -- Quest: Battle Bots (Alliance)
+        pets = {
+            { petNpcID = 149348, petSpeciesID = 2564 }, -- Rebuilt Gorilla Bot
+        },
+    },
+    [54273] = { -- Quest: Battle Bots (Horde)
+        pets = {
+            { petNpcID = 149361, petSpeciesID = 2565 }, -- Rebuilt Mechanical Spider
+        },
+    },
+    [57301] = { -- Quest: Callous Concoctions; Spawns Several Rares; One Drops a Pet
+        pets = {
+            { petNpcID = 172149, petSpeciesID = 2960 }, -- Invertebrate Oil
+        },
+    },
     [59808] = { -- Quest: Muck It Up; Spawns Rare: Bog Beast; Pet Drop Chance: Primordial Bogling
         pets = {
             { petNpcID = 171121, petSpeciesID = 2896 }, -- Primordial Bogling
@@ -65,12 +107,14 @@ DataModule.ActivitiesData.worldQuestPetData = {
         pets = {
             { petNpcID = 179008, petSpeciesID = 3098 }, -- Lil' Abom, have to craft from Necrolord Assault Items
             { petNpcID = 179171, petSpeciesID = 3114 }, -- Fodder, Random Reward from Necrolord Cache/Chest
+            { petNpcID = 174081, petSpeciesID = 3037 }, -- Dread, Drop from Eternas the Tormentor
         },
     },
-    --[[[63822] = { -- Venthyr Maw Assault
+    [63822] = { -- Venthyr Maw Assault
         pets = {
+            { petNpcID = 174081, petSpeciesID = 3037 }, -- Dread, Drop from Eternas the Tormentor
         },
-    },--]]
+    },
     [63823] = { -- Night Fae Maw Assault
         pets = {
             { petNpcID = 179025, petSpeciesID = 3099 }, -- Infused Etherwyrm, Random Reward from Night Fae Cache/Chest
@@ -81,6 +125,38 @@ DataModule.ActivitiesData.worldQuestPetData = {
         pets = {
             { petNpcID = 179083, petSpeciesID = 3101 }, -- Sly, from Kyrian Maw Assault Achievement "A Sly Fox"
             { petNpcID = 179132, petSpeciesID = 3103 }, -- Copperback Etherwyrm, Random Reward from Kyrian Cache/Chest
+        },
+    },
+    [65102] = { -- Quest: Fish Eyes
+        pets = {
+            { petNpcID = 184186, petSpeciesID = 3229 }, -- Archetype of Renewal
+            { petNpcID = 184192, petSpeciesID = 3230 }, -- Terror Jelly
+            { petNpcID = 184193, petSpeciesID = 3231 }, -- Prototickles
+        },
+    },
+    [66070] = { -- Brightblade's Bones
+        pets = {
+            { petNpcID = 192350, petSpeciesID = 3360 }, -- Bugbiter Tortoise, Bought from the NPC Available during this WQ for "Eroded Fossil" & "Petrified Dragon Egg"
+        },
+    },
+    [73146] = { -- Quest: Cutting Wind
+        pets = {
+            { petNpcID = 200769, petSpeciesID = 3446 }, -- VorteX
+        },
+    },
+    [73147] = { -- Quest: Shifting Ground
+        pets = {
+            { petNpcID = 200770, petSpeciesID = 3447 }, -- Tremblor
+        },
+    },
+    [73148] = { -- Quest: Combustible Vegetation
+        pets = {
+            { petNpcID = 200771, petSpeciesID = 3488 }, -- Wildfire
+        },
+    },
+    [73149] = { -- Quest: Flood Warning
+        pets = {
+            { petNpcID = 200772, petSpeciesID = 3449 }, -- Flow
         },
     },
 }

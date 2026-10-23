@@ -22,9 +22,6 @@
     Reminders" ... FR Link:
     https://github.com/GurliGebis/WoWAddon-BattlePetCompletionist/issues/86
 
-    This has two arrays incase of variance later on by Blizzard.
-    One is for World Quests and one is for Daily Quests
-
     The data is in a Multi-Layered Hash Table with format:
         EventID -- English name in comment for ease of maintaining
             PetHash of Pet NPC ID & Pet Species ID
@@ -96,6 +93,46 @@ DataModule.ActivitiesData.dailyQuestPetData = {
             { petNpcID = 24389, petSpeciesID = 164 }, -- Muckbreath
             { petNpcID = 26050, petSpeciesID = 173 }, -- Snarly
             { petNpcID = 26056, petSpeciesID = 174 }, -- Chuck
+        },
+    },
+    [65256] = { -- Cluck, Cluck, Boom
+        pets = {
+            { petNpcID = 184189, petSpeciesID = 3225 }, -- Violent Poultrid
+        },
+    },
+    [63786] = { -- Sweep the Windswept Aerie
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 1 of 5)
+        },
+    },
+    [63936] = { -- Devoured Anima
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 2 of 5)
+        },
+    },
+    [63950] = { -- Razorwing Talons
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 3 of 5)
+        },
+    },
+    [63956] = { -- Sealed Secrets
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 4 of 5)
+        },
+    },
+    [63964] = { -- Broker's Bounty: Grimtalon
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 5 of 5)
+        },
+    },
+    [64017] = { -- Oozing with Character
+        pets = {
+            { petNpcID = 179230, petSpeciesID = 3127 }, -- Chompy (Q 1 of 2)
+        },
+    },
+    [64065] = { -- Local Reagents
+        pets = {
+            { petNpcID = 179230, petSpeciesID = 3127 }, -- Chompy (Q 2 of 2)
         },
     },
 }

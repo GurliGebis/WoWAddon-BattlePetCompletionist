@@ -22,9 +22,6 @@
     Reminders" ... FR Link:
     https://github.com/GurliGebis/WoWAddon-BattlePetCompletionist/issues/86
 
-    This has two arrays incase of variance later on by Blizzard.
-    One is for World Quests and one is for Daily Quests
-
     The data is in a Multi-Layered Hash Table with format:
         EventID -- English name in comment for ease of maintaining
             PetHash of Pet NPC ID & Pet Species ID
@@ -49,20 +46,26 @@ local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 
 DataModule.ActivitiesData.dailyQuestAchievementPetData = {
-    [60956] = { -- Family Battler of Northrend
-        petReward = { { petNpcID = 222342, petSpeciesID = 4475, } },-- Webbers
-    },
     [9696] = { -- Family Familiar
         petReward = { { petNpcID = 112798, petSpeciesID = 1932, } }, -- Nightmare Lasher
     },
     [12100] = { -- Family Fighter
         petReward = { { petNpcID = 128146, petSpeciesID = 2113, } }, -- Felclaw Marsuul
     },
+    [13279] = { -- Family Battler
+        petReward = { { petNpcID = 147884, petSpeciesID = 2535, } }, -- Wicker Wraith
+    },
     [14879] = { -- Family Exorcist
         petReward = { { petNpcID = 175756, petSpeciesID = 3067, } }, -- Spriggan Trickster
     },
-    [13279] = { -- Family Battler
-        petReward = { { petNpcID = 147884, petSpeciesID = 2535, } }, -- Wicker Wraith
+    [16512] = { -- Family Battler of  the Dragon Isles
+        petReward = { { petNpcID = 197969, petSpeciesID = 3406, } }, -- Lady Feathersworth
+    },
+    [17934] = { -- Family Battler of Zaralek Cavern
+        petReward = { { petNpcID = 189119, petSpeciesID = 3294, } }, -- Gerald
+    },
+    [18384] = { -- Whelp, There It Is
+        petReward = { { petNpcID = 204369, petSpeciesID = 3555, } } -- Axel
     },
     [40980] = { -- Family Battler of Khaz Algar
         petReward = { { petNpcID = 222574, petSpeciesID = 4490, } }, -- Fuzzy
@@ -70,11 +73,8 @@ DataModule.ActivitiesData.dailyQuestAchievementPetData = {
     [41551] = { -- Family Battler of Undermine
         petReward = { { petNpcID = 231469, petSpeciesID = 4631, } }, -- Foreman
     },
-    [17934] = { -- Family Battler of Zaralek Cavern
-        petReward = { { petNpcID = 189119, petSpeciesID = 3294, } }, -- Gerald
-    },
-    [16512] = { -- Family Battler of  the Dragon Isles
-        petReward = { { petNpcID = 197969, petSpeciesID = 3406, } }, -- Lady Feathersworth
+    [60956] = { -- Family Battler of Northrend
+        petReward = { { petNpcID = 222342, petSpeciesID = 4475, } },-- Webbers
     },
     [61040] = { -- Family Battler of Eastern Kingdoms
         petReward = { { petNpcID = 204240, petSpeciesID = 3519, } }, -- Byrn
