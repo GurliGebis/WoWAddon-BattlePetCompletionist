@@ -9,6 +9,7 @@ This addon is 100% GPL-3 licensed, and will stay that way.
 * Updates the tooltip for pets in the auction house (and pet cages in general), to show the source of the pet.
 * Create TomTom waypoints by shift clicking a map pin.
 * Work together with your party to capture pets (see Teamwork below).
+* Ability to alert you of available pet collecting opportunities. The "Available Activity Module" defaults to pop up from character screen login but can be called on-demand too. [Click Here](AAM.md) for the full module writeup.
 
 The aim of the addon is to keep things simple, which is why there is no integration with the pet battles themselves - if you want help with that, please look at the [Pokemon Trainer NG](https://www.curseforge.com/wow/addons/pokemon-trainer-ng) addon.
 
