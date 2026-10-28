@@ -46,9 +46,22 @@ local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 
 DataModule.ActivitiesData.dailyQuestPetData = {
-    [32441] = { -- Thundering Pandaren Spirit
+    [11665] = { -- Crocolisks in the City
         pets = {
-            { petNpcID = 68468, petSpeciesID = 1126 }, -- Pandaren Earth Spirit
+            { petNpcID = 24388, petSpeciesID = 163 }, -- Toothy
+            { petNpcID = 24389, petSpeciesID = 164 }, -- Muckbreath
+            { petNpcID = 26050, petSpeciesID = 173 }, -- Snarly
+            { petNpcID = 26056, petSpeciesID = 174 }, -- Chuck
+        },
+    },
+    [31752] = { -- Blingtron 4000
+        pets = {
+            { petNpcID = 73011, petSpeciesID = 1320 }, -- Lil' Bling
+        },
+    },
+    [32434] = { -- Burning Pandaren Spirit
+        pets = {
+            { petNpcID = 68466, petSpeciesID = 1124 }, -- Pandaren Fire Spirit
         },
     },
     [32439] = { -- Flowing Pandaren Spirit
@@ -61,9 +74,30 @@ DataModule.ActivitiesData.dailyQuestPetData = {
             { petNpcID = 68467, petSpeciesID = 1125 }, -- Pandaren Air Spirit
         },
     },
-    [32434] = { -- Burning Pandaren Spirit
+    [32441] = { -- Thundering Pandaren Spirit
         pets = {
-            { petNpcID = 68466, petSpeciesID = 1124 }, -- Pandaren Fire Spirit
+            { petNpcID = 68468, petSpeciesID = 1126 }, -- Pandaren Earth Spirit
+        },
+    },
+    [32604] = { -- Beasts of Fable Book I
+        pets = {
+            { petNpcID = 69893, petSpeciesID = 1197 }, -- Snowy Panda
+            { petNpcID = 69892, petSpeciesID = 1198 }, -- Mountain Panda
+            { petNpcID = 69891, petSpeciesID = 1196 }, -- Sunfur Panda
+        },
+    },
+    [32868] = { -- Beasts of Fable Book II
+        pets = {
+            { petNpcID = 69893, petSpeciesID = 1197 }, -- Snowy Panda
+            { petNpcID = 69892, petSpeciesID = 1198 }, -- Mountain Panda
+            { petNpcID = 69891, petSpeciesID = 1196 }, -- Sunfur Panda
+        },
+    },
+    [32869] = { -- Beasts of Fable Book III
+        pets = {
+            { petNpcID = 69893, petSpeciesID = 1197 }, -- Snowy Panda
+            { petNpcID = 69892, petSpeciesID = 1198 }, -- Mountain Panda
+            { petNpcID = 69891, petSpeciesID = 1196 }, -- Sunfur Panda
         },
     },
     [37644] = { -- Mastering the Menagerie
@@ -85,14 +119,6 @@ DataModule.ActivitiesData.dailyQuestPetData = {
     [47895] = { -- Bert's Bots
         pets = {
             { petNpcID = 117340, petSpeciesID = 2001 }, -- Dibbler
-        },
-    },
-    [11665] = { -- Crocolisks in the City
-        pets = {
-            { petNpcID = 24388, petSpeciesID = 163 }, -- Toothy
-            { petNpcID = 24389, petSpeciesID = 164 }, -- Muckbreath
-            { petNpcID = 26050, petSpeciesID = 173 }, -- Snarly
-            { petNpcID = 26056, petSpeciesID = 174 }, -- Chuck
         },
     },
     [65256] = { -- Cluck, Cluck, Boom

@@ -45,10 +45,8 @@ function AvailableActivityModule:OnInitialize()
     self.EventFrame = CreateFrame("Frame")
     self.EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
     self.EventFrame:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST")
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-        self.EventFrame:RegisterEvent("QUEST_DATA_LOAD_RESULT")
-        self.EventFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
-    end
+    self.EventFrame:RegisterEvent("QUEST_DATA_LOAD_RESULT")
+    self.EventFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
     self.EventFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE")
 
     self.EventFrame:SetScript("OnEvent", function(selfFrame, event, ...)
@@ -143,6 +141,9 @@ function AvailableActivityModule:GetQuestTitle(questID)
     end
 
     local title = C_QuestLog.GetTitleForQuestID(questID)
+    if issecretvalue(title) then
+        return
+    end
 
     if title then
         return title
@@ -1126,10 +1127,6 @@ function AvailableActivityModule:WaitForCalendarReady(startTime, interval)
 end
 
 function AvailableActivityModule:OnEvent(event, arg1, ...)
-    if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
-        return
-    end
-
     if event == "PLAYER_ENTERING_WORLD" and arg1 then
         -- WOW_PROJECT_MAINLINE only had arguments added in 8.0.1
         -- full details: https://warcraft.wiki.gg/wiki/PLAYER_ENTERING_WORLD
