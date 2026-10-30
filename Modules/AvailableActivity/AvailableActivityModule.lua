@@ -277,7 +277,7 @@ function AvailableActivityModule:BuildIslandQuestList(dataSource)
         if mapID > 0 then
             title = C_Map.GetMapInfo(mapID).name
         elseif mapID == -1 then
-            title = "From Any Island Expedition"
+            title = L["From Any Island Expedition"]
         end
 
         if AvailableActivityModule:tableSize(sourceEntry.pets) == 0 then
@@ -285,7 +285,7 @@ function AvailableActivityModule:BuildIslandQuestList(dataSource)
         end
 
         local links = AvailableActivityModule:GetPetData(sourceEntry.pets, mapID)
-        local entry = AvailableActivityModule:BuildActivityEntry("Island Expeditions", title, links)
+        local entry = AvailableActivityModule:BuildActivityEntry(L["Island Expeditions"], title, links)
 
         if entry then
             table.insert(results, entry)
@@ -317,11 +317,11 @@ function AvailableActivityModule:SeasonalPets()
     if 620 < md and md < 924 then -- if it's after june 20 (620) and before sep 24 (924) aka WoW Summer
 		pets = {{ petNpcID = 62256, petSpeciesID = 513 }}
 		links = AvailableActivityModule:GetPetData(pets)
-		seasonal = AvailableActivityModule:BuildActivityEntry("Calendar Events", "Summer Season", links)
+		seasonal = AvailableActivityModule:BuildActivityEntry(L["Calendar Events"], L["Summer Season"], links)
     elseif md < 320 or 1221 < md then -- if it's after dec 21 (1221) and before mar 20 (320) aka WoW Winter
 		pets = {{ petNpcID = 7554, petSpeciesID = 69 }}
 		links = AvailableActivityModule:GetPetData(pets)
-		seasonal = AvailableActivityModule:BuildActivityEntry("Calendar Events", "Winter Season", links)
+		seasonal = AvailableActivityModule:BuildActivityEntry(L["Calendar Events"], L["Winter Season"], links)
     end
 
     return seasonal
@@ -342,7 +342,7 @@ function AvailableActivityModule:BuildTimedZoneEventActivityList(dataSource)
                 if inactiveZone ~= eventZone.mapZone then
                     local title = zoneName
                     local links = AvailableActivityModule:GetPetData(eventZone.pets)
-                    local entry = AvailableActivityModule:BuildActivityEntry("Timed Zone Event Rares", title, links)
+                    local entry = AvailableActivityModule:BuildActivityEntry(L["Timed Zone Event Rares"], title, links)
 
                     if entry then
                         table.insert(results, entry)
@@ -360,7 +360,7 @@ function AvailableActivityModule:BuildTimedZoneEventActivityList(dataSource)
                 local links = { { petSpeciesID = nil, petName = nil, linkType = nil,
     linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
                     } }
-                local entry = AvailableActivityModule:BuildActivityEntry("Timed Zone Event Rares", L["Are you a Time Traveler?"], links)
+                local entry = AvailableActivityModule:BuildActivityEntry(L["Timed Zone Event Rares"], L["Are you a Time Traveler?"], links)
                 table.insert(results, entry)
             else
                 for _, questData in ipairs(mapQuests) do
@@ -369,7 +369,7 @@ function AvailableActivityModule:BuildTimedZoneEventActivityList(dataSource)
                     if activity ~= nil then
                         local title = AvailableActivityModule:GetQuestTitle(questData.questID)
                         local links = AvailableActivityModule:GetPetData(activity.pets)
-                        local entry = AvailableActivityModule:BuildActivityEntry("Timed Zone Event Rares", title, links)
+                        local entry = AvailableActivityModule:BuildActivityEntry(L["Timed Zone Event Rares"], title, links)
 
                         if entry then
                             table.insert(results, entry)
@@ -437,7 +437,7 @@ function AvailableActivityModule:MicroHolidays()
     if dow == 1 then -- if it is sunday
         pets = {{ petNpcID = 67022, petSpeciesID = 1013 }}
         links = AvailableActivityModule:GetPetData(pets)
-        local title = "Wanderer's Festival: 9pm to 11pm"
+        local title = L["Wanderer's Festival: 9pm to 11pm"]
         local region = GetCurrentRegion()
         --[[
             regions: 1 is US & Oceanic (use PT & AET respectively) -- Multiple TZs
@@ -455,7 +455,7 @@ function AvailableActivityModule:MicroHolidays()
         elseif region == 3 then -- EU
             title = title .. " CET"
         end
-        micros = AvailableActivityModule:BuildActivityEntry("Calendar Events", title, links)
+        micros = AvailableActivityModule:BuildActivityEntry(L["Calendar Events"], title, links)
     end
 
     return micros
@@ -514,7 +514,7 @@ function AvailableActivityModule:BuildCalendarEventList(dataSource)
                     links = AvailableActivityModule:GetPetData(sourceEntry.pets)
                 end
 
-                local entry = AvailableActivityModule:BuildActivityEntry("Calendar Events", title, links)
+                local entry = AvailableActivityModule:BuildActivityEntry(L["Calendar Events"], title, links)
 
                 if entry then
                     table.insert(results, entry)
@@ -552,7 +552,7 @@ function AvailableActivityModule:BuildBountyQuestList(dataSource)
         if sourceEntry ~= nil then
             local title = AvailableActivityModule:GetQuestTitle(bountyData.questID)
             local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
-            local entry = AvailableActivityModule:BuildActivityEntry("Bounty Quests", title, links)
+            local entry = AvailableActivityModule:BuildActivityEntry(L["Bounty Quests"], title, links)
 
             if entry then
                 table.insert(results, entry)
@@ -575,7 +575,7 @@ function AvailableActivityModule:BuildCovenantQuestList(dataSource)
     end
     if not unlocked then
         local linkTitle = L["You need to unlock Covenants"]
-        results = { { category = "Covenant Callings", title = L["Covenants Not Unlocked"],
+        results = { { category = L["Covenant Callings"], title = L["Covenants Not Unlocked"],
             pets = { { petSpeciesID = nil, petName = nil, linkType = nil,
     linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
         } } } }
@@ -587,7 +587,7 @@ function AvailableActivityModule:BuildCovenantQuestList(dataSource)
     end
     if not aligned or aligned <= 0 then
         local linkTitle = L["You need to choose a Covenant"]
-        results = { { category = "Covenant Callings", title = L["No Covenant Chosen"],
+        results = { { category = L["Covenant Callings"], title = L["No Covenant Chosen"],
             pets = { { petSpeciesID = nil, petName = nil, linkType = nil,
     linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
         } } } }
@@ -603,7 +603,7 @@ function AvailableActivityModule:BuildCovenantQuestList(dataSource)
         if sourceEntry ~= nil then
             local title = AvailableActivityModule:GetQuestTitle(callingData.questID)
             local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
-            local entry = AvailableActivityModule:BuildActivityEntry("Covenant Callings", title, links)
+            local entry = AvailableActivityModule:BuildActivityEntry(L["Covenant Callings"], title, links)
 
             if entry then
                 table.insert(results, entry)
@@ -630,7 +630,7 @@ function AvailableActivityModule:BuildParagonEventActivityList(dataSource)
 	    if repInfo ~= nil then
             local title = repInfo.name
             local links = AvailableActivityModule:GetPetData(repData.pets)
-            local entry = AvailableActivityModule:BuildActivityEntry("Paragon Reputations", title, links)
+            local entry = AvailableActivityModule:BuildActivityEntry(L["Paragon Reputations"], title, links)
 
             if entry then
                 table.insert(results, entry)
@@ -652,7 +652,7 @@ function AvailableActivityModule:BuildDailyQuestList(dataSource)
         if AvailableActivityModule:IsQuestAvailable(questID, "daily") then
             local title = AvailableActivityModule:GetQuestTitle(questID)
             local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
-            local entry = AvailableActivityModule:BuildActivityEntry("Daily Quests", title, links)
+            local entry = AvailableActivityModule:BuildActivityEntry(L["Daily Quests"], title, links)
 
             if entry then
                 table.insert(results, entry)
@@ -674,7 +674,7 @@ function AvailableActivityModule:BuildWorldQuestList(dataSource)
         if AvailableActivityModule:IsQuestAvailable(questID, "world") then
             local title = AvailableActivityModule:GetQuestTitle(questID)
             local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
-            local entry = AvailableActivityModule:BuildActivityEntry("World Quests", title, links)
+            local entry = AvailableActivityModule:BuildActivityEntry(L["World Quests"], title, links)
 
             if entry then
                 table.insert(results, entry)
@@ -773,7 +773,7 @@ function AvailableActivityModule:BuildDailyQuestAchievementList(dataSource, crit
 
     for achievementID, achievementData in pairs(dataSource) do
         local achievementTitle = select(2, GetAchievementInfo(achievementID))
-        local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "daily", achievementTitle, "Achievements From Daily Quests", criteriaToQuestMap)
+        local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "daily", achievementTitle, L["Achievements From Daily Quests"], criteriaToQuestMap)
         if entries then
             for _, entry in ipairs(entries) do
                 table.insert(results, entry)
@@ -793,7 +793,7 @@ function AvailableActivityModule:BuildWorldQuestAchievementList(dataSource, crit
 
     for achievementID, achievementData in pairs(dataSource) do
         local achievementTitle = select(2, GetAchievementInfo(achievementID))
-        local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "world", achievementTitle, "Achievements From World Quests", criteriaToQuestMap)
+        local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "world", achievementTitle, L["Achievements From World Quests"], criteriaToQuestMap)
         if entries then
             for _, entry in ipairs(entries) do
                 table.insert(results, entry)
