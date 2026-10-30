@@ -136,7 +136,7 @@ function AvailableActivityModule:GetQuestTitle(questID, lock)
     local wlcount = 0
 
     if issecretvalue(title) then
-        return "Quest Not Found"
+        return L["Quest Not Found"]
     end
 
     while wlcount < 20 and title == nil do
@@ -148,7 +148,7 @@ function AvailableActivityModule:GetQuestTitle(questID, lock)
     end
 
     if not title then
-        title = "Quest Not Found"
+        title = L["Quest Not Found"]
     end
 
     return title
@@ -260,11 +260,11 @@ function AvailableActivityModule:SeasonalPets()
     if 620 < md and md < 924 then -- if it's after june 20 (620) and before sep 24 (924) aka WoW Summer
         pets = {{ petNpcID = 62256, petSpeciesID = 513 }}
         links = AvailableActivityModule:GetPetData(pets)
-        seasonal = AvailableActivityModule:BuildActivityEntry("Calendar Events", "Summer Season", links)
+        seasonal = AvailableActivityModule:BuildActivityEntry(L["Calendar Events"], L["Summer Season"], links)
     elseif md < 320 or 1221 < md then -- if it's after dec 21 (1221) and before mar 20 (320) aka WoW Winter
         pets = {{ petNpcID = 7554, petSpeciesID = 69 }}
         links = AvailableActivityModule:GetPetData(pets)
-        seasonal = AvailableActivityModule:BuildActivityEntry("Calendar Events", "Winter Season", links)
+        seasonal = AvailableActivityModule:BuildActivityEntry(L["Calendar Events"], L["Winter Season"], links)
     end
 
     return seasonal
@@ -293,7 +293,7 @@ function AvailableActivityModule:MicroHolidays()
     if dow == 1 then -- if it is sunday
         pets = {{ petNpcID = 67022, petSpeciesID = 1013 }}
         links = AvailableActivityModule:GetPetData(pets)
-        local title = "Wanderer's Festival: 9pm to 11pm"
+        local title = L["Wanderer's Festival: 9pm to 11pm"]
         local region = GetCurrentRegion()
         --[[
             regions: 1 is US & Oceanic (use PT & AET respectively) -- Multiple TZs
@@ -311,7 +311,7 @@ function AvailableActivityModule:MicroHolidays()
         elseif region == 3 then -- EU
             title = title .. " CET"
         end
-        micros = AvailableActivityModule:BuildActivityEntry("Calendar Events", title, links)
+        micros = AvailableActivityModule:BuildActivityEntry(L["Calendar Events"], title, links)
     end
 
     return micros
@@ -370,7 +370,7 @@ function AvailableActivityModule:BuildCalendarEventList(dataSource)
                     links = AvailableActivityModule:GetPetData(sourceEntry.pets)
                 end
 
-                local entry = AvailableActivityModule:BuildActivityEntry("Calendar Events", title, links)
+                local entry = AvailableActivityModule:BuildActivityEntry(L["Calendar Events"], title, links)
 
                 if entry then
                     table.insert(results, entry)
@@ -405,7 +405,7 @@ function AvailableActivityModule:BuildDailyQuestList(dataSource)
         if AvailableActivityModule:IsQuestAvailable(questID, "daily") then
             local title = AvailableActivityModule:GetQuestTitle(questID)
             local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
-            local entry = AvailableActivityModule:BuildActivityEntry("Daily Quests", title, links)
+            local entry = AvailableActivityModule:BuildActivityEntry(L["Daily Quests"], title, links)
 
             if entry then
                 table.insert(results, entry)
@@ -576,7 +576,7 @@ function AvailableActivityModule:DisplayActivityWindow(dataObject)
     end
 
     frame:SetLayout("Fill")
-    frame:SetStatusText(L["Need more information? Try"] .. " WarCraftPets.com")
+    frame:SetStatusText(string.format(L["Need more information? Try %s"], "WarCraftPets.com"))
     local treeGroup = AceGUI:Create("TreeGroup")
     treeGroup:SetLayout("Fill")
     treeGroup:SetFullWidth(true)
