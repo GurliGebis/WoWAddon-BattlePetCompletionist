@@ -53,5 +53,5 @@ end
 
 function AvailableActivityModule:ShowActivityWindow_OnChatCommand()
     self:Print(L["Module not currently supported in this WoW version."])
-    self:Print(L["If you would like to use it in this version, please open a Feature Request at "] .. "https://github.com/GurliGebis/WoWAddon-BattlePetCompletionist/issues")
+    self:Print(string.format(L["If you would like to use it in this version, please open a Feature Request at %s"], "https://github.com/GurliGebis/WoWAddon-BattlePetCompletionist/issues"))
 end

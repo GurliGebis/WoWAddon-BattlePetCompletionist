@@ -576,7 +576,7 @@ function AvailableActivityModule:DisplayActivityWindow(dataObject)
     end
 
     frame:SetLayout("Fill")
-    frame:SetStatusText(L["Need more information? Try"] .. " WarCraftPets.com")
+    frame:SetStatusText(string.format(L["Need more information? Try %s"], "WarCraftPets.com"))
     local treeGroup = AceGUI:Create("TreeGroup")
     treeGroup:SetLayout("Fill")
     treeGroup:SetFullWidth(true)

@@ -247,16 +247,14 @@ function AvailableActivityModule:GetPetData(pets, islandID)
             if not issecretvalue(petName) then
                 local petLink = "|cff1eff00|Hbattlepet:" .. pet.petSpeciesID .. ":1:3:1:::BattlePet--:|h[" .. petName .. "]|h|r"
                 if pet.islands and (islandID > 0) then
-                    local first = true
+                    local otherIslands = {}
                     for _, mapID in ipairs(pet.islands) do
                         if mapID ~= islandID then
-                            if first then
-                                petLink = petLink .. L[" also from "] .. C_Map.GetMapInfo(mapID).name
-                                first = false
-                            else
-                                petLink = petLink .. L[", "] .. C_Map.GetMapInfo(mapID).name
-                            end
+                            table.insert(otherIslands, C_Map.GetMapInfo(mapID).name)
                         end
+                    end
+                    if #otherIslands > 0 then
+                        petLink = string.format(L["%s also from %s"], petLink, table.concat(otherIslands, ", "))
                     end
                 end
                 table.insert(results, { petSpeciesID = pet.petSpeciesID, petName = petName, linkValue = petLink, linkType = "battlepet", })
@@ -358,7 +356,7 @@ function AvailableActivityModule:BuildTimedZoneEventActivityList(dataSource)
             end
 
             if AvailableActivityModule:tableSize(mapQuests) == 0 then
-                local linkTitle = L["Ensure you have the current "] .. C_Map.GetMapInfo(mapID).name .. L[" open & active. Check with"] .. " Zidormi."
+                local linkTitle = string.format(L["Ensure you have the current %s open & active. Check with %s."], C_Map.GetMapInfo(mapID).name, "Zidormi")
                 local links = { { petSpeciesID = nil, petName = nil, linkType = nil,
     linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
                     } }
@@ -984,7 +982,7 @@ function AvailableActivityModule:DisplayActivityWindow(dataObject)
     end
 
     frame:SetLayout("Fill")
-    frame:SetStatusText(L["Need more information? Try"] .. " WarCraftPets.com")
+    frame:SetStatusText(string.format(L["Need more information? Try %s"], "WarCraftPets.com"))
     local treeGroup = AceGUI:Create("TreeGroup")
     treeGroup:SetLayout("Fill")
     treeGroup:SetFullWidth(true)
