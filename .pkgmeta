@@ -28,6 +28,7 @@ required-dependencies:
   - battle-pet-completionist-pet-data
 
 ignore:
+  - docs
   - images
   - Changelog.md
   - LICENSE
