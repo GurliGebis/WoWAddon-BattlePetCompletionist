@@ -1,3 +1,6 @@
+# 12.1.5-20261030-3
+* Updated more missing localizations.
+
 # 12.1.5-20261030-2
 * Updated missing localizations.
 
