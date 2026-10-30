@@ -22,9 +22,6 @@
     Reminders" ... FR Link:
     https://github.com/GurliGebis/WoWAddon-BattlePetCompletionist/issues/86
 
-    This has two arrays incase of variance later on by Blizzard.
-    One is for World Quests and one is for Daily Quests
-
     The data is in a Multi-Layered Hash Table with format:
         EventID -- English name in comment for ease of maintaining
             PetHash of Pet NPC ID & Pet Species ID
@@ -49,9 +46,22 @@ local BattlePetCompletionist = LibStub("AceAddon-3.0"):GetAddon(addonName)
 local DataModule = BattlePetCompletionist:GetModule("DataModule")
 
 DataModule.ActivitiesData.dailyQuestPetData = {
-    [32441] = { -- Thundering Pandaren Spirit
+    [11665] = { -- Crocolisks in the City
         pets = {
-            { petNpcID = 68468, petSpeciesID = 1126 }, -- Pandaren Earth Spirit
+            { petNpcID = 24388, petSpeciesID = 163 }, -- Toothy
+            { petNpcID = 24389, petSpeciesID = 164 }, -- Muckbreath
+            { petNpcID = 26050, petSpeciesID = 173 }, -- Snarly
+            { petNpcID = 26056, petSpeciesID = 174 }, -- Chuck
+        },
+    },
+    [31752] = { -- Blingtron 4000
+        pets = {
+            { petNpcID = 73011, petSpeciesID = 1320 }, -- Lil' Bling
+        },
+    },
+    [32434] = { -- Burning Pandaren Spirit
+        pets = {
+            { petNpcID = 68466, petSpeciesID = 1124 }, -- Pandaren Fire Spirit
         },
     },
     [32439] = { -- Flowing Pandaren Spirit
@@ -64,9 +74,30 @@ DataModule.ActivitiesData.dailyQuestPetData = {
             { petNpcID = 68467, petSpeciesID = 1125 }, -- Pandaren Air Spirit
         },
     },
-    [32434] = { -- Burning Pandaren Spirit
+    [32441] = { -- Thundering Pandaren Spirit
         pets = {
-            { petNpcID = 68466, petSpeciesID = 1124 }, -- Pandaren Fire Spirit
+            { petNpcID = 68468, petSpeciesID = 1126 }, -- Pandaren Earth Spirit
+        },
+    },
+    [32604] = { -- Beasts of Fable Book I
+        pets = {
+            { petNpcID = 69893, petSpeciesID = 1197 }, -- Snowy Panda
+            { petNpcID = 69892, petSpeciesID = 1198 }, -- Mountain Panda
+            { petNpcID = 69891, petSpeciesID = 1196 }, -- Sunfur Panda
+        },
+    },
+    [32868] = { -- Beasts of Fable Book II
+        pets = {
+            { petNpcID = 69893, petSpeciesID = 1197 }, -- Snowy Panda
+            { petNpcID = 69892, petSpeciesID = 1198 }, -- Mountain Panda
+            { petNpcID = 69891, petSpeciesID = 1196 }, -- Sunfur Panda
+        },
+    },
+    [32869] = { -- Beasts of Fable Book III
+        pets = {
+            { petNpcID = 69893, petSpeciesID = 1197 }, -- Snowy Panda
+            { petNpcID = 69892, petSpeciesID = 1198 }, -- Mountain Panda
+            { petNpcID = 69891, petSpeciesID = 1196 }, -- Sunfur Panda
         },
     },
     [37644] = { -- Mastering the Menagerie
@@ -90,12 +121,44 @@ DataModule.ActivitiesData.dailyQuestPetData = {
             { petNpcID = 117340, petSpeciesID = 2001 }, -- Dibbler
         },
     },
-    [11665] = { -- Crocolisks in the City
+    [65256] = { -- Cluck, Cluck, Boom
         pets = {
-            { petNpcID = 24388, petSpeciesID = 163 }, -- Toothy
-            { petNpcID = 24389, petSpeciesID = 164 }, -- Muckbreath
-            { petNpcID = 26050, petSpeciesID = 173 }, -- Snarly
-            { petNpcID = 26056, petSpeciesID = 174 }, -- Chuck
+            { petNpcID = 184189, petSpeciesID = 3225 }, -- Violent Poultrid
+        },
+    },
+    [63786] = { -- Sweep the Windswept Aerie
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 1 of 5)
+        },
+    },
+    [63936] = { -- Devoured Anima
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 2 of 5)
+        },
+    },
+    [63950] = { -- Razorwing Talons
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 3 of 5)
+        },
+    },
+    [63956] = { -- Sealed Secrets
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 4 of 5)
+        },
+    },
+    [63964] = { -- Broker's Bounty: Grimtalon
+        pets = {
+            { petNpcID = 179251, petSpeciesID = 3136 }, -- Korthian Specimen (Q 5 of 5)
+        },
+    },
+    [64017] = { -- Oozing with Character
+        pets = {
+            { petNpcID = 179230, petSpeciesID = 3127 }, -- Chompy (Q 1 of 2)
+        },
+    },
+    [64065] = { -- Local Reagents
+        pets = {
+            { petNpcID = 179230, petSpeciesID = 3127 }, -- Chompy (Q 2 of 2)
         },
     },
 }

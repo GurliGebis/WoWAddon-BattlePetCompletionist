@@ -32,7 +32,7 @@
     Note: while most of these quests are daily trainer quests,
         some are weekly, such as the Celestial Tournement.
 
-    Format: [criteriaID] -> QuestID, -- Trainer | Quest Name
+    Format: [criteriaID] -> QuestID, -- NPC/Monster/Etc | Quest Name
 
 --]]
 
@@ -1294,4 +1294,22 @@ DataModule.ActivitiesData.criteriaToQuestMap = {
     [113336] = 31926, -- Bloodknight Antari | Grand Master Antari
     [113337] = 31925, -- Morulu The Elder | Morulu The Elder
     [113338] = 31923, -- Ras'an | Ras'an
+    [212033] = 78370, -- Giblet | Claws for Concern
+    [212039] = 78370, -- Feets | Claws for Concern
+    [212042] = 78370, -- Bumbletweet | Claws for Concern
+    [212044] = 78370, -- Peanut | Claws for Concern
+    [212045] = 78370, -- Snoozle | Claws for Concern
+    [212046] = 78370, -- Fruffles | Claws for Concern
+    [212047] = 78370, -- Squawkle | Claws for Concern
+    [212049] = 78370, -- Wingnut | Claws for Concern
+    [212050] = 78370, -- Owlington | Claws for Concern
+    [212051] = 78370, -- Meep | Claws for Concern
+    [212052] = 78370, -- Hops | Claws for Concern
+    [212053] = 78370, -- Beaks | Claws for Concern
+    [212054] = 78370, -- Squeaky | Claws for Concern
+    [212055] = 78370, -- Moonbeam | Claws for Concern
+    [212056] = 78370, -- Chickle | Claws for Concern
+    [212057] = 78370, -- Fuzz | Claws for Concern
+    [212058] = 78370, -- Eugene | Claws for Concern
+    [212060] = 78370, -- Tickles | Claws for Concern
 }

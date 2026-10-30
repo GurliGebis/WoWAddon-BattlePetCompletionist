@@ -22,9 +22,6 @@
     Reminders" ... FR Link:
     https://github.com/GurliGebis/WoWAddon-BattlePetCompletionist/issues/86
 
-    This has two arrays incase of variance later on by Blizzard.
-    One is for World Quests and one is for Daily Quests
-
     The data is in a Multi-Layered Hash Table with format:
         EventID -- English name in comment for ease of maintaining
             PetHash of Pet NPC ID & Pet Species ID
@@ -51,6 +48,9 @@ DataModule.ActivitiesData.worldQuestAchievementPetData = {
     },
     [9069] = { -- An Awfully Big Adventure
         petReward = { { petNpcID = 88830, petSpeciesID = 1605, } }, -- Trunks
+    },
+    [19293] = { -- Friends In Feathers
+        petReward = { { petNpcID = 212206, petSpeciesID = 4288, } } -- Blueloo
     },
     [40088] = { -- A Champion's Tour: The War Within
         petReward = { { petNpcID = 223859, petSpeciesID = 4581, } }, -- Ruby-Eyed Stagshell

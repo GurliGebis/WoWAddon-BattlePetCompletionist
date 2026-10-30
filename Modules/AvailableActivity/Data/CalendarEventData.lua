@@ -216,6 +216,11 @@ DataModule.ActivitiesData.calendarEventPetData = {
             { petNpcID = 118063, petSpeciesID = 2018 }, -- Paradox Spirit
         },
     },
+    [1052] = { -- Wanderer's Festival (Dec 7 Instance)
+        pets = {
+            { petNpcID = 67022, petSpeciesID = 1013 }, -- Wanderer's  Festival Hatchling
+        },
+    },
     -- [1056] = {}, -- Warlords of Draenor; does not currently have pets
     -- [1263] = {}, -- Legion Timewalking; does not currently have pets
     -- [1271] = {}, -- Legion Timewalking; does not currently have pets

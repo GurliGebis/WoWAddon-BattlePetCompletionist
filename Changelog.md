@@ -1,3 +1,6 @@
+# 12.1.5-20261030-1
+* Added a large number of new data entries to the activity tracker, provided by JPEscher on github, based on a data dump from Remte on the WarCraftPets Discord.
+
 # 12.1.5-20261014-1
 * Updated Retail TOC to match 12.1.5
 

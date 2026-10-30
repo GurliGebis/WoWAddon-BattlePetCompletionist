@@ -36,17 +36,17 @@ local AceGUI = LibStub("AceGUI-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_AvailableActivity")
 
 function AvailableActivityModule:OnInitialize()
-    self.dataReady = { calendar = false, pets = false, process = false, }
+    self.dataReady = { calendar = false, covenant = false, pets = false, process = false, }
     self.calendarWaitStarted = false
     self.pendingQuestLoads = {}
     self.pendingQuestCount = 0
+    self.callingsData = nil
 
     self.EventFrame = CreateFrame("Frame")
     self.EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
     self.EventFrame:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST")
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-        self.EventFrame:RegisterEvent("QUEST_DATA_LOAD_RESULT")
-    end
+    self.EventFrame:RegisterEvent("QUEST_DATA_LOAD_RESULT")
+    self.EventFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
     self.EventFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE")
 
     self.EventFrame:SetScript("OnEvent", function(selfFrame, event, ...)
@@ -97,6 +97,9 @@ function AvailableActivityModule:StartProcess(command)
     -- this is a default false that allows for slashcommand override
     self.dataReady.pets = command or false
 
+    -- this tells the system to get the ShadowLands Covenant Callings for the day
+    C_CovenantCallings.RequestCallings()
+
     -- this tells the calendar when we are at to cache this month initially
     -- this prevents a looping issue as sometimes the calendar never figures
     -- out the current month without it.
@@ -138,6 +141,9 @@ function AvailableActivityModule:GetQuestTitle(questID)
     end
 
     local title = C_QuestLog.GetTitleForQuestID(questID)
+    if issecretvalue(title) then
+        return
+    end
 
     if title then
         return title
@@ -220,7 +226,7 @@ function AvailableActivityModule:IsPetSought(petNpcID)
     return numPets < threshhold
 end
 
-function AvailableActivityModule:GetPetData(pets)
+function AvailableActivityModule:GetPetData(pets, islandID)
     if InCombatLockdown() then
         return
     end
@@ -231,19 +237,230 @@ function AvailableActivityModule:GetPetData(pets)
     -- speciesName, speciesIcon, petType, companionID, tooltipSource,
     -- tooltipDescription, isWild, canBattle, isTradeable, isUnique,
     -- obtainable, creatureDisplayID
+    islandID = islandID or 0
     pets = pets or {}
+
     for _,pet in ipairs(pets) do
         if AvailableActivityModule:IsPetSought(pet.petNpcID) then
             local petName, _ = C_PetJournal.GetPetInfoBySpeciesID(pet.petSpeciesID)
 
             if not issecretvalue(petName) then
                 local petLink = "|cff1eff00|Hbattlepet:" .. pet.petSpeciesID .. ":1:3:1:::BattlePet--:|h[" .. petName .. "]|h|r"
+                if pet.islands and (islandID > 0) then
+                    local first = true
+                    for _, mapID in ipairs(pet.islands) do
+                        if mapID ~= islandID then
+                            if first then
+                                petLink = petLink .. L[" also from "] .. C_Map.GetMapInfo(mapID).name
+                                first = false
+                            else
+                                petLink = petLink .. L[", "] .. C_Map.GetMapInfo(mapID).name
+                            end
+                        end
+                    end
+                end
                 table.insert(results, { petSpeciesID = pet.petSpeciesID, petName = petName, linkValue = petLink, linkType = "battlepet", })
             end
         end
     end
 
     return results
+end
+
+function AvailableActivityModule:BuildIslandQuestList(dataSource)
+    if InCombatLockdown() then
+        return
+    end
+
+    local results = {}
+
+    for mapID, sourceEntry in pairs(dataSource) do
+        local title = ""
+        if mapID > 0 then
+            title = C_Map.GetMapInfo(mapID).name
+        elseif mapID == -1 then
+            title = "From Any Island Expedition"
+        end
+
+        if AvailableActivityModule:tableSize(sourceEntry.pets) == 0 then
+            return results
+        end
+
+        local links = AvailableActivityModule:GetPetData(sourceEntry.pets, mapID)
+        local entry = AvailableActivityModule:BuildActivityEntry("Island Expeditions", title, links)
+
+        if entry then
+            table.insert(results, entry)
+        end
+    end
+
+    return results
+end
+
+function AvailableActivityModule:SeasonalPets()
+    if InCombatLockdown() then
+        return
+    end
+
+    --[[
+        This function checks for and returns seasonal pets that are based
+        on set calendar dates, and not calendar events. Currently known Pets:
+
+        Starts | Ends   | NPCID | PetID | Pet Name
+        Jun 21 | Sep 23 | 62256 | 513   | Qiraji Guardling
+        Dec 22 | Mar 19 | 7554  | 69    | Snowy Owl
+    --]]
+
+    local seasonal = nil
+    local links = nil
+    local pets = nil
+    local md = self.today.month * 100 + self.today.monthDay -- make today look like 1011
+
+    if 620 < md and md < 924 then -- if it's after june 20 (620) and before sep 24 (924) aka WoW Summer
+		pets = {{ petNpcID = 62256, petSpeciesID = 513 }}
+		links = AvailableActivityModule:GetPetData(pets)
+		seasonal = AvailableActivityModule:BuildActivityEntry("Calendar Events", "Summer Season", links)
+    elseif md < 320 or 1221 < md then -- if it's after dec 21 (1221) and before mar 20 (320) aka WoW Winter
+		pets = {{ petNpcID = 7554, petSpeciesID = 69 }}
+		links = AvailableActivityModule:GetPetData(pets)
+		seasonal = AvailableActivityModule:BuildActivityEntry("Calendar Events", "Winter Season", links)
+    end
+
+    return seasonal
+end
+
+function AvailableActivityModule:BuildTimedZoneEventActivityList(dataSource)
+    if InCombatLockdown() then
+        return
+    end
+
+    local results = {}
+
+    for mapID, eventData in pairs(dataSource) do
+        if eventData.requireTimer then
+            inactiveZone = AvailableActivityModule:InactiveZoneCheck(mapID)
+
+            for zoneName, eventZone in pairs(eventData.events) do
+                if inactiveZone ~= eventZone.mapZone then
+                    local title = zoneName
+                    local links = AvailableActivityModule:GetPetData(eventZone.pets)
+                    local entry = AvailableActivityModule:BuildActivityEntry("Timed Zone Event Rares", title, links)
+
+                    if entry then
+                        table.insert(results, entry)
+                    end
+                end
+            end
+        else
+            local mapQuests = C_TaskQuest.GetQuestsOnMap(mapID) -- fails if old zone is active!
+            if issecretvalue(mapQuests) then
+                return results
+            end
+
+            if AvailableActivityModule:tableSize(mapQuests) == 0 then
+                local linkTitle = L["Ensure you have the current "] .. C_Map.GetMapInfo(mapID).name .. L[" open & active. Check with"] .. " Zidormi."
+                local links = { { petSpeciesID = nil, petName = nil, linkType = nil,
+    linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
+                    } }
+                local entry = AvailableActivityModule:BuildActivityEntry("Timed Zone Event Rares", L["Are you a Time Traveler?"], links)
+                table.insert(results, entry)
+            else
+                for _, questData in ipairs(mapQuests) do
+                    local activity = nil
+                    activity = eventData.events[questData.questID]
+                    if activity ~= nil then
+                        local title = AvailableActivityModule:GetQuestTitle(questData.questID)
+                        local links = AvailableActivityModule:GetPetData(activity.pets)
+                        local entry = AvailableActivityModule:BuildActivityEntry("Timed Zone Event Rares", title, links)
+
+                        if entry then
+                            table.insert(results, entry)
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return results
+end
+
+function AvailableActivityModule:InactiveZoneCheck(MapID)
+    if InCombatLockdown() then
+        return
+    end
+
+    local serverTime = (C_DateAndTime.GetServerTimeLocal() + C_DateAndTime.GetSecondsUntilDailyReset())
+    if issecretvalue(serverTime) then
+        return
+    end
+
+    local modMe = floor(serverTime/86400)
+
+    local locations = {
+        [1469] = { 1, 2, },
+	    [2133] = { 1, 2, 3, 4, }
+    }
+
+    local checkme = locations[MapID]
+    local modBy = #checkme
+    local inactiveID = checkme[(modMe%modBy)+1]
+
+    if MapID == 1469 then
+        inactiveID = 1
+        if C_TaskQuest.IsActive(57157) then
+            inactiveID = 2
+        end
+    end
+
+    return inactiveID
+end
+
+function AvailableActivityModule:MicroHolidays()
+    if InCombatLockdown() then
+        return
+    end
+
+    --[[
+        This function checks for and returns microholidays which cannot be tracked
+        by traditional means. The list is as follows:
+        NPCID | PetID | Pet Name | Holiday | Time Info
+        67022 | 1013  | Wanderer's Festival Hatchling | Wanderer's Festival | Sundays from 9 pm to 11 pm
+        Reference: https://us.forums.blizzard.com/en/wow/t/wanderers-festival-timing-clarification/2379938
+        Reference: https://www.wowhead.com/event=1052/wanderers-festival#comments:id=6241762
+        Reference: https://www.wowhead.com/npc=67022/wanderers-festival-hatchling#comments:id=1790187
+    --]]
+
+    local micros = nil
+    local links = nil
+    local pets = nil
+    local dow = C_DateAndTime.GetCurrentCalendarTime().weekday
+
+    if dow == 1 then -- if it is sunday
+        pets = {{ petNpcID = 67022, petSpeciesID = 1013 }}
+        links = AvailableActivityModule:GetPetData(pets)
+        local title = "Wanderer's Festival: 9pm to 11pm"
+        local region = GetCurrentRegion()
+        --[[
+            regions: 1 is US & Oceanic (use PT & AET respectively) -- Multiple TZs
+            2 is KR which uses Korean Standard Time - No Daylight Savings - One TZ
+            3 is EU which uses CET -- Multiple TZs
+            4 is TW which uses China Standard Time aka Taipei Time - No Daylight Savings - One TZ
+            5 is CN which uses China Standard Time aka Taipei Time - One TZ
+        --]]
+        if region == 1 then -- Americas & Oceanic
+            if BattlePetCompletionist.IsOceanic() then -- Oceanic -> Australian Eastern Time
+                title = title .. " AET"
+            else -- Americas -> Pacific Time
+                title = title .. " PT"
+            end
+        elseif region == 3 then -- EU
+            title = title .. " CET"
+        end
+        micros = AvailableActivityModule:BuildActivityEntry("Calendar Events", title, links)
+    end
+
+    return micros
 end
 
 function AvailableActivityModule:BuildActivityEntry(category, title, petLinks, subCategory)
@@ -304,6 +521,121 @@ function AvailableActivityModule:BuildCalendarEventList(dataSource)
                 if entry then
                     table.insert(results, entry)
                 end
+            end
+        end
+    end
+
+    local seasonal = AvailableActivityModule:SeasonalPets()
+	if seasonal then
+        table.insert(results, seasonal)
+    end
+
+    local micros = AvailableActivityModule:MicroHolidays()
+    if micros then
+        table.insert(results, micros)
+    end
+
+    return results
+end
+
+function AvailableActivityModule:BuildBountyQuestList(dataSource)
+    if InCombatLockdown() then
+        return
+    end
+
+    local results = {}
+    local bounties = C_QuestLog.GetBountiesForMapID(627)
+    if issecretvalue(bounties) then
+        return
+    end
+
+    for _,bountyData in ipairs(bounties) do
+        local sourceEntry = dataSource[bountyData]
+        if sourceEntry ~= nil then
+            local title = AvailableActivityModule:GetQuestTitle(bountyData.questID)
+            local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
+            local entry = AvailableActivityModule:BuildActivityEntry("Bounty Quests", title, links)
+
+            if entry then
+                table.insert(results, entry)
+            end
+        end
+    end
+
+    return results
+end
+
+function AvailableActivityModule:BuildCovenantQuestList(dataSource)
+    if InCombatLockdown() then
+        return
+    end
+
+    local results = {}
+    local unlocked = C_CovenantCallings.AreCallingsUnlocked()
+    if issecretvalue(unlocked) then
+        return
+    end
+    if not unlocked then
+        local linkTitle = L["You need to unlock Covenants"]
+        results = { { category = "Covenant Callings", title = L["Covenants Not Unlocked"],
+            pets = { { petSpeciesID = nil, petName = nil, linkType = nil,
+    linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
+        } } } }
+    end
+
+    local aligned = C_Covenants.GetActiveCovenantID()
+    if issecretvalue(aligned) then
+        return
+    end
+    if not aligned or aligned <= 0 then
+        local linkTitle = L["You need to choose a Covenant"]
+        results = { { category = "Covenant Callings", title = L["No Covenant Chosen"],
+            pets = { { petSpeciesID = nil, petName = nil, linkType = nil,
+    linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
+        } } } }
+    end
+
+    -- protective and possibly not necessary. here for safety.
+    if self.callingsData == nil then
+        return
+    end
+
+    for _,callingData in ipairs(self.callingsData) do
+        local sourceEntry = dataSource[callingData.questID]
+        if sourceEntry ~= nil then
+            local title = AvailableActivityModule:GetQuestTitle(callingData.questID)
+            local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
+            local entry = AvailableActivityModule:BuildActivityEntry("Covenant Callings", title, links)
+
+            if entry then
+                table.insert(results, entry)
+            end
+        end
+    end
+
+    return results
+end
+
+function AvailableActivityModule:BuildParagonEventActivityList(dataSource)
+    if InCombatLockdown() then
+        return
+    end
+
+    local results = {}
+
+    for repID, repData in pairs(dataSource) do
+        repInfo = C_Reputation.GetFactionDataByID(repID)
+        if issecretvalue(repInfo) then
+            repInfo = nil
+        end
+
+	    if repInfo ~= nil then
+            local title = repInfo.name
+            local links = AvailableActivityModule:GetPetData(repData.pets)
+            local entry = AvailableActivityModule:BuildActivityEntry("Paragon Reputations", title, links)
+
+            if entry then
+                table.insert(results, entry)
             end
         end
     end
@@ -393,6 +725,14 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
                     if AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
                         seenQuestIDs[qID] = true
                         table.insert(necessaryCriteria, { questTitle = title, questID = qID })
+                elseif criteriaType == 0 then -- this is a "monster" we need to move to a quest
+                    local qID = criteriaToQuestMap[criteriaID]
+                    local title = AvailableActivityModule:GetQuestTitle(qID)
+
+                    if AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
+                        seenQuestIDs[qID] = true
+                        table.insert(necessaryCriteria, { questTitle = title, questID = qID })
+                    end
                     end
                 end
             end
@@ -524,11 +864,16 @@ function AvailableActivityModule:CreateDataObject()
     end
 
     dataObject = {
+        bountyPetEvents                = AvailableActivityModule:BuildBountyQuestList(activitiesData.bountyPetData),
         calendarPetEvents              = AvailableActivityModule:BuildCalendarEventList(activitiesData.calendarEventPetData),
-        dailyQuestPetEvents            = AvailableActivityModule:BuildDailyQuestList(activitiesData.dailyQuestPetData),
-        worldQuestPetEvents            = AvailableActivityModule:BuildWorldQuestList(activitiesData.worldQuestPetData),
+        covenantPetEvents              = AvailableActivityModule:BuildCovenantQuestList(activitiesData.covenantPetData),
         dailyQuestPetAchievementEvents = AvailableActivityModule:BuildDailyQuestAchievementList(activitiesData.dailyQuestAchievementPetData, activitiesData.criteriaToQuestMap),
+        dailyQuestPetEvents            = AvailableActivityModule:BuildDailyQuestList(activitiesData.dailyQuestPetData),
+        islandPetEvents                = AvailableActivityModule:BuildIslandQuestList(activitiesData.islandPetData),
+        paragonPetEvents               = AvailableActivityModule:BuildParagonEventActivityList(activitiesData.paragonPetData),
+        timedZonePetEvents             = AvailableActivityModule:BuildTimedZoneEventActivityList(activitiesData.TimedZoneActivityPetData),
         worldQuestPetAchievementEvents = AvailableActivityModule:BuildWorldQuestAchievementList(activitiesData.worldQuestAchievementPetData, activitiesData.criteriaToQuestMap),
+        worldQuestPetEvents            = AvailableActivityModule:BuildWorldQuestList(activitiesData.worldQuestPetData),
     }
 
     return dataObject
@@ -541,11 +886,16 @@ function AvailableActivityModule:DisplayActivityWindow(dataObject)
 
     --[[ structure reminder note
     dataObject = {
+        bountyPetEvents                = { { category = category, title = title, pets = petLinks } }
         calendarPetEvents              = { { category = category, title = title, pets = petLinks } }
-        dailyQuestPetEvents            = { { category = category, title = title, pets = petLinks } }
-        worldQuestPetEvents            = { { category = category, title = title, pets = petLinks } }
+        covenantPetEvents              = { { category = category, title = title, pets = petLinks } }
         dailyQuestPetAchievementEvents = { { category = category, subcategory = subcategory, title = title, pets = petLinks } }
+        dailyQuestPetEvents            = { { category = category, title = title, pets = petLinks } }
+        islandPetEvents                = { { category = category, title = title, pets = petLinks } }
+        paragonPetEvents               = { { category = category, title = title, pets = petLinks } }
+        timedZonePetEvents             = { { category = category, title = title, pets = petLinks } }
         worldQuestPetAchievementEvents = { { category = category, subcategory = subcategory, title = title, pets = petLinks } }
+        worldQuestPetEvents            = { { category = category, title = title, pets = petLinks } }
     }
     --]]
 
@@ -600,11 +950,25 @@ function AvailableActivityModule:DisplayActivityWindow(dataObject)
         table.insert(parentNode.children, { value = leafValue, text = eventData.title })
     end
 
+    local function sortTree(nodes)
+        table.sort(nodes, function(a, b)
+            return a.text:lower() < b.text:lower()
+        end)
+
+        for _, node in ipairs(nodes) do
+            if node.children and #node.children > 0 then
+                sortTree(node.children)
+            end
+        end
+    end
+
     for _, eventArray in pairs(dataObject) do
         for _, eventData in ipairs(eventArray) do
             addEvent(eventData)
         end
     end
+
+    sortTree(tree)
 
     -- maintainers: this is the adjustment when no notices are needed
     if #tree == 0 then
@@ -620,6 +984,7 @@ function AvailableActivityModule:DisplayActivityWindow(dataObject)
     end
 
     frame:SetLayout("Fill")
+    frame:SetStatusText(L["Need more information? Try"] .. " WarCraftPets.com")
     local treeGroup = AceGUI:Create("TreeGroup")
     treeGroup:SetLayout("Fill")
     treeGroup:SetFullWidth(true)
@@ -681,6 +1046,10 @@ function AvailableActivityModule:TryRefresh()
     end
 
     if not self.dataReady.calendar then
+        return
+    end
+
+    if not self.dataReady.covenant then
         return
     end
 
@@ -758,10 +1127,6 @@ function AvailableActivityModule:WaitForCalendarReady(startTime, interval)
 end
 
 function AvailableActivityModule:OnEvent(event, arg1, ...)
-    if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
-        return
-    end
-
     if event == "PLAYER_ENTERING_WORLD" and arg1 then
         -- WOW_PROJECT_MAINLINE only had arguments added in 8.0.1
         -- full details: https://warcraft.wiki.gg/wiki/PLAYER_ENTERING_WORLD
@@ -778,6 +1143,11 @@ function AvailableActivityModule:OnEvent(event, arg1, ...)
 
     elseif event == "PET_JOURNAL_LIST_UPDATE" and self.dataReady.process then
         self.dataReady.pets = true
+        AvailableActivityModule:TryRefresh()
+
+    elseif event == "COVENANT_CALLINGS_UPDATED" and arg1 and self.dataReady.process then
+        self.callingsData = arg1
+        self.dataReady.covenant = true
         AvailableActivityModule:TryRefresh()
 
     elseif event == "QUEST_DATA_LOAD_RESULT" and self.dataReady.process then
