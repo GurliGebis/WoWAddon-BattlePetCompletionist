@@ -1,3 +1,6 @@
+# 12.1.5-20261030-2
+* Updated missing localizations.
+
 # 12.1.5-20261030-1
 * Added a large number of new data entries to the activity tracker, provided by JPEscher on github, based on a data dump from Remte on the WarCraftPets Discord.
 
