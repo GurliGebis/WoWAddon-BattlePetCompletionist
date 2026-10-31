@@ -4,7 +4,7 @@
 
 The Available Activity Module (AAM) was a BattlePetCompletionist Feature Request for Retail World of Warcraft being fulfilled. Currently only the Retail WoW is supported. This is due in part to the way Blizzard implements their IDs.
  The event, quest and other IDs are not uniform across versions. Once a version is branched form Retail, the IDs can start being used by the new branch with different items attached. Due to this, the AAM was launched with Retail as 
-the target. Expanding to other versions is possible, but there is no current timetable.
+the target. MoP Classic is also supported. Other branches may be looked into if there is interest.
 
 ## Features
 
@@ -18,6 +18,9 @@ the target. Expanding to other versions is possible, but there is no current tim
   It is requested that any tickets us the blank format and get tagged "[AAM Update]" as their start.
 
 ## The AAM Covers
+
+This list is for Retail. Where applicable, it is also on other supported branches
+
   * Calendar Based:
     * Brewfest
     * Children's Week
