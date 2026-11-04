@@ -514,7 +514,7 @@ function AvailableActivityModule:BuildCalendarEventList(dataSource)
                     local regionDay = { [1] = 14, [2] = 7, [3] = 8, [4] = 7, [5] = 7 }
                     local rotationDay = ( math.floor((( GetServerTime() + C_DateAndTime.GetSecondsUntilDailyReset()) - time({year = 2026, month = 10, day = regionDay[region]})) / 86400) % 15) + 1
                     if rotationDay == 1 then
-                        links.linkValue = links.linkValue .. " " .. L["NOTE: Today is Super Squirt Day!"}
+                        links.linkValue = links.linkValue .. " " .. L["NOTE: Today is Super Squirt Day!"]
                     end
                 else -- regular event
                     links = AvailableActivityModule:GetPetData(sourceEntry.pets)
