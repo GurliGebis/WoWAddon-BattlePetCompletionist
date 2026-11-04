@@ -1,3 +1,6 @@
+# 12.1.5-20261104-1
+* Added Super Squirt Day notice and updated AAM docs for MoP support.
+
 # 12.1.5-20261030-3
 * Updated more missing localizations.
 
