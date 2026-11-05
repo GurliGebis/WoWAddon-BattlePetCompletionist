@@ -1,4 +1,4 @@
-# 12.1.5-20261104-5
+# 12.1.5-20261105-1
 * Fix MoP quest titles showing 'Quest Not Found' on cold cache.
 * Fixing incorrect ending (} -> ]), provided by JPEscher on github.
 
