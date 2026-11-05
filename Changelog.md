@@ -1,5 +1,6 @@
 # 12.1.5-20261104-5
 * Fix MoP quest titles showing 'Quest Not Found' on cold cache.
+* Fixing incorrect ending (} -> ]), provided by JPEscher on github.
 
 # 12.1.5-20261104-1
 * Added Super Squirt Day notice and updated AAM docs for MoP support.
