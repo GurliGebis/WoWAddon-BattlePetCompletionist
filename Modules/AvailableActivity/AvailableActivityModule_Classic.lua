@@ -38,6 +38,8 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName .. "_AvailableActivity")
 function AvailableActivityModule:OnInitialize()
     self.dataReady = { calendar = false, pets = false, process = false, }
     self.calendarWaitStarted = false
+    self.questTitleWaits = 0
+    self.questTitleTimer = false
 
     self.EventFrame = CreateFrame("Frame")
     self.EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -85,6 +87,10 @@ function AvailableActivityModule:StartProcess(command)
         return
     end
 
+    self.questTitleWaits = 0
+    -- prime the client's quest name cache
+    self:QuestTitlesCached()
+
     self.dataReady.process = true
     self.dataReady.calendar = false
     self.calendarWaitStarted = false
@@ -121,6 +127,22 @@ function AvailableActivityModule:BeginCalendarWait()
     AvailableActivityModule:WaitForCalendarReady()
 end
 
+-- Returns the cached quest title, or nil if the client has not cached it yet.
+-- Calling GetQuestInfo also makes the client request the name from the server.
+function AvailableActivityModule:GetCachedQuestTitle(questID)
+    if not questID then
+        return
+    end
+
+    local title = C_QuestLog.GetQuestInfo(questID)
+
+    if issecretvalue(title) or title == nil or title == "" then
+        return
+    end
+
+    return title
+end
+
 function AvailableActivityModule:GetQuestTitle(questID, lock)
     if InCombatLockdown() then
         return
@@ -132,26 +154,23 @@ function AvailableActivityModule:GetQuestTitle(questID, lock)
         return
     end
 
-    local title = C_QuestLog.GetQuestInfo(questID)
-    local wlcount = 0
+    return self:GetCachedQuestTitle(questID) or L["Quest Not Found"]
+end
 
-    if issecretvalue(title) then
-        return L["Quest Not Found"]
-    end
+-- Asks the server for all known daily quest names, so they are cached by the
+-- time we build the list. Returns true when every title is available.
+function AvailableActivityModule:QuestTitlesCached()
+    local allCached = true
+    local activitiesData = DataModule:GetActivitiesData()
+    local dailyData = activitiesData and activitiesData.dailyQuestPetData or {}
 
-    while wlcount < 20 and title == nil do
-        title = C_QuestLog.GetQuestInfo(questID)
-        wlcount = wlcount + 1
-        if issecretvalue(title) then
-            return
+    for questID in pairs(dailyData) do
+        if not self:GetCachedQuestTitle(questID) then
+            allCached = false
         end
     end
 
-    if not title then
-        title = L["Quest Not Found"]
-    end
-
-    return title
+    return allCached
 end
 
 function AvailableActivityModule:IsQuestAvailable(questID, questType)
@@ -416,6 +435,9 @@ function AvailableActivityModule:BuildDailyQuestList(dataSource)
     return results
 end
 
+-- Waits between quest name checks double each time: 1, 2, 4, 8, 16, 32s.
+local QUEST_TITLE_MAX_WAITS = 6
+
 function AvailableActivityModule:VerifyDataIsReady()
     if InCombatLockdown() then
         return false
@@ -423,7 +445,23 @@ function AvailableActivityModule:VerifyDataIsReady()
 
     local questVerificationID = 12515 -- https://www.wowhead.com/quest=12515/nice-hat
 
-    local questVerified = AvailableActivityModule:GetQuestTitle(questVerificationID) ~= nil
+    -- Quest names load asynchronously from the server. Wait for them (up to
+    -- QUEST_TITLE_MAX_WAITS growing waits); after that, accept "Quest Not Found".
+    local questVerified = AvailableActivityModule:GetCachedQuestTitle(questVerificationID) ~= nil
+        and AvailableActivityModule:QuestTitlesCached()
+
+    if not questVerified and self.questTitleWaits < QUEST_TITLE_MAX_WAITS then
+        if not self.questTitleTimer then
+            local delay = 2 ^ self.questTitleWaits
+            self.questTitleWaits = self.questTitleWaits + 1
+            self.questTitleTimer = true
+            C_Timer.After(delay, function()
+                AvailableActivityModule.questTitleTimer = false
+                AvailableActivityModule:TryRefresh()
+            end)
+        end
+        return false
+    end
 
     -- note: we don't check against a curated list of specific calendar event
     -- IDs here, since which events are actually scheduled for "today" varies
