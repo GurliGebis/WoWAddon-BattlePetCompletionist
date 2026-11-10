@@ -549,12 +549,12 @@ function AvailableActivityModule:BuildBountyQuestList(dataSource)
 
     local results = {}
     local bounties = C_QuestLog.GetBountiesForMapID(627)
-    if issecretvalue(bounties) then
-        return
+    if bounties == nil or issecretvalue(bounties) then
+        return results
     end
 
     for _,bountyData in ipairs(bounties) do
-        local sourceEntry = dataSource[bountyData]
+        local sourceEntry = dataSource[bountyData.questID]
         if sourceEntry ~= nil then
             local title = AvailableActivityModule:GetQuestTitle(bountyData.questID)
             local links = AvailableActivityModule:GetPetData(sourceEntry.pets)
