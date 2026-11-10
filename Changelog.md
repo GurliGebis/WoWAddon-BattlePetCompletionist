@@ -1,3 +1,6 @@
+# 12.1.5-20261110-1
+* Fix Available Activity error when no bounty quests are returned.
+
 # 12.1.5-20261105-1
 * Fix MoP quest titles showing 'Quest Not Found' on cold cache.
 * Fixing incorrect ending (} -> ]), provided by JPEscher on github.
