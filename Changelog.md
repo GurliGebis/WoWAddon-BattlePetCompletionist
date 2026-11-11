@@ -1,3 +1,7 @@
+# 12.1.5-20261112-1
+* Fix Available Activity errors and empty results when APIs return nil, including achievement criteria, map info, pet names, calendar events and combat, also in the Classic module.
+* Fix Available Activity lists ending early or showing wrong results (islands, covenant callings, achievement criteria).
+
 # 12.1.5-20261110-1
 * Fix Available Activity error when no bounty quests are returned.
 
