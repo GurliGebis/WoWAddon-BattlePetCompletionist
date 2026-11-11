@@ -693,7 +693,7 @@ end
 
 function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questType, seenQuestIDs, criteriaToQuestMap)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local criteriaTitle, criteriaType, criteriaComplete, assetID, criteriaID, numCriteria
@@ -703,7 +703,7 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
     local numCriteria = GetAchievementNumCriteria(achievementID)
 
     if issecretvalue(numCriteria) then
-        return
+        return necessaryCriteria
     end
 
     for criteriaIndex = 1, numCriteria do
@@ -714,7 +714,7 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
                 if criteriaType == 8 then  -- subcriteria is an achievement
                     local subCriteria = AvailableActivityModule:AchievementCriteriaCheck(assetID, questType, seenQuestIDs, criteriaToQuestMap)
 
-                    for _, data in ipairs(subCriteria) do
+                    for _, data in ipairs(subCriteria or {}) do
                         table.insert(necessaryCriteria, data)
                     end
                 elseif criteriaType == 27 then -- this is a quest & we need the quest. verify availability
@@ -724,19 +724,19 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
                     end
                 elseif criteriaType == 158 then -- this is an npc we need to move to a quest
                     local qID = criteriaToQuestMap[criteriaID]
-                    local title = AvailableActivityModule:GetQuestTitle(qID)
+                    local title = qID and AvailableActivityModule:GetQuestTitle(qID)
 
-                    if AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
-                        seenQuestIDs[qID] = true
-                        table.insert(necessaryCriteria, { questTitle = title, questID = qID })
-                elseif criteriaType == 0 then -- this is a "monster" we need to move to a quest
-                    local qID = criteriaToQuestMap[criteriaID]
-                    local title = AvailableActivityModule:GetQuestTitle(qID)
-
-                    if AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
+                    if qID and AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
                         seenQuestIDs[qID] = true
                         table.insert(necessaryCriteria, { questTitle = title, questID = qID })
                     end
+                elseif criteriaType == 0 then -- this is a "monster" we need to move to a quest
+                    local qID = criteriaToQuestMap[criteriaID]
+                    local title = qID and AvailableActivityModule:GetQuestTitle(qID)
+
+                    if qID and AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
+                        seenQuestIDs[qID] = true
+                        table.insert(necessaryCriteria, { questTitle = title, questID = qID })
                     end
                 end
             end
@@ -759,7 +759,7 @@ function AvailableActivityModule:ProcessAchievementEntry(achievementID, achievem
     local petLinks = AvailableActivityModule:GetPetData(achievementData.petReward)
     local achievementList = {}
 
-    for _, questNeeded in ipairs(necessaryQuests) do
+    for _, questNeeded in ipairs(necessaryQuests or {}) do
         local entry = AvailableActivityModule:BuildActivityEntry(category, questNeeded.questTitle, petLinks, subcategory)
 
         if entry then
