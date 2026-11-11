@@ -231,7 +231,7 @@ end
 
 function AvailableActivityModule:GetPetData(pets, islandID)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -356,7 +356,7 @@ end
 
 function AvailableActivityModule:BuildCalendarEventList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -415,7 +415,7 @@ end
 
 function AvailableActivityModule:BuildDailyQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}

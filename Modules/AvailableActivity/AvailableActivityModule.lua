@@ -228,7 +228,7 @@ end
 
 function AvailableActivityModule:GetPetData(pets, islandID)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -270,7 +270,7 @@ end
 
 function AvailableActivityModule:BuildIslandQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -331,7 +331,7 @@ end
 
 function AvailableActivityModule:BuildTimedZoneEventActivityList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -483,7 +483,7 @@ end
 
 function AvailableActivityModule:BuildCalendarEventList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -546,7 +546,7 @@ end
 
 function AvailableActivityModule:BuildBountyQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -573,7 +573,7 @@ end
 
 function AvailableActivityModule:BuildCovenantQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -626,7 +626,7 @@ end
 
 function AvailableActivityModule:BuildParagonEventActivityList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -653,7 +653,7 @@ end
 
 function AvailableActivityModule:BuildDailyQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -675,7 +675,7 @@ end
 
 function AvailableActivityModule:BuildWorldQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -776,13 +776,13 @@ end
 
 function AvailableActivityModule:BuildDailyQuestAchievementList(dataSource, criteriaToQuestMap)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
 
     for achievementID, achievementData in pairs(dataSource) do
-        local achievementTitle = select(2, GetAchievementInfo(achievementID))
+        local achievementTitle = select(2, GetAchievementInfo(achievementID)) or ""
         local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "daily", achievementTitle, L["Achievements From Daily Quests"], criteriaToQuestMap)
         if entries then
             for _, entry in ipairs(entries) do
@@ -796,13 +796,13 @@ end
 
 function AvailableActivityModule:BuildWorldQuestAchievementList(dataSource, criteriaToQuestMap)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
 
     for achievementID, achievementData in pairs(dataSource) do
-        local achievementTitle = select(2, GetAchievementInfo(achievementID))
+        local achievementTitle = select(2, GetAchievementInfo(achievementID)) or ""
         local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "world", achievementTitle, L["Achievements From World Quests"], criteriaToQuestMap)
         if entries then
             for _, entry in ipairs(entries) do
