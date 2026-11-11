@@ -244,13 +244,16 @@ function AvailableActivityModule:GetPetData(pets, islandID)
         if AvailableActivityModule:IsPetSought(pet.petNpcID) then
             local petName, _ = C_PetJournal.GetPetInfoBySpeciesID(pet.petSpeciesID)
 
-            if not issecretvalue(petName) then
+            if petName and not issecretvalue(petName) then
                 local petLink = "|cff1eff00|Hbattlepet:" .. pet.petSpeciesID .. ":1:3:1:::BattlePet--:|h[" .. petName .. "]|h|r"
                 if pet.islands and (islandID > 0) then
                     local otherIslands = {}
                     for _, mapID in ipairs(pet.islands) do
                         if mapID ~= islandID then
-                            table.insert(otherIslands, C_Map.GetMapInfo(mapID).name)
+                            local mapInfo = C_Map.GetMapInfo(mapID)
+                            if mapInfo and mapInfo.name then
+                                table.insert(otherIslands, mapInfo.name)
+                            end
                         end
                     end
                     if #otherIslands > 0 then
@@ -275,7 +278,8 @@ function AvailableActivityModule:BuildIslandQuestList(dataSource)
     for mapID, sourceEntry in pairs(dataSource) do
         local title = ""
         if mapID > 0 then
-            title = C_Map.GetMapInfo(mapID).name
+            local mapInfo = C_Map.GetMapInfo(mapID)
+            title = mapInfo and mapInfo.name or ""
         elseif mapID == -1 then
             title = L["From Any Island Expedition"]
         end
@@ -336,7 +340,7 @@ function AvailableActivityModule:BuildTimedZoneEventActivityList(dataSource)
 
     for mapID, eventData in pairs(dataSource) do
         if eventData.requireTimer then
-            inactiveZone = AvailableActivityModule:InactiveZoneCheck(mapID)
+            local inactiveZone = AvailableActivityModule:InactiveZoneCheck(mapID)
 
             for zoneName, eventZone in pairs(eventData.events) do
                 if inactiveZone ~= eventZone.mapZone then
@@ -351,12 +355,12 @@ function AvailableActivityModule:BuildTimedZoneEventActivityList(dataSource)
             end
         else
             local mapQuests = C_TaskQuest.GetQuestsOnMap(mapID) -- fails if old zone is active!
-            if issecretvalue(mapQuests) then
+            if mapQuests == nil or issecretvalue(mapQuests) then
                 return results
             end
 
             if AvailableActivityModule:tableSize(mapQuests) == 0 then
-                local linkTitle = string.format(L["Ensure you have the current %s open & active. Check with %s."], C_Map.GetMapInfo(mapID).name, "Zidormi")
+                local linkTitle = string.format(L["Ensure you have the current %s open & active. Check with %s."], (C_Map.GetMapInfo(mapID) or {}).name or "", "Zidormi")
                 local links = { { petSpeciesID = nil, petName = nil, linkType = nil,
     linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
                     } }
@@ -488,14 +492,14 @@ function AvailableActivityModule:BuildCalendarEventList(dataSource)
 
     local numEvents = C_Calendar.GetNumDayEvents(0, self.today.monthDay)
 
-    if issecretvalue(numEvents) then
-        return
+    if numEvents == nil or issecretvalue(numEvents) then
+        return results
     end
 
     for eventNum = 1, numEvents do
         local event = C_Calendar.GetDayEvent(0, self.today.monthDay, eventNum) or nil
 
-        if not issecretvalue(event) then
+        if event and not issecretvalue(event) then
             local sourceEntry = dataSource[event.eventID]
             if sourceEntry then
                 local title = event.title
@@ -628,7 +632,7 @@ function AvailableActivityModule:BuildParagonEventActivityList(dataSource)
     local results = {}
 
     for repID, repData in pairs(dataSource) do
-        repInfo = C_Reputation.GetFactionDataByID(repID)
+        local repInfo = C_Reputation.GetFactionDataByID(repID)
         if issecretvalue(repInfo) then
             repInfo = nil
         end
@@ -829,6 +833,9 @@ function AvailableActivityModule:VerifyDataIsReady()
     -- the data has loaded.
     local calendarVerified = false
     local numEvents = C_Calendar.GetNumDayEvents(0, self.today.monthDay)
+    if numEvents == nil or issecretvalue(numEvents) then
+        return false
+    end
     for eventNum = 1, numEvents do
         local event = C_Calendar.GetDayEvent(0, self.today.monthDay, eventNum) or nil
         if not issecretvalue(event) and event and event.eventID and event.title then
