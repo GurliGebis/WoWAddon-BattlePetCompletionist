@@ -284,15 +284,13 @@ function AvailableActivityModule:BuildIslandQuestList(dataSource)
             title = L["From Any Island Expedition"]
         end
 
-        if AvailableActivityModule:tableSize(sourceEntry.pets) == 0 then
-            return results
-        end
+        if AvailableActivityModule:tableSize(sourceEntry.pets) > 0 then
+            local links = AvailableActivityModule:GetPetData(sourceEntry.pets, mapID)
+            local entry = AvailableActivityModule:BuildActivityEntry(L["Island Expeditions"], title, links)
 
-        local links = AvailableActivityModule:GetPetData(sourceEntry.pets, mapID)
-        local entry = AvailableActivityModule:BuildActivityEntry(L["Island Expeditions"], title, links)
-
-        if entry then
-            table.insert(results, entry)
+            if entry then
+                table.insert(results, entry)
+            end
         end
     end
 
@@ -581,7 +579,7 @@ function AvailableActivityModule:BuildCovenantQuestList(dataSource)
     local results = {}
     local unlocked = C_CovenantCallings.AreCallingsUnlocked()
     if issecretvalue(unlocked) then
-        return
+        return results
     end
     if not unlocked then
         local linkTitle = L["You need to unlock Covenants"]
@@ -589,11 +587,12 @@ function AvailableActivityModule:BuildCovenantQuestList(dataSource)
             pets = { { petSpeciesID = nil, petName = nil, linkType = nil,
     linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
         } } } }
+        return results
     end
 
     local aligned = C_Covenants.GetActiveCovenantID()
     if issecretvalue(aligned) then
-        return
+        return results
     end
     if not aligned or aligned <= 0 then
         local linkTitle = L["You need to choose a Covenant"]
@@ -601,11 +600,12 @@ function AvailableActivityModule:BuildCovenantQuestList(dataSource)
             pets = { { petSpeciesID = nil, petName = nil, linkType = nil,
     linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
         } } } }
+        return results
     end
 
     -- protective and possibly not necessary. here for safety.
     if self.callingsData == nil then
-        return
+        return results
     end
 
     for _,callingData in ipairs(self.callingsData) do
