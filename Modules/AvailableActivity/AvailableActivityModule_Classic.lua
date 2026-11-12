@@ -231,7 +231,7 @@ end
 
 function AvailableActivityModule:GetPetData(pets, islandID)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -247,7 +247,7 @@ function AvailableActivityModule:GetPetData(pets, islandID)
         if AvailableActivityModule:IsPetSought(pet.petNpcID) then
             local petName, _ = C_PetJournal.GetPetInfoBySpeciesID(pet.petSpeciesID)
 
-            if not issecretvalue(petName) then
+            if petName and not issecretvalue(petName) then
                 local petLink = "|cff1eff00|Hbattlepet:" .. pet.petSpeciesID .. ":1:3:1:::BattlePet--:|h[" .. petName .. "]|h|r"
                 table.insert(results, { petSpeciesID = pet.petSpeciesID, petName = petName, linkValue = petLink, linkType = "battlepet", })
             end
@@ -356,21 +356,21 @@ end
 
 function AvailableActivityModule:BuildCalendarEventList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
 
     local numEvents = C_Calendar.GetNumDayEvents(0, self.today.monthDay)
 
-    if issecretvalue(numEvents) then
-        return
+    if numEvents == nil or issecretvalue(numEvents) then
+        return results
     end
 
     for eventNum = 1, numEvents do
         local event = C_Calendar.GetDayEvent(0, self.today.monthDay, eventNum) or nil
 
-        if not issecretvalue(event) then
+        if event and not issecretvalue(event) then
             local sourceEntry = dataSource[event.eventID]
             if sourceEntry then
                 local title = event.title
@@ -415,7 +415,7 @@ end
 
 function AvailableActivityModule:BuildDailyQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -471,6 +471,9 @@ function AvailableActivityModule:VerifyDataIsReady()
     -- the data has loaded.
     local calendarVerified = false
     local numEvents = C_Calendar.GetNumDayEvents(0, self.today.monthDay)
+    if numEvents == nil or issecretvalue(numEvents) then
+        return false
+    end
     for eventNum = 1, numEvents do
         local event = C_Calendar.GetDayEvent(0, self.today.monthDay, eventNum) or nil
         if not issecretvalue(event) and event and event.eventID and event.title then

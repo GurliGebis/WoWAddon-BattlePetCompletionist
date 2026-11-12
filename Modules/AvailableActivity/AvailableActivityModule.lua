@@ -228,7 +228,7 @@ end
 
 function AvailableActivityModule:GetPetData(pets, islandID)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -244,13 +244,16 @@ function AvailableActivityModule:GetPetData(pets, islandID)
         if AvailableActivityModule:IsPetSought(pet.petNpcID) then
             local petName, _ = C_PetJournal.GetPetInfoBySpeciesID(pet.petSpeciesID)
 
-            if not issecretvalue(petName) then
+            if petName and not issecretvalue(petName) then
                 local petLink = "|cff1eff00|Hbattlepet:" .. pet.petSpeciesID .. ":1:3:1:::BattlePet--:|h[" .. petName .. "]|h|r"
                 if pet.islands and (islandID > 0) then
                     local otherIslands = {}
                     for _, mapID in ipairs(pet.islands) do
                         if mapID ~= islandID then
-                            table.insert(otherIslands, C_Map.GetMapInfo(mapID).name)
+                            local mapInfo = C_Map.GetMapInfo(mapID)
+                            if mapInfo and mapInfo.name then
+                                table.insert(otherIslands, mapInfo.name)
+                            end
                         end
                     end
                     if #otherIslands > 0 then
@@ -267,7 +270,7 @@ end
 
 function AvailableActivityModule:BuildIslandQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -275,20 +278,19 @@ function AvailableActivityModule:BuildIslandQuestList(dataSource)
     for mapID, sourceEntry in pairs(dataSource) do
         local title = ""
         if mapID > 0 then
-            title = C_Map.GetMapInfo(mapID).name
+            local mapInfo = C_Map.GetMapInfo(mapID)
+            title = mapInfo and mapInfo.name or ""
         elseif mapID == -1 then
             title = L["From Any Island Expedition"]
         end
 
-        if AvailableActivityModule:tableSize(sourceEntry.pets) == 0 then
-            return results
-        end
+        if AvailableActivityModule:tableSize(sourceEntry.pets) > 0 then
+            local links = AvailableActivityModule:GetPetData(sourceEntry.pets, mapID)
+            local entry = AvailableActivityModule:BuildActivityEntry(L["Island Expeditions"], title, links)
 
-        local links = AvailableActivityModule:GetPetData(sourceEntry.pets, mapID)
-        local entry = AvailableActivityModule:BuildActivityEntry(L["Island Expeditions"], title, links)
-
-        if entry then
-            table.insert(results, entry)
+            if entry then
+                table.insert(results, entry)
+            end
         end
     end
 
@@ -329,14 +331,14 @@ end
 
 function AvailableActivityModule:BuildTimedZoneEventActivityList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
 
     for mapID, eventData in pairs(dataSource) do
         if eventData.requireTimer then
-            inactiveZone = AvailableActivityModule:InactiveZoneCheck(mapID)
+            local inactiveZone = AvailableActivityModule:InactiveZoneCheck(mapID)
 
             for zoneName, eventZone in pairs(eventData.events) do
                 if inactiveZone ~= eventZone.mapZone then
@@ -351,12 +353,12 @@ function AvailableActivityModule:BuildTimedZoneEventActivityList(dataSource)
             end
         else
             local mapQuests = C_TaskQuest.GetQuestsOnMap(mapID) -- fails if old zone is active!
-            if issecretvalue(mapQuests) then
+            if mapQuests == nil or issecretvalue(mapQuests) then
                 return results
             end
 
             if AvailableActivityModule:tableSize(mapQuests) == 0 then
-                local linkTitle = string.format(L["Ensure you have the current %s open & active. Check with %s."], C_Map.GetMapInfo(mapID).name, "Zidormi")
+                local linkTitle = string.format(L["Ensure you have the current %s open & active. Check with %s."], (C_Map.GetMapInfo(mapID) or {}).name or "", "Zidormi")
                 local links = { { petSpeciesID = nil, petName = nil, linkType = nil,
     linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
                     } }
@@ -481,21 +483,21 @@ end
 
 function AvailableActivityModule:BuildCalendarEventList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
 
     local numEvents = C_Calendar.GetNumDayEvents(0, self.today.monthDay)
 
-    if issecretvalue(numEvents) then
-        return
+    if numEvents == nil or issecretvalue(numEvents) then
+        return results
     end
 
     for eventNum = 1, numEvents do
         local event = C_Calendar.GetDayEvent(0, self.today.monthDay, eventNum) or nil
 
-        if not issecretvalue(event) then
+        if event and not issecretvalue(event) then
             local sourceEntry = dataSource[event.eventID]
             if sourceEntry then
                 local title = event.title
@@ -544,7 +546,7 @@ end
 
 function AvailableActivityModule:BuildBountyQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -571,13 +573,13 @@ end
 
 function AvailableActivityModule:BuildCovenantQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
     local unlocked = C_CovenantCallings.AreCallingsUnlocked()
     if issecretvalue(unlocked) then
-        return
+        return results
     end
     if not unlocked then
         local linkTitle = L["You need to unlock Covenants"]
@@ -585,11 +587,12 @@ function AvailableActivityModule:BuildCovenantQuestList(dataSource)
             pets = { { petSpeciesID = nil, petName = nil, linkType = nil,
     linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
         } } } }
+        return results
     end
 
     local aligned = C_Covenants.GetActiveCovenantID()
     if issecretvalue(aligned) then
-        return
+        return results
     end
     if not aligned or aligned <= 0 then
         local linkTitle = L["You need to choose a Covenant"]
@@ -597,11 +600,12 @@ function AvailableActivityModule:BuildCovenantQuestList(dataSource)
             pets = { { petSpeciesID = nil, petName = nil, linkType = nil,
     linkValue = "\124cff0070dd\124Hitem:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0\124h[" .. linkTitle .. "]\124h\124r"
         } } } }
+        return results
     end
 
     -- protective and possibly not necessary. here for safety.
     if self.callingsData == nil then
-        return
+        return results
     end
 
     for _,callingData in ipairs(self.callingsData) do
@@ -622,13 +626,13 @@ end
 
 function AvailableActivityModule:BuildParagonEventActivityList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
 
     for repID, repData in pairs(dataSource) do
-        repInfo = C_Reputation.GetFactionDataByID(repID)
+        local repInfo = C_Reputation.GetFactionDataByID(repID)
         if issecretvalue(repInfo) then
             repInfo = nil
         end
@@ -649,7 +653,7 @@ end
 
 function AvailableActivityModule:BuildDailyQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -671,7 +675,7 @@ end
 
 function AvailableActivityModule:BuildWorldQuestList(dataSource)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
@@ -693,7 +697,7 @@ end
 
 function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questType, seenQuestIDs, criteriaToQuestMap)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local criteriaTitle, criteriaType, criteriaComplete, assetID, criteriaID, numCriteria
@@ -703,7 +707,7 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
     local numCriteria = GetAchievementNumCriteria(achievementID)
 
     if issecretvalue(numCriteria) then
-        return
+        return necessaryCriteria
     end
 
     for criteriaIndex = 1, numCriteria do
@@ -714,7 +718,7 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
                 if criteriaType == 8 then  -- subcriteria is an achievement
                     local subCriteria = AvailableActivityModule:AchievementCriteriaCheck(assetID, questType, seenQuestIDs, criteriaToQuestMap)
 
-                    for _, data in ipairs(subCriteria) do
+                    for _, data in ipairs(subCriteria or {}) do
                         table.insert(necessaryCriteria, data)
                     end
                 elseif criteriaType == 27 then -- this is a quest & we need the quest. verify availability
@@ -724,19 +728,19 @@ function AvailableActivityModule:AchievementCriteriaCheck(achievementID, questTy
                     end
                 elseif criteriaType == 158 then -- this is an npc we need to move to a quest
                     local qID = criteriaToQuestMap[criteriaID]
-                    local title = AvailableActivityModule:GetQuestTitle(qID)
+                    local title = qID and AvailableActivityModule:GetQuestTitle(qID)
 
-                    if AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
-                        seenQuestIDs[qID] = true
-                        table.insert(necessaryCriteria, { questTitle = title, questID = qID })
-                elseif criteriaType == 0 then -- this is a "monster" we need to move to a quest
-                    local qID = criteriaToQuestMap[criteriaID]
-                    local title = AvailableActivityModule:GetQuestTitle(qID)
-
-                    if AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
+                    if qID and AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
                         seenQuestIDs[qID] = true
                         table.insert(necessaryCriteria, { questTitle = title, questID = qID })
                     end
+                elseif criteriaType == 0 then -- this is a "monster" we need to move to a quest
+                    local qID = criteriaToQuestMap[criteriaID]
+                    local title = qID and AvailableActivityModule:GetQuestTitle(qID)
+
+                    if qID and AvailableActivityModule:IsQuestAvailable(qID, questType) and not seenQuestIDs[qID] then
+                        seenQuestIDs[qID] = true
+                        table.insert(necessaryCriteria, { questTitle = title, questID = qID })
                     end
                 end
             end
@@ -759,7 +763,7 @@ function AvailableActivityModule:ProcessAchievementEntry(achievementID, achievem
     local petLinks = AvailableActivityModule:GetPetData(achievementData.petReward)
     local achievementList = {}
 
-    for _, questNeeded in ipairs(necessaryQuests) do
+    for _, questNeeded in ipairs(necessaryQuests or {}) do
         local entry = AvailableActivityModule:BuildActivityEntry(category, questNeeded.questTitle, petLinks, subcategory)
 
         if entry then
@@ -772,13 +776,13 @@ end
 
 function AvailableActivityModule:BuildDailyQuestAchievementList(dataSource, criteriaToQuestMap)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
 
     for achievementID, achievementData in pairs(dataSource) do
-        local achievementTitle = select(2, GetAchievementInfo(achievementID))
+        local achievementTitle = select(2, GetAchievementInfo(achievementID)) or ""
         local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "daily", achievementTitle, L["Achievements From Daily Quests"], criteriaToQuestMap)
         if entries then
             for _, entry in ipairs(entries) do
@@ -792,13 +796,13 @@ end
 
 function AvailableActivityModule:BuildWorldQuestAchievementList(dataSource, criteriaToQuestMap)
     if InCombatLockdown() then
-        return
+        return {}
     end
 
     local results = {}
 
     for achievementID, achievementData in pairs(dataSource) do
-        local achievementTitle = select(2, GetAchievementInfo(achievementID))
+        local achievementTitle = select(2, GetAchievementInfo(achievementID)) or ""
         local entries = AvailableActivityModule:ProcessAchievementEntry(achievementID, achievementData, "world", achievementTitle, L["Achievements From World Quests"], criteriaToQuestMap)
         if entries then
             for _, entry in ipairs(entries) do
@@ -829,6 +833,9 @@ function AvailableActivityModule:VerifyDataIsReady()
     -- the data has loaded.
     local calendarVerified = false
     local numEvents = C_Calendar.GetNumDayEvents(0, self.today.monthDay)
+    if numEvents == nil or issecretvalue(numEvents) then
+        return false
+    end
     for eventNum = 1, numEvents do
         local event = C_Calendar.GetDayEvent(0, self.today.monthDay, eventNum) or nil
         if not issecretvalue(event) and event and event.eventID and event.title then
